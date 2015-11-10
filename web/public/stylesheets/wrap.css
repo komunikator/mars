@@ -1,0 +1,9 @@
+.x-grid-cell-inner,.x-grid-hd-inner {
+  white-space: normal !important;
+}
+audio.rec { width: 120px; display: block}
+
+.x-tree-icon-parent
+{
+    width: 20px !important;
+}

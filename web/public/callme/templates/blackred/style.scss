@@ -1,0 +1,51 @@
+$zIndex: 110;
+
+$fldBg: #fff;
+$fldText: #333;
+$fldBrd: #ebebeb;
+$fldBrdSize: 2px;
+
+$formBg: #f7f7f7;
+$formBorder: #bbc1ce;
+$formFont: "Tahoma"; 
+$formTxtSize: 12px;
+$formTxtSizeSmall: 11px;
+$formText: #333;  
+$formBrdRadius: 3px;
+
+$btnBg: #5cb85c;
+$btnTxtShadow: #810900;
+$btnTxtColor: #fff;
+$btnSize: 12px;
+
+$hdrColor: #fff;
+$hdrBrdColor: #000;
+$hdrTxtSize: 13px;
+$hdrBrdRadius: 3px 3px 0 0;
+
+$closeTxtShadow: #4d659f;
+$closeTxt: #fff;
+$closeTxtSize: 15px;
+$closePaddings: 0 3px 3px;
+
+$bgError: #f76363;
+$bgSuccess: #98c462;
+$bgHasError: #f2dede;
+
+@import '../lib';
+@import '../base';
+
+.cme-btn {
+	@include border(top, #db8a89);
+	@include border(left, #810900);
+	@include border(right, #810900);
+	@include border(bottom, #810900);
+	@include box-shadow(0, -1px, 0, #810900);
+	@include bg(#c04f4c, #810900);
+	margin-bottom: 5px;
+}
+.cme-cls {
+}
+.h6 {
+	@include bg(#404040, #000);
+}

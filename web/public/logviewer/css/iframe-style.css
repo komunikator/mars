@@ -1,0 +1,240 @@
+::selection 
+{
+     color: #fff;
+     background: #FF7726;
+}
+    
+::-moz-selection
+{
+     color: #fff;
+     background: #FF7726;
+}
+
+body{
+    background-color: #f0f0f0;
+    font-size: 1.48rem;
+}
+
+.arrow{
+    margin-top: 40px;
+    position: absolute;
+    margin-left: -40px;
+}
+
+img.responsive-img, video.responsive-video {
+  max-width: 90%;
+  height: auto; 
+}
+
+.blue{
+    background-color: #489FD1 !important;
+}
+
+.blue-text{
+    color: #489FD1 !important;
+}
+
+.waves-effect.waves-blue .waves-ripple {
+  background-color: rgba(87, 175, 218, 0.7); 
+}
+
+.orange{
+    background-color: #FF7726 !important;
+}
+
+.orange-text{
+    color: #FF7726 !important;
+}
+
+.waves-effect.waves-orange .waves-ripple {
+  background-color: rgba(255, 140, 49, 0.7);
+}
+
+.grey{
+    background-color: #f0f0f0 !important;
+}
+
+.grey-text{
+    color: #f0f0f0 !important;
+}
+
+
+  
+.content-card{
+    background-color: #fff;
+    -webkit-box-shadow:0 2px 2px rgba(0,0,0,0.23);
+    -moz-box-shadow:0 2px 2px rgba(0,0,0,0.23);
+    -o-box-shadow:0 2px 2px rgba(0,0,0,0.23);
+    box-shadow:0 2px 2px rgba(0,0,0,0.23);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+nav ul a,
+nav .brand-logo {
+  color: #444;
+}
+
+ul li
+{
+    list-style-type: disc;
+    font-size: 1.48rem;
+}
+
+ul.hide-on-med-and-down li
+{
+    list-style-type: none;
+}
+
+/* FORM */
+/* label color */
+.input-field label {
+    color: #FF7726;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label {
+    color: rgba(0, 0, 0, 0);
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #489FD1;
+    box-shadow: 0 1px 0 0 #489FD1;
+}
+/* valid color */
+.input-field input[type=text].valid {
+    border-bottom: 1px solid #489FD1;
+    box-shadow: 0 1px 0 0 #489FD1;
+    color: #489FD1;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+    border-bottom: 1px solid #FB0029;
+    box-shadow: 0 1px 0 0 #FB0029;
+    color: #FB0029;
+}
+
+.pin-icon{
+    height: 50px;
+    padding: 10px;
+    margin-left: -7px;
+}
+
+
+.phone{
+    word-wrap: none;
+    white-space: nowrap;
+}
+/* CONSOLE */
+.log-window{
+    height: 320px;
+    padding: 10px;
+    display: none;
+}
+
+.log-text{
+    color: #28375e;
+    border-right: #9bc1d5 solid 1px;
+    height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 90%;
+    margin-top: 25px;
+    margin-left: 20px;
+}
+
+
+.log-list-item{
+    list-style: none;
+    padding-top: 10px;
+}
+
+.typing{
+    width: 100%;
+    white-space: pre;
+    overflow: hidden;
+    -webkit-animation: type 0.5s steps(100, end);
+    animation: type 0.5s steps(1000, end);
+}
+
+@keyframes type{
+    from { width: 0; }
+}
+
+@-webkit-keyframes type{
+    from { width: 0; }
+}
+
+#a1 {
+    margin: 25px -12px;
+    height:4px;
+    width: 130%;
+    border:1px dotted #9bc1d5;
+}
+#a11 {
+    height: 100%;
+    background: #9bc1d5;
+    -webkit-animation:a11 4s ease-in-out infinite;
+    -moz-animation:a11 4s ease-in-out infinite;
+}
+@-webkit-keyframes a11 {
+    from {width:70%;}
+    10%  {width:20%;}
+    20%  {width:90%;}
+    30%  {width:60%;}
+    40%  {width:100%;}
+    50%  {width:10%;}
+    60%  {width:30%;}
+    70%  {width:20%;}
+    80%  {width:50%;}
+    90%  {width:10%;}
+    to   {width:70%;}                   
+}
+@-moz-keyframes a11 {
+    from {width:70%;}
+    10%  {width:20%;}
+    20%  {width:90%;}
+    30%  {width:60%;}
+    40%  {width:100%;}
+    50%  {width:10%;}
+    60%  {width:30%;}
+    70%  {width:20%;}
+    80%  {width:50%;}
+    90%  {width:10%;}
+    to   {width:70%;}                   
+}
+
+#a4 {
+    margin-left: -12px;
+    height: 150px;
+    width: 14px;
+}
+#a4 span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: #9bc1d5;
+    margin-bottom: 3px;
+}
+
+#a3 {
+    height: 200px;
+    margin: -150px 20px;
+    width: 20px;
+    font-size: 50%;
+    color: #9bc1d5
+}
+#a3 span {
+    display: block;
+    margin-bottom: 10px;
+    text-shadow: 0 0 1px #9bc1d5;
+}
+@-webkit-keyframes a3 {
+    from {opacity: 0;}
+    50%  {opacity: 1;}
+    to   {opacity: 0;}
+}
+@-moz-keyframes a3 {
+    from {opacity: 0;}
+    50%  {opacity: 1;}
+    to   {opacity: 0;}
+}

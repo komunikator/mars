@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Locking Grid Column Example</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="../shared/example.css" />
+
+    <!-- GC -->
+
+    <script type="text/javascript" src="../../ext-all.js"></script>
+
+    <!-- page specific -->
+    <script type="text/javascript" src="locking-grid.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script type="text/javascript" src="xFilterRow.js"></script>
+    
+</head>
+<body>
+    <h1>Locking Grid Column Example</h1>
+	<p>This example shows how to achieve "freeze pane" locking functionality similar to Excel.</p>
+        <p>Columns may be locked or unlocked by dragging them across into the opposite side, or by using the column's header menu.</p>
+        <p>The "Price" column is not lockable, and may not be dragged into the locked side, or locked using the header menu.</p>
+        <p>It is not possible to lock or unlock <i>all</i> columns using the user interface. Each side, locked or unlocked must always contain at least one column.</p>
+	<p>Note that the js is not minified so it is readable. See <a href="locking-grid.js">locking-grid.js</a>.</p>
+    <div id="grid-example"></div>
+</body>
+</html>
