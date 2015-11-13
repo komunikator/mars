@@ -1070,5 +1070,11 @@
     require(extDir + '/multifonSMS').init({
         Events: e
     });
+    if (module.parent)
+        module.exports = {
+            events: e,
+            config: config,
+            dialogs: dialogs,
+            sip: sip};
     //
 })();
