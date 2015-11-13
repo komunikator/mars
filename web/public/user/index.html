@@ -50,7 +50,7 @@
 
         <style>
             body{
-                font: 100% "Trebuchet MS", sans-serif;             
+                font: 100% "Trebuchet MS", sans-serif;
             }
             .demoHeaders {
                 margin-top: 2em;
@@ -115,7 +115,7 @@
                         </td>
                     </tr>
                 </table>
-                <div class="ui-dialog-buttonset" style="float:right; ">               
+                <div class="ui-dialog-buttonset" style="float:right; ">
                     <button id="button-login-ok" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button">
                         <span class="ui-button-text">Ok</span>
                     </button>
@@ -130,10 +130,10 @@
                 <div id="refresh-button"></div>
                 <table id="list-sip-connection" cellpadding="7" style="margin: 15px;border-collapse: collapse; width: 90%">
                     <caption style="margin-bottom: 20px;">SIP Подключения</caption>
-                    <tr></tr>              
+                    <tr></tr>
                 </table>
                 <div id="contextMenuId" style="position:absolute; top:0; left:0; border:1px solid #666; background-color:#CCC; display:none; float:left; z-index: 100;"></div>
-                <p style="text-align: center;"><a href="#" id="add-sipconnect" class="ui-state-default ui-corner-all add-button-text">            
+                <p style="text-align: center;"><a href="#" id="add-sipconnect" class="ui-state-default ui-corner-all add-button-text">
                     </a>
                 </p>
             </div>
@@ -263,9 +263,9 @@
                                     alert("Check whether all the fields are filled");
                                 }
                                 else {
-                                    
+
                                     actionSipConnection();
-                              
+
                                     $(this).dialog("close");
                                     $("#choice-page").show();
                                     $("#enterData-page").hide();
@@ -317,11 +317,13 @@
                                     $.ajax({
                                         url: "/resourceData/update",
                                         method: 'put',
-                                        data: response.data[0]
+                                        data: response.data[0],
+                                        success: function (response) {
+                                            $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
+                                        }
                                     });
                                     idSipRecord = null;
                                     idProvider = null;
-                                    $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
                                 }
                             });
                             $(this).dialog("close");
@@ -391,4 +393,4 @@
         </script>
 
     </body>
-</html> 
+</html>

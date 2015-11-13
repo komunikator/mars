@@ -3,6 +3,7 @@ var hostname = window.location.hostname;
 var port = window.location.port;
 var idSipRecord = null;
 var idProvider = null;
+var editData = null;
 
 window.onload = function () {
 
@@ -18,72 +19,106 @@ window.onload = function () {
 
 };
 
-
 function displaySipTable(returnedData) {
-    var data = jQuery.parseJSON(returnedData.data[0].value);
+    if (returnedData && returnedData.data && returnedData.data[0] && returnedData.data[0].value) {
+        var data = jQuery.parseJSON(returnedData.data[0].value);
 
-    var tbody = document.getElementById("list-sip-connection").getElementsByTagName("TBODY")[0];
-    if (tbody.rows.length > 0) {
-        while (tbody.rows[0]) {
-            tbody.deleteRow(0);
+        var tbody = document.getElementById("list-sip-connection").getElementsByTagName("TBODY")[0];
+        if (tbody.rows.length > 0) {
+            while (tbody.rows[0]) {
+                tbody.deleteRow(0);
+            }
         }
-    }
 
-    if (data.sipAccounts.length > 0) {
-        for (var i = 0; i < data.sipAccounts.length; i++) {
+        if (data.sipAccounts.length > 0) {
+            for (var i = 0; i < data.sipAccounts.length; i++) {
+                var domain = data.sipAccounts[i].host;
 
-            var nameProvider = data.sipAccounts[i].user + "@" + data.sipAccounts[i].host;
-            var row = document.createElement("TR");
-            var td = document.createElement("TD");
-            td.appendChild(document.createTextNode(nameProvider));
-            row.setAttribute('oncontextmenu', 'return menu(1, event, this);');
-            row.appendChild(td);
-            tbody.appendChild(row);
+                if (data.sipAccounts[i].domain) {
+                    domain = data.sipAccounts[i].domain;
+                }
+                var nameProvider = data.sipAccounts[i].user + "@" + domain;
+                var row = document.createElement("TR");
+                var td = document.createElement("TD");
+                td.appendChild(document.createTextNode(nameProvider));
+                row.setAttribute('oncontextmenu', 'return menu(1, event, this);');
+                row.appendChild(td);
+                tbody.appendChild(row);
+            }
         }
+
     }
 }
 
 function actionSipConnection() {
+    if (editData) {
+        recordSipConnection(editData);
+    } else {
+        $.ajax({
+            url: '/resourceData/settings',
+            method: 'get',
+            success: recordSipConnection
+        });
+    }
+}
+
+function recordSipConnection(response) {
+    var data = jQuery.parseJSON(response.data[0].value);
+    var login = $("#userSipName").val();
+    var pass = $("#userSipPassword").val();
+    var host = getHostSipConnection(idProvider);
+    var domain = getDomainSipConnection(idProvider);
+    var sipAccount = {
+        host: host,
+        expires: 60,
+        user: login,
+        password: pass,
+        disable: 1
+    };
+
+    if (!host) {
+        if (data && data.sipAccounts &&
+            data.sipAccounts[idSipRecord] &&
+            data.sipAccounts[idSipRecord].host) {
+
+            sipAccount['host'] = data.sipAccounts[idSipRecord].host;
+        }
+    }
+
+    if (domain) {
+        sipAccount['domain'] = domain;
+    } else {
+        if (data && data.sipAccounts &&
+            data.sipAccounts[idSipRecord] &&
+            data.sipAccounts[idSipRecord].domain) {
+
+            sipAccount['domain'] = data.sipAccounts[idSipRecord].domain;
+        }
+    }
+
+    //choose add or edit
+    (idSipRecord === null) ?
+            data.sipAccounts[data.sipAccounts.length] = sipAccount :
+            data.sipAccounts[idSipRecord] = sipAccount;
+
+    response.data[0].create = false;
+    response.data[0].name = 'config/config';
+    //save in the proper format
+    response.data[0].value = JSON.stringify(data, null, 4);
 
     $.ajax({
-        url: '/resourceData/settings',
-        method: 'get',
+        url: "/resourceData/update",
+        method: 'put',
+        data: response.data[0],
         success: function (response) {
-            var data = jQuery.parseJSON(response.data[0].value);
-            var login = $("#userSipName").val();
-            var pass = $("#userSipPassword").val();
-            var sipAccount = {
-                host: "172.17.2.147",
-                comment: idProvider,
-                expires: 60,
-                user: login,
-                password: pass,
-                disable: 1
-            };
-            //choose add or edit
-            (idSipRecord === null) ?
-                    data.sipAccounts[data.sipAccounts.length] = sipAccount :
-                    data.sipAccounts[idSipRecord] = sipAccount;
-
-            response.data[0].create = false;
-            response.data[0].name = 'config/config';
-            //save in the proper format
-            response.data[0].value = JSON.stringify(data, null, 4);
-
-            $.ajax({
-                url: "/resourceData/update",
-                method: 'put',
-                data: response.data[0]
-            });
-            idSipRecord = null;
-            idProvider = null;
-            $("#userSipName").val('');
-            $("#userSipPassword").val('');
+            $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
         }
-
     });
-
-    $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
+    idSipRecord = null;
+    idProvider = null;
+    editData = null;
+    $("#userSipName").val('');
+    $("#userSipPassword").val('');
 }
 
 function editAction()
@@ -95,6 +130,7 @@ function editAction()
         url: '/resourceData/settings',
         method: 'get',
         success: function (response) {
+            editData = response;
             var data = jQuery.parseJSON(response.data[0].value);
             $("#userSipName").val(data.sipAccounts[idSipRecord].user);
             $("#userSipPassword").val(data.sipAccounts[idSipRecord].password);
