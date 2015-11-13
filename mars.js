@@ -293,7 +293,7 @@
     } catch (e) {
         //console.log(e);
     }
-    var ivona_speech = new (require('ivona-node'))(config.get("ivona_speech"));
+    var ivona_speech = new (require('ivona-node'))(config.get("ivona_speech")||{});
     e.on('tts', function (data) {
         var yandex_speech = require('./lib/recognize/yandex-speech');
         var sox = require('sox-stream');
