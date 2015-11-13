@@ -559,7 +559,8 @@ Ext.define('IVR.view.companies.Editor', {
             var obj;
             try {
                 eval('obj = (' + selections[0].data.value + ')');
-                obj.script = obj.script.replace(/(\.js)$/, '');
+                if (obj.script )
+                    obj.script = obj.script.replace(/(\.js)$/, '');
                 if (obj.target)
                     obj.target = obj.target.replace(/(\.js)$/, '');
                 if (obj.onEvent)
