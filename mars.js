@@ -32,7 +32,7 @@
         if (sipAccounts)
             sipAccounts.forEach(function (account) {
                 if (!account.disable) {
-                    var event = 'on_call[' + account.user + '@' + (account.domain || account.host) + ']';
+                    var event = 'on_call[' + account.user + '@' + account.host + ']';
                     if (OnEvent[event] === undefined)
                         OnEvent[event] = null;
                 }
@@ -165,7 +165,6 @@
     }
 
     var e = new (require("events").EventEmitter)();
-    appExtension = e;
 
     e.setEventHandlers = function (eventHandlers) {
         if (eventHandlers)
@@ -260,6 +259,8 @@
             cdr.dtmfTime = data.dtmfTime;
         if (data.dtmfData)
             cdr.dtmfData = data.dtmfData;
+        if (data.sipContext && data.sipContext.uri)
+            cdr.uri = data.sipContext.uri;
         cdr.script = cdr.script.replace('.js', '');
         ;
         for (var time in cdr.times)
@@ -303,12 +304,12 @@
         });
 
         var file_name = 'media/temp/' + data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') + '.wav';
-        transcode.on('error', function (err) {
-            data.cb(file_name);
-            data.cb = function () {
-            };
-            //console.log(err.message)
-        });
+                transcode.on('error', function (err) {
+                    data.cb(file_name);
+                    data.cb = function () {
+                    };
+                    //console.log(err.message)
+                });
 
         // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
         if (data.rewrite || !fs.existsSync(file_name) || !require('./lib/wav').checkFormat(file_name))
@@ -539,7 +540,7 @@
 
     e.on('incomingCall', function (data) {
         //if (!(OnEvent['incomingCall']) >= 0) {
-            e.emit('startScript', {sessionID: data.sessionID, response: data.response, uri: data.response.headers.from.uri, script: data.script, serviceContactID: data.serviceContactID});
+        e.emit('startScript', {sessionID: data.sessionID, response: data.response, uri: data.response.headers.from.uri, script: data.script, serviceContactID: data.serviceContactID});
         // }
     });
 
@@ -823,7 +824,7 @@
         if (fs.existsSync(script_path))
         {
             try {
-                scriptCfg = require(libDir + '/util').requireUncached('.' + script_path);
+                scriptCfg = require(libDir + '/util').requireUncached(require("path").resolve(script_path));
                 // console.log(scriptCfg.src);
             }
             catch (e_) {
@@ -874,7 +875,7 @@
         if (fs.existsSync(company_path))
         {
             try {
-                companyCfg = require(libDir + '/util').requireUncached('.' + company_path);
+                companyCfg = require(libDir + '/util').requireUncached(require("path").resolve(company_path));
                 // console.log(scriptCfg.src);
             }
             catch (e_) {

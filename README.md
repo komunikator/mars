@@ -9,4 +9,4 @@ MARS - Multi-channel Automatic Response Sysytem (Мультиканальная 
   npm i
 
 Запуск: 
-  node app
+  node mars

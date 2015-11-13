@@ -2,3 +2,6 @@
 /logs
 /rec
 /media/temp
+/node_modules
+/data/*
+/data/cdr.db

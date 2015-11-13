@@ -2,12 +2,14 @@
     "name": "mars",
     "version": "1.0.0",
     "scripts": {
-        "start": "node app.js"
+        "start": "node mars.js"
     },
+    "main":"mars",
     "repository": {
         "type": "git",
         "url": "https://github.com/komunikator/mars"
     },
+    "license": "GNU GPLv3",
     "dependencies": {
         "encoding": "0.1.7",
         "express": "4.0.0",
