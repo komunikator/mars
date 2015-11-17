@@ -7,10 +7,10 @@ html
   body
     .container
       section#content
-        form(method='post', action='/login')
+        form(method='post', action='/login?referer='  + referer)
           h1 Авторизация
           div
-            //span= user 
+            //span= user
             span#message= message
           div
             input#username(type='text', placeholder='Логин', required='', name='username')
@@ -19,8 +19,8 @@ html
           div
             input(type='submit', value='Войти')
         //
-           form 
+           form
       //
-         content 
+         content
     //
-       container 
+       container

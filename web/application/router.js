@@ -20,7 +20,13 @@ exports.init = function(app, models)
             resource = require('./controller/resource'),
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
-            listSIP = require('./controller/listSIP');
+            listSIP = require('./controller/listSIP'),
+    		userPage = require('./controller/userPage'),
+            moduleReports = require('./controller/module/reports'),
+            moduleScripts = require('./controller/module/scripts'),
+            moduleMedia = require('./controller/module/media'),
+            moduleManager = require('./controller/module/manager'),
+            moduleDialogs = require('./controller/module/dialogs');
 
     makeCall.init(app.events);
     dialog.init(app.events);
@@ -39,6 +45,13 @@ exports.init = function(app, models)
 
     /* set controllers */
     app.get('/', app.isLoggedIn, index.index);
+    app.get('/user', app.isLoggedIn, userPage.index);
+
+    app.get('/module/reports', app.isLoggedIn, moduleReports.index );
+    app.get('/module/scripts', app.isLoggedIn, moduleScripts.index );
+    app.get('/module/media',   app.isLoggedIn, moduleMedia.index );
+    app.get('/module/manager', app.isLoggedIn, moduleManager.index );
+    app.get('/module/dialogs', app.isLoggedIn, moduleDialogs.index );
 
     //read
     app.get('/users', app.isLoggedIn, user.read);
