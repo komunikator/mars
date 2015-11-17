@@ -2,7 +2,7 @@
     "name": "mars",
     "version": "1.0.0",
     "license": "GPL-3.0",
-    "description" : "MARS - Multi-channel Automatic Response Sysytem (Мультиканальная система обработки запросов )",
+    "description" : "MARS - Multi-channel Automatic Response Sysytem (РњСѓР»СЊС‚РёРєР°РЅР°Р»СЊРЅР°СЏ СЃРёСЃС‚РµРјР° РѕР±СЂР°Р±РѕС‚РєРё Р·Р°РїСЂРѕСЃРѕРІ)",
     "scripts": {
         "start": "node mars.js"
     },
