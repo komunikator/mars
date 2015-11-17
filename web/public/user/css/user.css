@@ -107,7 +107,7 @@ div#login-dialog-content-container
 
 .login-left {
     float: left;
-    //   margin-left: -32px;
+    /* margin-left: -32px; */
 }
 .registration-left {
     float: right;
@@ -260,7 +260,7 @@ div.login-links {
     position: absolute; 
     height: 250px;
     width: 400px;
-    display: block;
+    display: none;
     top: 0;
     right: 0;
     bottom: 0;
@@ -278,7 +278,7 @@ div.login-links {
     position: absolute; 
     height: 600px;
     width: 400px;
-    display: none;
+/*    display: none;*/
     margin: 20px;
 }
 
@@ -293,6 +293,7 @@ div.login-links {
     right: 0;
     margin: auto;
     padding: 10px;
+    display: none;
 }
 
 #user-login, #user-password
