@@ -275,23 +275,25 @@
         return cdr;
     }
 // stt & tts
+    try {
+        var Recognizer = require('./lib/recognizer'),
+                recognizer = new Recognizer(config.get("recognize"));
 
-    var Recognizer = require('./lib/recognizer'),
-            recognizer = new Recognizer(config.get("recognize"));
+        e.on('stt', function (data) {
+            recognizer.recognize(data.file, function (err, result) {
+                //console.log('recognizeCallback', err, result);
+                //callback(err, result);
+                //console.log(result);
+                if (!err)
+                    e.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts text "' + result.text + '"'});
+                data.cb(result.text);
+            });
 
-    e.on('stt', function (data) {
-        recognizer.recognize(data.file, function (err, result) {
-            //console.log('recognizeCallback', err, result);
-            //callback(err, result);
-            //console.log(result);
-            if (!err)
-                e.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts text "' + result.text + '"'});
-            data.cb(result.text);
         });
-
-    });
-
-    var ivona_speech = new (require('ivona-node'))(config.get("ivona_speech"));
+    } catch (e) {
+        //console.log(e);
+    }
+    var ivona_speech = new (require('ivona-node'))(config.get("ivona_speech")||{});
     e.on('tts', function (data) {
         var yandex_speech = require('./lib/recognize/yandex-speech');
         var sox = require('sox-stream');
@@ -304,12 +306,12 @@
         });
 
         var file_name = 'media/temp/' + data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') + '.wav';
-                transcode.on('error', function (err) {
-                    data.cb(file_name);
-                    data.cb = function () {
-                    };
-                    //console.log(err.message)
-                });
+        transcode.on('error', function (err) {
+            data.cb(file_name);
+            data.cb = function () {
+            };
+            //console.log(err.message)
+        });
 
         // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
         if (data.rewrite || !fs.existsSync(file_name) || !require('./lib/wav').checkFormat(file_name))
