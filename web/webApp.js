@@ -138,7 +138,7 @@ app.isLoggedIn = function(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/login');
+    res.redirect('/login?referer=' + req.url);
 };
 
 app.get('/account', app.isLoggedIn, function(req, res) {
@@ -148,12 +148,26 @@ app.get('/account', app.isLoggedIn, function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-    res.render('login', {user: req.user, message: req.flash('error')});
+
+    var data = {
+        user: req.user,
+        message: req.flash('error')
+    };
+
+    if (req.query['referer'] != undefined) {
+        data['referer'] = req.query['referer'];
+    }
+
+    res.render('login', data);
 });
 
 app.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}),
 function(req, res) {
-    res.redirect('/');
+    if (req.query['referer'] != 'undefined' && req.query['referer'] != undefined) {
+        res.redirect(req.query['referer']);
+    } else {
+        res.redirect('/');
+    }
 });
 
 app.get('/logout', function(req, res) {
@@ -235,7 +249,7 @@ exports.start = function(options, callback) {
             ////cert: fs.readFileSync("./web/ssl/certificate.pem"),
             //ca: fs.readFileSync("./web/ssl/certificate.pem"),
             ///passphrase: '1234'
-        //}, 
+        //},
         app).listen(port);
 
 //https
@@ -245,7 +259,7 @@ exports.start = function(options, callback) {
     catch (e) {
         console.log(e);
     }
-    
+
     (require('./logview'))(https,Events);
 
 
