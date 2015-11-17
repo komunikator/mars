@@ -2,7 +2,7 @@
     "name": "mars",
     "version": "1.0.0",
     "license": "GPL-3.0",
-    "description" : "MARS",
+    "description" : "MARS - Multi-channel Automatic Response Sysytem (Мультиканальная система обработки запросов )",
     "scripts": {
         "start": "node mars.js"
     },
@@ -11,7 +11,6 @@
         "type": "git",
         "url": "https://github.com/komunikator/mars"
     },
-    "license": "GNU GPLv3",
     "dependencies": {
         "encoding": "0.1.7",
         "express": "4.0.0",
