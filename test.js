@@ -1,6 +1,6 @@
 (function () {
 
-    process.on('uncaughtException', function (e) {
+    processs.on('uncaughtException', function (e) {
         console.log('uncaughtException', e);
     });
 
