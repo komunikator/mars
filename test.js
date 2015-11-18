@@ -1,6 +1,10 @@
 (function () {
 
+<<<<<<< HEAD
     processs.on('uncaughtException', function (e) {
+=======
+    proces.on('uncaughtException', function (e) {
+>>>>>>> a7840bf4a3c283d8539fd3b8f4b39f92819d0471
         console.log('uncaughtException', e);
     });
 
