@@ -1,3 +1,4 @@
+    var libDir = './lib',
 (function () {
 
 <<<<<<< HEAD
