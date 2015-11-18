@@ -21,6 +21,7 @@
             jobs = [];
     log4js.configure(confFile, {reloadSecs: 300});
     function loggerInit() {
+        console.log('uncaughtException', e);
         var logLevels = config.get("logLevel");
         if (logLevels)
             for (var category in logLevels)
