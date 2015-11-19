@@ -5,6 +5,10 @@ Ext.onReady(function() {
     Ext.create('Ext.container.Viewport', {
         renderTo: Ext.getBody(),
         layout: 'fit',
-        items: Ext.create('IVR.view.scripts.Editor', {})
-    })
+        items:
+	        Ext.create('Ext.Panel', {
+			    title: lang.user + ': <b>' + window['_username'] + '</b>',
+			    items: Ext.create('IVR.view.scripts.Editor', {})
+			})
+   })
 });
