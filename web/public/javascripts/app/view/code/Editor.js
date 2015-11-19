@@ -50,7 +50,7 @@ Ext.define('IVR.view.code.Editor', {
                                 text: lang['save'],
                                 handler: function() {
                                     var editor = this.ownerCt.ownerCt.ownerCt.ownerCt;
-					console.log(editor.getComponent('list'));
+					                console.log(editor.getComponent('list'));
                                     if (!editor.getComponent('list').selectedRow)
                                         return;
                                     var name = editor.getComponent('list').selectedRow.data.text;
@@ -83,6 +83,10 @@ Ext.define('IVR.view.code.Editor', {
                                             Ext.showError(e.message);
                                         }
                                 }
+                            },
+                            {
+                                xtype: 'displayfield',
+                                value: lang.user+': <b>'+window['_username']+'</b>',
                             }
                         ]);
                         if (c.menu)

@@ -8,5 +8,5 @@ exports.init = function(req, res){
 };
 
 exports.index = function(req, res){
-  res.render('manager', { });
+  res.render('manager', { username: req.user.username});
 };

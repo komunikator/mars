@@ -8,5 +8,5 @@ exports.init = function(req, res){
 };
 
 exports.index = function(req, res){
-  res.render('media', { });
+  res.render('media', { username: req.user.username});
 };
