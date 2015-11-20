@@ -7,8 +7,16 @@ Ext.require([
 ]);
 
 Ext.onReady(function() {
-    Ext.create('IVR.view.media.Tree', {
-        store: Ext.create('IVR.store.Media'),
-        renderTo: Ext.getBody()
+    Ext.create('Ext.container.Viewport', {
+        renderTo: Ext.getBody(),
+        layout: 'border',
+        items:
+        [
+            Ext.create('IVR.view.Header'),
+		    Ext.create('IVR.view.media.Tree', {
+		        store: Ext.create('IVR.store.Media'),
+				region: 'center'
+		    })
+        ]
     });
 });
