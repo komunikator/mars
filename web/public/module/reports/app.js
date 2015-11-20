@@ -9,10 +9,14 @@ Ext.require([
 Ext.onReady(function() {
     Ext.create('Ext.container.Viewport', {
         renderTo: Ext.getBody(),
-        layout: 'fit',
+        layout: 'border',
         items:
-                Ext.create('IVR.view.reports.List', {
-            store: Ext.create('IVR.store.Reports')//,
-        })
-    })
+        [
+            Ext.create('IVR.view.Header'),
+            Ext.create('IVR.view.reports.List', {
+                store: Ext.create('IVR.store.Reports'),
+                region: 'center'
+            })
+        ]
+    });
 });
