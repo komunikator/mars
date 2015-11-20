@@ -9,10 +9,14 @@ Ext.require([
 Ext.onReady(function() {
     Ext.QuickTips.init();
     Ext.create('Ext.container.Viewport', {
-        style: 'padding: 2px 5px;',
         renderTo: Ext.getBody(),
-        layout: 'fit',
+        layout: 'border',
         items:
-          	Ext.create('IVR.view.companies.Editor')
+        [
+            Ext.create('IVR.view.Header'),
+			Ext.create('IVR.view.companies.Editor', {
+        	    region: 'center'
+            })
+        ]
     })
 });
