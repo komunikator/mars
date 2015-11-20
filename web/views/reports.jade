@@ -9,6 +9,8 @@ html
     script(type="text/javascript", src="/javascripts/lib/ext/locale/ext-lang-ru.js")
     script(type="text/javascript", src="/javascripts/lib/ext/locale/ru.js")
     script(type="text/javascript", src="/module/reports/app.js")
+    script(type='text/javascript'). 
+     _username= '#{username}'
   body
     iframe#exportframe.x-hidden(name="exportframe")
     form#exportform(method="get", target="exportframe")
