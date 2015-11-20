@@ -7,8 +7,16 @@ Ext.require([
 ]);
 
 Ext.onReady(function() {
-    Ext.create('IVR.view.dialogs.List', {
-        store: Ext.create('IVR.store.Dialogs'),
-        renderTo: Ext.getBody()
+    Ext.create('Ext.container.Viewport', {
+        renderTo: Ext.getBody(),
+        layout: 'border',
+        items:
+        [
+            Ext.create('IVR.view.Header'),
+            Ext.create('IVR.view.dialogs.List', {
+                store: Ext.create('IVR.store.Dialogs'),
+                region: 'center'
+            })
+        ]
     });
 });
