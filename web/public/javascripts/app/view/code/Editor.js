@@ -83,10 +83,6 @@ Ext.define('IVR.view.code.Editor', {
                                             Ext.showError(e.message);
                                         }
                                 }
-                            },
-                            {
-                                xtype: 'displayfield',
-                                value: lang.user+': <b>'+window['_username']+'</b>',
                             }
                         ]);
                         if (c.menu)

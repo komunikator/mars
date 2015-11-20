@@ -9,11 +9,7 @@ Ext.onReady(function() {
         layout: 'border',
         items:
         [
-            Ext.create('Ext.Panel', {
-                height: 64,
-                region: 'north',
-                title: lang.user + ': <b>' + window['_username'] + '</b><p>Выход</p>'
-            }),
+            Ext.create('IVR.view.Header'),
             Ext.create('IVR.view.scripts.Editor', {
                 region: 'center'
             })
