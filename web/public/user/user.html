@@ -67,6 +67,11 @@
                 top: 50%;
                 // margin-top: -8px;
             }
+            #exit {
+                padding: .4em 1em .4em 20px;
+                text-decoration: none;
+                position: relative;
+            }
             #icons {
                 margin: 0;
                 padding: 0;
@@ -139,6 +144,18 @@
             </div>
         </div>
         <!---->
+
+
+        <div id="user-panel-form" class="ui-widget ui-widget-content ui-corner-all user-panel" >
+            <div class="ui-dialog-content ui-widget-content" style="background: none; border: 0;">
+            	<p style="text-align: center;"><a href="/logOut" id="exit" class="ui-state-default ui-corner-all exit-button-text">
+                    </a>
+                </p>
+            </div>
+        </div>
+        <!---->
+
+
         <div id="user-master-form">
             <div id="choice-page" class="page1">
                 <p class="choice_text"></p>
@@ -346,6 +363,7 @@
                 $("#user-master-form").dialog("open");
                 event.preventDefault();
             });
+
 
             $("#datepicker").datepicker({
                 inline: true

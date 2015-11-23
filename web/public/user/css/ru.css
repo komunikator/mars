@@ -28,6 +28,11 @@
     content: "Добавить SIP подключение";
 }
 
+.exit-button-text:after
+{
+    content: "Выход";
+}
+
 .next_text span:after
 {
     content: "Далее";

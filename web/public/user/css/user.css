@@ -7,8 +7,8 @@ body {
 #credit-container{
     position:fixed;
     bottom:0px;
-    width:100%;   
-} 
+    width:100%;
+}
 #credit{
     width:400px;
     font-size: 10px;
@@ -35,7 +35,7 @@ body {
 
 .showLoginDialog.ui-dialog .ui-dialog-titlebar {
     background: linear-gradient(#4d4d4d, #2f2f2f);
-    border-radius: 5px 5px 0px 0px; 
+    border-radius: 5px 5px 0px 0px;
     color: #fff;
     drop-shadow: 0 2px 0 black;
     font-size: 15px;
@@ -47,7 +47,7 @@ body {
     display: none;
 }
 .showLoginDialog .ui-dialog-title {
-    width: 550px; 
+    width: 550px;
 }
 .showLoginDialog .ui-corner-all {
     border-radius: 0;
@@ -63,7 +63,7 @@ body {
     padding: 1em;
     -webkit-box-shadow: 0px 0px 3px 0px rgba(50, 50, 50, 0.87);
     -moz-box-shadow: 0px 0px 3px 0px rgba(50, 50, 50, 0.87);
-    box-shadow: 0px 0px 3px 0px rgba(50, 50, 50, 0.87); 
+    box-shadow: 0px 0px 3px 0px rgba(50, 50, 50, 0.87);
 }
 .showLoginDialog.ui-dialog .ui-dialog-buttonpane button {
     background: linear-gradient(#4d4d4d, #2f2f2f);
@@ -88,7 +88,7 @@ body {
 }
 .showLoginDialog .ui-button .ui-button-text {
     display: block;
-    line-height: 0; 
+    line-height: 0;
 }
 .showLoginDialog .ui-button-text-only .ui-button-text {
     padding: 0 1em;
@@ -257,7 +257,7 @@ div.login-links {
 
 .user-dialog
 {
-    position: absolute; 
+    position: absolute;
     height: 250px;
     width: 400px;
     display: none;
@@ -275,7 +275,7 @@ div.login-links {
 
 .user-status
 {
-    position: absolute; 
+    position: absolute;
     height: 600px;
     width: 400px;
 /*    display: none;*/
@@ -313,26 +313,26 @@ div.login-links {
 }
 
 .circle_red
-{ 
-    display: block; 
-    background: #FF0000; 
-    border-radius: 50%; 
-    height: 20px; 
-    width: 20px; 
-    margin: 0; 
+{
+    display: block;
+    background: #FF0000;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin: 0;
     background: radial-gradient(6px 10px, circle, #FF0000, #000);
     background: -webkit-radial-gradient(6px 10px, circle, #FF0000, #000);
     background: -moz-radial-gradient(6px 10px, circle, #FF0000, #000);
 }
 
 .circle_green
-{ 
-    display: block; 
-    background: #00FF15; 
-    border-radius: 50%; 
-    height: 20px; 
-    width: 20px; 
-    margin: 0; 
+{
+    display: block;
+    background: #00FF15;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin: 0;
     background: radial-gradient(6px 10px, circle, #00FF15, #000);
     background: -webkit-radial-gradient(6px 10px, circle, #00FF15, #000);
     background: -moz-radial-gradient(6px 10px, circle, #00FF15, #000);
@@ -346,14 +346,14 @@ div.login-links {
 }
 
 #list-sip-connection tr:hover {
-    background: #f3bd48; 
-    color: #fff; 
+    background: #f3bd48;
+    color: #fff;
     cursor: pointer;
 }
 
 .sip-col1
 {
-    width: 20%;   
+    width: 20%;
 }
 
 .sip-col2
@@ -399,13 +399,13 @@ div.login-links {
 
 #refresh-button:hover {
     background-position: -262px -185px;
-    box-shadow: 0 0 5px #666; 
+    box-shadow: 0 0 5px #666;
     cursor: pointer;
 }
 
 #refresh-button:active {
     background-position: 0px -228px;
-    box-shadow: 0 0 5px #666; 
+    box-shadow: 0 0 5px #666;
     cursor: pointer;
 }
 
@@ -419,7 +419,7 @@ div.login-links {
     padding: 0px;
     border: none;
     text-align: center;
-    min-height: none; 
+    min-height: none;
 }
 
 div[aria-describedby="question-shour-form"] div:nth-child(3) button
@@ -449,4 +449,12 @@ div[aria-describedby="question-shour-form"] div:nth-child(3) div
 #userSipName, #userSipPassword
 {
     width: 100%;
+}
+
+.user-panel
+{
+    position: absolute;
+    height: 60px;
+    width: 150px;
+    margin: 20px 20px 20px 450px;
 }
