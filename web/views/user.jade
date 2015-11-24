@@ -13,8 +13,8 @@ head
     link(type='text/css', href='css/user.css', rel='stylesheet')
     script(src='js/jquery-ui.js')
     script.
-      /* - - определяется основной язык пользовател и по этому параметру
-      * выбираем какой файл css подключать - - - - - - - - - - - - - */
+      /* - - РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РѕСЃРЅРѕРІРЅРѕР№ СЏР·С‹Рє РїРѕР»СЊР·РѕРІР°С‚РµР» Рё РїРѕ СЌС‚РѕРјСѓ РїР°СЂР°РјРµС‚СЂСѓ
+      * РІС‹Р±РёСЂР°РµРј РєР°РєРѕР№ С„Р°Р№Р» css РїРѕРґРєР»СЋС‡Р°С‚СЊ - - - - - - - - - - - - - */
       function getUrlVars()
       {
       var vars = [], hash;
@@ -54,6 +54,11 @@ head
       left: .2em;
       top: 50%;
       // margin-top: -8px;
+      }
+      #exit {
+      padding: .4em 1em .4em 20px;
+      text-decoration: none;
+      position: relative;
       }
       #icons {
       margin: 0;
@@ -105,6 +110,11 @@ head
         p(style='text-align: center;')
           a#add-sipconnect.ui-state-default.ui-corner-all.add-button-text(href='#')
     //
+    #user-panel-form.ui-widget.ui-widget-content.ui-corner-all.user-panel
+      .ui-dialog-content.ui-widget-content(style="background: none; border: 0;")
+        p(style="text-align: center;")
+          a#exit.ui-state-default.ui-corner-all.exit-button-text(href="/logOut")
+    //
     #user-master-form
       #choice-page.page1
         p.choice_text
@@ -129,7 +139,7 @@ head
         form(style='margin-top: 1em;')
     script(src='js/user.js')
     script.
-      //загрузка списка провайдеров из providers.js
+      //Р·Р°РіСЂСѓР·РєР° СЃРїРёСЃРєР° РїСЂРѕРІР°Р№РґРµСЂРѕРІ РёР· providers.js
       getProvidersList();
       $("#accordion").accordion();
       var availableTags = [
