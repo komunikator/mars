@@ -215,12 +215,11 @@ function createViewHtml(modelHtml, arrStr) {
                     return;
                 }
             }
-            sendData(arrStr);
         });
 
         if (isCorrect) {
             var script = arrStr.join('');
-            //ws.send( JSON.stringify(script) );
+            sendData( JSON.stringify(script) );
             document.getElementById("status").innerHTML = "Успешно сохранено.";
         } else {
             document.getElementById("status").innerHTML = "Ошибка! Не Сохранено.";
@@ -264,8 +263,10 @@ getScriptsListData();
 
 function sendData(str) {
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", '/resourceData/update?create=false&name=script/data&value=' + str, true);
+    xhr.open("PUT", '/resourceData/update?create=false&name=scripts/data&value=' + str, true);
+    console.log(xhr.body);
     xhr.onreadystatechange = function(data) {
+        xhr.onreadystatechange = null;
         if (data && data.target && data.target.response) {
             console.log('response = ' + data.target.response);
         }

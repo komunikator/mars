@@ -64,23 +64,27 @@ exports.rename = function(req, res) {
 };
 
 exports.update = function(req, res) {
-    if (!req.body['name']) {
+    var name = req.body['name'] || req.query.name;
+    var create = req.body['name'] || req.query.create;
+    var value = req.body['value'] || req.query.value;
+    if (!name) {
         res.end(JSON.stringify({success: false}));
         return;
     }
-    var path = './' + req.body['name'] + '.js';
-    if ((req.body['create'] == 'true') && fs.existsSync(path)) {
+    var path = './' + name + '.js';
+    if ((create == 'true') && fs.existsSync(path)) {
         res.end(JSON.stringify({success: false, message: lang.fileExist}));
         return;
-    }
-    ;
-    //console.log(path);
-    fs.writeFile(path, req.body['value'], function(err) {
-        if (!err)
-            Events.emit('refresh', req.body['name'].replace(/\/(.*)$/, ''));
+    };
+
+    fs.writeFile(path, value, function(err) {
+        if (!err) {
+            Events.emit('refresh', name.replace(/\/(.*)$/, ''));
+        }
         var result = {success: !err};
-        if (err)
+        if (err) {
             result.message = lang[err.code] ? lang[err.code] : err.code;
+        }
         res.end(JSON.stringify(result));
     });
 };
