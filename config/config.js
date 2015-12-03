@@ -31,34 +31,37 @@
     },
     "sipAccounts": [
         {
-            "host": "193.201.229.35",
-            "domain": "multifon.ru",
+            "host": "172.17.2.156",
             "expires": 60,
-            "password": "XXXXXXXXX",
-            "user": "XXXXXXXXX",
+            "password": "_2",
+            "user": "_2",
             "disable": 0
         }
     ],
-    "logLevel": {
-        "server": "DEBUG",
-        "call": "DEBUG",
-        "sip": "DEBUG",
-        "http": "ERROR",
-        "ua": "ERROR"
-    },
+     "levels": {
+       "[all]": "trace",
+       "http": "error"
+     },
+    "replaceConsole": "false",
     "appenders": [
         {
             "type": "console",
-            "category_": [
-                "softphone"
-            ],
             "category": [
+                "console",
                 "server",
                 "ua",
                 "call",
-                "company",
-                "remoteClient"
+                "task",
+                "error",
+                "http"
             ]
+        },
+        {
+            "type": "file",
+            "filename": "logs/error.log",
+            "maxLogSize": 1048576,
+            "backups": 3,
+            "category": "error"
         },
         {
             "type": "file",
@@ -97,10 +100,10 @@
         },
         {
             "type": "file",
-            "filename": "logs/company.log",
+            "filename": "logs/task.log",
             "maxLogSize": 1048576,
             "backups": 10,
-            "category": "company"
+            "category": "task"
         },
         {
             "type": "file",
