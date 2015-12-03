@@ -31,10 +31,11 @@
     },
     "sipAccounts": [
         {
-            "host": "172.17.2.156",
+            "host": "193.201.229.35",
+            "domain": "multifon.ru",
             "expires": 60,
-            "password": "_2",
-            "user": "_2",
+            "password": "XXXXXXXXX",
+            "user": "XXXXXXXXX",
             "disable": 0
         }
     ],
