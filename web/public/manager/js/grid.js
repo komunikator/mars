@@ -219,7 +219,10 @@ function createViewHtml(modelHtml, arrStr) {
 
         if (isCorrect) {
             var script = arrStr.join('');
-            sendData( JSON.stringify(script) );
+            script = "exports.src = " + script;
+            //Преобразование перевода строки в уникальную комбинацию
+            script = script.replace(/\n/g, '@@@');
+            sendData(script);
             document.getElementById("status").innerHTML = "Успешно сохранено.";
         } else {
             document.getElementById("status").innerHTML = "Ошибка! Не Сохранено.";
@@ -264,7 +267,6 @@ getScriptsListData();
 function sendData(str) {
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", '/resourceData/update?create=false&name=scripts/data&value=' + str, true);
-    console.log(xhr.body);
     xhr.onreadystatechange = function(data) {
         xhr.onreadystatechange = null;
         if (data && data.target && data.target.response) {
