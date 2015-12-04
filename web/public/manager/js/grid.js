@@ -1,87 +1,94 @@
-function parseScript(str) {
+function getParsedScript(str) {
     str = String(str);
+    document.getElementById("script1").value = str;
     if (str.length < 8) {
-        return;
+        console.log('The length of the line is too short');
+        return false;
     }
-
-    var cursorPosition = 0;
+    var cursorPos = 0;
     var arrayStr = [];
     var editFields = [];
     var infoFields = [];
     var strLength = str.length;
+    var isCorrect = true;
 
-    function createArray() {
-        var positionFirstComment = getIndexEndComment(str, cursorPosition);
-        if (positionFirstComment) {
+    do {
+        var posFirstComment = getIndexEndComment(str, cursorPos);
+        if (posFirstComment) {
             //Запись символов включая /**/
-            arrayStr.push( str.substring(cursorPosition, positionFirstComment) );
-            cursorPosition = positionFirstComment;
+            arrayStr.push( str.substring(cursorPos, posFirstComment) );
+            cursorPos = posFirstComment;
 
-            var positionBeginSecondComment = getIndexBeginInfo(str, cursorPosition);
-            if (positionBeginSecondComment > -1) {
+            var posBeginSecondComment = getIndexBeginInfo(str, cursorPos);
+            if (posBeginSecondComment > -1) {
                 //Запись значения для редактирования
                 editFields.push(arrayStr.length);
-                arrayStr.push( str.substring(cursorPosition, positionBeginSecondComment) );
-                cursorPosition = positionBeginSecondComment;
+                arrayStr.push( str.substring(cursorPos, posBeginSecondComment) );
+                cursorPos = posBeginSecondComment;
 
-                var positionEndSecondComment = getIndexEndInfo(str, cursorPosition);
-                if (positionEndSecondComment) {
+                var posEndSecondComment = getIndexEndInfo(str, cursorPos);
+                if (posEndSecondComment) {
                     //Запись служебной информации
-                    var infoStr = str.substring(cursorPosition, positionEndSecondComment);
+                    var infoStr = str.substring(cursorPos, posEndSecondComment);
                     if ( createInfoObject(infoStr) ) {
                         infoFields.push(arrayStr.length);
                         arrayStr.push(infoStr);
-                        cursorPosition = positionEndSecondComment;
+                        cursorPos = posEndSecondComment;
                     } else {
-                        cursorPosition = strLength;
+                        cursorPos = strLength;
+                        isCorrect = false;
                     }
                 } else {
-                    cursorPosition = strLength;
+                    cursorPos = strLength;
+                    isCorrect = false;
                 }
             } else {
-                cursorPosition = strLength;
+                cursorPos = strLength;
+                isCorrect = false;
             }
         } else {
             //Запись остатка строки
-            arrayStr.push( str.substring(cursorPosition) );
-            cursorPosition = strLength;
+            arrayStr.push( str.substring(cursorPos) );
+            cursorPos = strLength;
         }
-    }
+    } while (cursorPos < strLength)
 
-    do {
-        createArray();
-    } while (cursorPosition < strLength)
-
-    if ( createHtml(arrayStr, infoFields, editFields) ) {
-        console.log('Create html objects');
+    if (isCorrect) {
+        var result = {
+            arrayStr:   arrayStr,
+            infoFields: infoFields,
+            editFields: editFields
+        };
+        return result;
     } else {
-        console.log('Error to create html objects');
+        console.log('Incorrect description');
+        return false;
     }
 }
 
-function getIndexBeginComment(str, cursorPosition) {
-    var text = str.substring(cursorPosition);
+function getIndexBeginComment(str, cursorPos) {
+    var text = str.substring(cursorPos);
     return text.indexOf("/**/");
 }
 
-function getIndexEndComment(str, cursorPosition) {
-    var position = getIndexBeginComment(str, cursorPosition);
+function getIndexEndComment(str, cursorPos) {
+    var position = getIndexBeginComment(str, cursorPos);
     if (position > -1) {
-        return position + cursorPosition + 4;
+        return position + cursorPos + 4;
     }
     return 0;
 }
 
-function getIndexBeginInfo(str, cursorPosition) {
-    var text = str.substring(cursorPosition);
-    return text.indexOf("/*") + cursorPosition;
+function getIndexBeginInfo(str, cursorPos) {
+    var text = str.substring(cursorPos);
+    return text.indexOf("/*") + cursorPos;
 }
 
-function getIndexEndInfo(str, cursorPosition) {
-    var text = str.substring(cursorPosition);
+function getIndexEndInfo(str, cursorPos) {
+    var text = str.substring(cursorPos);
     var position = text.indexOf("*/");
     if (position > -1) {
-        return position + cursorPosition + 2;
+        return position + cursorPos + 2;
     }
     return 0;
 }
@@ -128,6 +135,7 @@ function createInfoObject(str) {
         }
     } catch (err) {
         result = false;
+        console.log('Cannot create info object');
     }
     return result;
 }
@@ -180,6 +188,7 @@ function createViewHtml(modelHtml, arrStr) {
     btn.innerHTML = 'Отправить';
     btn.addEventListener('click', saveData);
     document.getElementById('fields').appendChild(btn);
+    console.log('All right');
 
     function saveData() {
         var isCorrect = true;
@@ -230,39 +239,15 @@ function createViewHtml(modelHtml, arrStr) {
     }
 }
 
-function createHtml(arrStr, arrInfo, arrEdit) {
-    var modelHtml = createModelHtml(arrStr, arrInfo, arrEdit);
+function createHtml(modelHtml, arrStr) {
     if (modelHtml.length > 0) {
-        console.log('Create html model');
         createViewHtml(modelHtml, arrStr);
         return true;
     } else {
-        console.log('Error to create model html');
+        console.log('No models elements');
         return false;
     }
 }
-
-function getScriptsListData() {
-    var idScript = 7;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/scriptsListData', true);
-    xhr.onreadystatechange = function(data) {
-        if (data && data.target && data.target.response) {
-            try {
-                var response = JSON.parse(data.target.response);
-                response = response.data[idScript].value;
-                document.getElementById("script1").value = response;
-                parseScript(response);
-                xhr.onreadystatechange = null;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    };
-    xhr.send();
-}
-
-getScriptsListData();
 
 function sendData(str) {
     var xhr = new XMLHttpRequest();
@@ -270,8 +255,42 @@ function sendData(str) {
     xhr.onreadystatechange = function(data) {
         xhr.onreadystatechange = null;
         if (data && data.target && data.target.response) {
-            console.log('response = ' + data.target.response);
+            //console.log('response = ' + data.target.response);
         }
     };
     xhr.send();
 }
+
+function getScriptsListData() {
+    var idScript = 0;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", '/scriptsListData', true);
+    xhr.onreadystatechange = function(data) {
+        if (data && data.target && data.target.response) {
+            xhr.onreadystatechange = null;
+            var response;
+            try {
+                response = JSON.parse(data.target.response);
+            } catch (err) {
+                console.log('Cannot JSON.parse response');
+                return;
+            }
+
+            try {
+                response = response.data[idScript].value;
+            } catch (err) {
+                console.log('Cannot read script');
+                return;
+            }
+
+            var script = getParsedScript(response);
+            if (script && script.arrayStr && script.infoFields && script.editFields) {
+                var modelHtml = createModelHtml(script.arrayStr, script.infoFields, script.editFields);
+                createHtml(modelHtml, script.arrayStr);
+            }
+        }
+    };
+    xhr.send();
+}
+
+getScriptsListData();
