@@ -270,7 +270,7 @@ function sendData(str) {
 }
 
 function getScriptsListData() {
-    var idScript = 0;
+    var idScript = 7;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/scriptsListData', true);
     xhr.onreadystatechange = function(data) {
