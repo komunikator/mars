@@ -201,23 +201,30 @@ function createViewHtml(modelHtml, arrStr) {
                 text = text.trim();
 
                 try {
-                    if (type == "string") {
+                    switch (type) {
+                      case "string":
                         arrStr[index] = JSON.stringify(text);
-                    } else if (type == "number") {
+                        break;
+
+                      case "number":
                         if ( Number(text) ) {
                             arrStr[index] =  text;
                         } else {
                             throw "Not a Number";
                         }
-                    } else if (type == "boolean") {
+                        break;
+
+                      case "boolean":
+                        break;
+
+                      default:
                         if (text == "true" || text == "false") {
                             arrStr[index] =  text;
                         } else {
                             throw "Not a Boolean";
                         }
-                    } else {
-                        throw "No type";
-                    }
+                        break;
+                    };
                 } catch (err) {
                     console.log(err);
                     isCorrect = false;
