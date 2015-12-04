@@ -215,14 +215,15 @@ function createViewHtml(modelHtml, arrStr) {
                         break;
 
                       case "boolean":
-                        break;
-
-                      default:
                         if (text == "true" || text == "false") {
                             arrStr[index] =  text;
                         } else {
                             throw "Not a Boolean";
                         }
+                        break;
+
+                      default:
+                        throw "Unknow type";
                         break;
                     };
                 } catch (err) {
