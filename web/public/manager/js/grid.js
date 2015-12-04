@@ -203,7 +203,7 @@ function createViewHtml(modelHtml, arrStr) {
                 try {
                     switch (type) {
                       case "string":
-                        arrStr[index] = JSON.stringify(text);
+                        arrStr[index] =  "\"" + text + "\"";
                         break;
 
                       case "number":
