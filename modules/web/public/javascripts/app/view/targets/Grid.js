@@ -4,7 +4,8 @@ Ext.define('IVR.view.targets.Grid', {
     title: lang['target'],
     store: [],
     columns: [
-        {flex: 1, text: lang['msisdn'], dataIndex: 'field1'}
+        {flex: 1, text: lang['msisdn'], dataIndex: 'field1'},
+        {flex: 2, text: lang['params'], dataIndex: 'id'} //???
     ],
     viewConfig: {
         loadMask: false

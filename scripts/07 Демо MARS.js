@@ -16,11 +16,12 @@ exports.src = {
                     return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
                 },
                     next:{ttsPlay: {text: function () {
+                        var abonent = (session.params && session.params[0])?'Уважаемый '+session.params[0]+'! ':'';
                         var res = requestRes && requestRes.items || [];
                         if (!res.length)
-                            return 'Вы позвонили впервые';
+                            return abonent + 'Вы позвонили впервые';
                         var time = res[0].gdate.replace(/^(\d{4})\.(\d{2})\.(\d{2}) (\d{2}\:\d{2})\:\d{2}/, '$4 $3.$2.$1');
-                        return 'Последний раз вы звонили в ' + time;
+                        return abonent + 'Последний раз вы звонили в ' + time;
                     },
                         next : {play: {file:'media/uchet/Ваш_код_.wav;<pin>',
                             next: { mark: 'Главное меню',

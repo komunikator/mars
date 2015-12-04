@@ -12,7 +12,8 @@ Ext.define('IVR.model.Target', {
     // gdate,step,session_id,msisdn,script,data,status,reason
     fields: [
         {
-            name: 'msisdn'
+            name: 'msisdn',
+            name: 'params'
         }
     ]
 });

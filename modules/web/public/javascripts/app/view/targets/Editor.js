@@ -28,7 +28,11 @@ Ext.define('IVR.view.targets.Editor', {
                         //target.unmask();
                         var resObj = Ext.decode(response.responseText);
                         if (resObj && resObj.success) {
-                            target.store.loadData(resObj.data);
+                            var data = [];
+                            resObj.data.forEach(function (el) {
+                                data.push([el.shift(), el.toString()]);
+                            });
+                            target.store.loadData(data);	
                             target.setTitle(lang['target'] + " '" + selections[0].data.text + "' " + lang['total_records'] + " [" + target.store.getCount() + "]");
                         }
                         else

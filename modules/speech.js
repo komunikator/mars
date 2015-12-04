@@ -20,7 +20,7 @@ bus.on('tts', function (data) {
     });
 
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
-    if (data.rewrite || !require('fs').existsSync(file_name) || !require('./lib/wav').checkFormat(file_name))
+    if (data.rewrite || !require('fs').existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name))
     {
         function ttsDone() {
             //consolbus.log('done');
