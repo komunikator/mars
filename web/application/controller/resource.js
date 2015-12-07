@@ -67,8 +67,6 @@ exports.update = function(req, res) {
     var name = req.body['name'];
     var create = req.body['name'];
     var value = req.body['value'];
-    //Преобразование уникальной комбинации в перевод строки
-	value = value.replace(/@@@/g, '\n');
     if (!name) {
         res.end(JSON.stringify({success: false}));
         return;
