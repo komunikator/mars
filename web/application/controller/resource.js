@@ -64,9 +64,9 @@ exports.rename = function(req, res) {
 };
 
 exports.update = function(req, res) {
-    var name = req.body['name'] || req.query.name;
-    var create = req.body['name'] || req.query.create;
-    var value = req.body['value'] || req.query.value;
+    var name = req.body['name'];
+    var create = req.body['name'];
+    var value = req.body['value'];
     //Преобразование уникальной комбинации в перевод строки
 	value = value.replace(/@@@/g, '\n');
     if (!name) {
