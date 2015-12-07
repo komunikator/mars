@@ -238,9 +238,8 @@ function createViewHtml(modelHtml, arrStr) {
             var script = arrStr.join('');
             script = "exports.src = " + script;
             //Преобразование перевода строки в уникальную комбинацию
-            script = script.replace(/\n/g, '@@@');
+            //script = script.replace(/\n/g, '@@@');
             sendData(script);
-            document.getElementById("status").innerHTML = "Успешно сохранено.";
         } else {
             document.getElementById("status").innerHTML = "Ошибка! Не Сохранено.";
         }
@@ -258,47 +257,57 @@ function createHtml(modelHtml, arrStr) {
 }
 
 function sendData(str) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", '/resourceData/update?create=false&name=scripts/data&value=' + str, true);
-    xhr.onreadystatechange = function(data) {
-        xhr.onreadystatechange = null;
-        if (data && data.target && data.target.response) {
-            //console.log('response = ' + data.target.response);
-        }
-    };
-    xhr.send();
+    try {
+        $.ajax({
+            url: '/resourceData/update',
+            method: 'PUT',
+            data: {
+                create: false,
+                name: 'scripts/data',
+                value: str
+            },
+            success: function(response) {
+                document.getElementById("status").innerHTML = "Успешно сохранено на сервере";
+            },
+            failure: function(response) {
+                document.getElementById("status").innerHTML = "Ошибка при отправке на сервер";
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-function getScriptsListData() {
-    var idScript = 7;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", '/scriptsListData', true);
-    xhr.onreadystatechange = function(data) {
-        if (data && data.target && data.target.response) {
-            xhr.onreadystatechange = null;
-            var response;
-            try {
-                response = JSON.parse(data.target.response);
-            } catch (err) {
-                console.log('Cannot JSON.parse response');
-                return;
-            }
+function requestScriptsListData() {
+    $.ajax({
+      url: '/scriptsListData',
+      type: 'GET',
+      success: onGetScripts
+    });
 
-            try {
-                response = response.data[idScript].value;
-            } catch (err) {
-                console.log('Cannot read script');
-                return;
-            }
-
-            var script = getParsedScript(response);
-            if (script && script.arrayStr && script.infoFields && script.editFields) {
-                var modelHtml = createModelHtml(script.arrayStr, script.infoFields, script.editFields);
-                createHtml(modelHtml, script.arrayStr);
-            }
+    function onGetScripts(data) {
+        var idScript = 7;
+        var response;
+        try {
+            response = JSON.parse( JSON.stringify(data) );
+        } catch (err) {
+            console.log('Cannot JSON.parse response');
+            return;
         }
-    };
-    xhr.send();
+
+        try {
+            response = response.data[idScript].value;
+        } catch (err) {
+            console.log('Cannot read script');
+            return;
+        }
+
+        var script = getParsedScript(response);
+        if (script && script.arrayStr && script.infoFields && script.editFields) {
+            var modelHtml = createModelHtml(script.arrayStr, script.infoFields, script.editFields);
+            createHtml(modelHtml, script.arrayStr);
+        }
+    }
 }
 
-getScriptsListData();
+requestScriptsListData();
