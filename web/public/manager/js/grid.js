@@ -175,8 +175,27 @@ function createViewHtml(modelHtml, arrStr) {
         p.id = 'p' + item.label;
         input.id = item.label;
         p.innerHTML = 'Введите данные ' + item.description + ': ';
-        input.type = 'text';
         input.value = modelHtml[i].value;
+
+        switch (item.typeField) {
+          case "string":
+            input.type = "text";
+            break;
+
+          case "number":
+            input.type = "number";
+            input.min = "0";
+            input.max = "1000";
+            break;
+
+          case "boolean":
+            input.type = 'checkbox';
+            input.checked = false;
+            if (input.value == "true") {
+                input.checked = true;
+            }
+            break;
+        };
 
         document.getElementById('editor').appendChild(div);
         document.getElementById('fields').appendChild(p);
@@ -215,8 +234,9 @@ function createViewHtml(modelHtml, arrStr) {
                         break;
 
                       case "boolean":
-                        if (text == "true" || text == "false") {
-                            arrStr[index] =  text;
+                        var value = document.getElementById(index).checked;
+                        if ( value == true || value == false ) {
+                            arrStr[index] =  value;
                         } else {
                             throw "Not a Boolean";
                         }
