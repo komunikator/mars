@@ -237,8 +237,6 @@ function createViewHtml(modelHtml, arrStr) {
         if (isCorrect) {
             var script = arrStr.join('');
             script = "exports.src = " + script;
-            //Преобразование перевода строки в уникальную комбинацию
-            //script = script.replace(/\n/g, '@@@');
             sendData(script);
         } else {
             document.getElementById("status").innerHTML = "Ошибка! Не Сохранено.";
