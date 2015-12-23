@@ -1,3 +1,7 @@
+process.on('disconnect', function () {
+    console.log('parent exited');
+    process.exit();
+});
 
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'http', type: 'error', msg: e.toString()});
@@ -96,8 +100,10 @@ app.set('view engine', 'jade');
 
 
 app.use(express.static(__dirname + '/public'));             // set the static files location /public/img will be /img for users
-app.use("/rec", express.static(__dirname + '/../../rec'));
-app.use("/media", express.static(__dirname + '/../../media'));
+app.use("/rec", express.static('./rec'));
+app.use("/media", express.static('./media'));
+
+
 //app.use(morgan('dev')); 					// log every request to the console
 app.use(bodyParser()); 						// pull information from html in POST
 app.use(methodOverride());
