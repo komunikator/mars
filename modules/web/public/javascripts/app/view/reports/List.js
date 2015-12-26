@@ -227,9 +227,9 @@ Ext.define('IVR.view.reports.List', {
                         today.setHours(0, 0, 0, 0);
                         return today;
                     })(),
-                    //regex: /^\d{1,4}\.?\d{0,2}\.?\d{2} ?\d{0,2}\:?\d{0,2}:?\d{0,2}$/,	
+                    //regex: /^\d{1,4}\.?\d{0,2}\.?\d{2} ?\d{0,2}\:?\d{0,2}:?\d{0,2}$/,
                     format: 'Y.m.d', //'Y.m.d H:i:s',
-                    //isValid: function(){this.regex.test(this.value)}, 	
+                    //isValid: function(){this.regex.test(this.value)},
                     getValue: function () {
                         if (this.isValid())
                             return Ext.Date.format(this.value, this.format);
@@ -256,6 +256,7 @@ Ext.define('IVR.view.reports.List', {
                     store: [[null, '*'], ['incoming', lang['incoming']], ['outgoing', lang['outgoing']]]
                 }
             },
+            {flex: 1, text: "ID группы", dataIndex: 'parent_id', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['msisdn'], dataIndex: 'msisdn', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['service_contact'], dataIndex: 'service_contact', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {hidden: true, flex: 1, text: lang['operator_contact'], dataIndex: 'refer', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
@@ -292,7 +293,7 @@ Ext.define('IVR.view.reports.List', {
         ];
         // grid.getPlugin('xFilter')
         this.plugins = [
-            // When remotefilter is active it will 
+            // When remotefilter is active it will
             // send with the datastore the "search variables"
             Ext.create('Ext.ux.grid.xFilterRow', {
                 pluginId: 'xFilter',

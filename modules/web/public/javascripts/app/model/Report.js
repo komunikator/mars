@@ -21,6 +21,9 @@ Ext.define('IVR.model.Report', {
             name: 'session_id'
         },
         {
+            name: 'parent_id'
+        },
+        {
             name: 'msisdn'
         },
         {
