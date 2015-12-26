@@ -37,7 +37,7 @@ function sortHashTableByKey(hash, key_order, desc)
             tmp.push(hash[key][key_order] + "\t" + key);
         }
     }
-    //console.log(tmp);	
+    //console.log(tmp);
 
     if (hash && hash[0] && IsNumeric(hash[0][key_order].split(/\t/)[0]))
     {
@@ -82,6 +82,7 @@ bus.on('cdr', function (data) {
         gdate: require('dateformat')(date, 'yyyy.mm.dd HH:MM:ss'),
         step: i,
         session_id: data.sessionID,
+        parent_id: data.parentID,
         msisdn: (data.type == 'outgoing') ? data.to : data.from,
         service_contact: (data.type == 'outgoing') ? data.from : data.to,
         script: data.script != undefined ? data.script : '',
