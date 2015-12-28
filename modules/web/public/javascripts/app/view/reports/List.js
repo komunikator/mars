@@ -256,7 +256,7 @@ Ext.define('IVR.view.reports.List', {
                     store: [[null, '*'], ['incoming', lang['incoming']], ['outgoing', lang['outgoing']]]
                 }
             },
-            {flex: 1, text: "ID группы", dataIndex: 'parent_id', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
+            {flex: 1, text: lang['idgroup'], dataIndex: 'parent_id', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['msisdn'], dataIndex: 'msisdn', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['service_contact'], dataIndex: 'service_contact', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {hidden: true, flex: 1, text: lang['operator_contact'], dataIndex: 'refer', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
