@@ -39,14 +39,14 @@ exports.getStoreData = function (data) {
                 dialogData.push(
                         {_id: i,
                             gdate: require('dateformat')(date, 'yyyy.mm.dd HH:MM:ss'),
+                            parent_id: data[i].parentID,
                             type: meta.type ? meta.type : '',
                             msisdn: meta.from ? meta.from : '',
                             service_contact: meta.to ? meta.to : '',
                             status: meta.status ? (meta.times.end ? 'ended' : meta.status) : '',
                             reason: meta.statusReason ? meta.statusReason : '',
                             script: meta.script ? meta.script.replace('.js', '') : '',
-                            data: _data.length ? _data.join('<br>') : '',
-                            parent_id: data[i].parentID
+                            data: _data.length ? _data.join('<br>') : ''
                                     //rtp_local: meta.in ? meta.in.ip + ":" + meta.in.port : '',
                                     //rtp_remote: meta.out ? meta.out.ip + ":" + meta.out.port : '',
                                     //refer: meta.refer ? meta.refer : ''
