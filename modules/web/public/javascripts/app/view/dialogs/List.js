@@ -36,7 +36,7 @@ Ext.define('IVR.view.dialogs.List', {
                         /*, hidden: true*/
             },
             {
-                text: 'ID группы',
+                text: lang.idgroup,
                 flex: 1,
                 dataIndex: 'parent_id'
             },

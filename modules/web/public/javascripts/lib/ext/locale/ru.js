@@ -159,6 +159,7 @@ lang = {
     connectedWebSocket: "Соединение установлено",
     disabledWebSocket: "Соединение разорвано",
     service_contact: "Сервисный номер",
+    idgroup: "ID Группы",
     operator_contact: "Номер оператора",
     disabled: "отключен",
     registered: "зарегистрирован",
