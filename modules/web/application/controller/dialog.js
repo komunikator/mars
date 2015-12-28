@@ -45,7 +45,8 @@ exports.getStoreData = function (data) {
                             status: meta.status ? (meta.times.end ? 'ended' : meta.status) : '',
                             reason: meta.statusReason ? meta.statusReason : '',
                             script: meta.script ? meta.script.replace('.js', '') : '',
-                            data: _data.length ? _data.join('<br>') : ''
+                            data: _data.length ? _data.join('<br>') : '',
+                            parent_id: data[i].parentID
                                     //rtp_local: meta.in ? meta.in.ip + ":" + meta.in.port : '',
                                     //rtp_remote: meta.out ? meta.out.ip + ":" + meta.out.port : '',
                                     //refer: meta.refer ? meta.refer : ''

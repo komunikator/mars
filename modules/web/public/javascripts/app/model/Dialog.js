@@ -47,5 +47,9 @@ Ext.define('IVR.model.Dialog', {
          {
          name: 'rtp_remote'
          }*/
+        ,
+        {
+            name: 'parent_id'
+        }
     ]
 });

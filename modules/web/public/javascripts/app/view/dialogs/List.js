@@ -84,6 +84,11 @@ Ext.define('IVR.view.dialogs.List', {
                 text: lang.findings,
                 flex: 1,
                 dataIndex: 'data'
+            },
+            {
+                text: 'ID группы',
+                flex: 1,
+                dataIndex: 'parent_id'
             }
             /*
              {
