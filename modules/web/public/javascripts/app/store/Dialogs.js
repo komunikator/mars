@@ -3,7 +3,7 @@ Ext.define('IVR.store.Dialogs', {
     model: 'IVR.model.Dialog',
     storeId: 'Dialogs',
     autoLoad: true,
-    autoSync: true,
+    autoSync: false,
     remoteFilter: true/*,
      loadRawData : function(data, append){
      var me      = this,
@@ -14,6 +14,6 @@ Ext.define('IVR.store.Dialogs', {
      me.currentPage = 1;
      me.loadRecords(records, { addRecords: append });
      me.fireEvent('load', me, records, true);
-     }    
+     }
      }*/
 });

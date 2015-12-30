@@ -1,6 +1,7 @@
 Ext.define('IVR.view.dialogs.List', {
     extend: 'Ext.grid.Panel',
     xtype: 'dialogsList',
+    id: 'dialogsList',
     title: lang['active_calls'],
     viewConfig: {
         loadMask: false,
@@ -16,14 +17,41 @@ Ext.define('IVR.view.dialogs.List', {
     store: 'Dialogs',
     iconCls: 'icon_menu_diag_monitor',
 
-    timer: setInterval(function() {
-        for(var key in window.answeredCalls) {
-            window.answeredCalls[key]++;
-            console.log('window.answeredCalls[key] = ' + window.answeredCalls[key]);
-        }
-    }, 1000),
+    onTimer: function () {
+        var store = Ext.getStore('Dialogs'); // Попробовать через this.store
+        store.each(function(record, idx) {
+            var diffTimeServerClient = 0; // Разница времени в секундах между сервером и клиентом
+            var serverTime = new Date(); // + diffTimeServerClient
+            var startTime = new Date(record.data.gdate);
+            var diffMs = Math.floor( Math.abs(serverTime - startTime) );
 
+            function num(val){
+                val = Math.floor(val);
+                return val < 10 ? '0' + val : val;
+            }
+
+            function getTime(ms){
+                var sec     = ms  / 1000
+                  , hours   = sec / 3600 % 24
+                  , minutes = sec / 60 % 60
+                  , seconds = sec % 60;
+                return num(hours) + ":" + num(minutes) + ":" + num(seconds);
+            };
+
+            var timeCall = getTime(diffMs);
+            record.set('duration', timeCall);
+            record.commit();
+        });
+    },
+    timerStart: function () {
+        if (!window.dialogTimer) {
+            window.dialogTimer = true;
+            var self = this;
+            setInterval(self.onTimer, 1000);
+        }
+    },
     constructor: function (config) {
+        this.timerStart();
         this.selType = 'rowmodel';
         this.tools = [
             {xtype: 'container',
@@ -82,27 +110,6 @@ Ext.define('IVR.view.dialogs.List', {
                 flex: 1,
                 dataIndex: 'status',
                 renderer: function (value, metaData, record, row, col, store, gridView) {
-                    if (value == 'answered') {
-                        if (!window.answeredCalls) {
-                            window.answeredCalls = {};
-                        }
-                        window.answeredCalls[record.internalId] = 0;
-
-                        /*
-                        for (var i = 0; i < this.columns.length; i++)
-                        {
-                            if (this.columns[i].dataIndex == 'call_duration') {
-                                var callDuration = this.columns[i];
-                                break;
-                            }
-                        }
-                        */
-                    } else if (value == 'ended') {
-                        if (record.internalId in window.answeredCalls) {
-                            delete window.answeredCalls[record.internalId];
-                        }
-                    }
-
                     value = this.renderMsg(value, record);
                     if (record.data.reason)
                         value += '. ' + this.renderMsg(record.data.reason, record)
@@ -110,13 +117,9 @@ Ext.define('IVR.view.dialogs.List', {
                 }
             },
             {
-                text: lang.call_duration,
+                text: lang.duration,
                 flex: 1,
-                dataIndex: 'call_duration',
-                renderer: function (value) {
-                    //console.log('renderer timer = ' + time);
-                    return value;
-                }
+                dataIndex: 'duration',
             },
             {
                 text: lang.script,

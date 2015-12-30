@@ -47,112 +47,115 @@ Ext.application({
     ],
     wsConnect: 'disable',
     wsLaunch: function() {
-		if (!window.WebSocket) {
-			console.log('WebSocket: is not available');
-		}
+        if (!window.WebSocket) {
+            console.log('WebSocket: is not available');
+        }
 
-		if (IVR.getApplication().wsConnect === 'disable') {
-			IVR.getApplication().wsConnect = 'expect';
+        if (IVR.getApplication().wsConnect === 'disable') {
+            IVR.getApplication().wsConnect = 'expect';
 
-			var socket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port);
+            var socket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port);
 
-			socket.onmessage = function(event) {
-				//var incomingMessage = event.data;
-				//console.log(incomingMessage);
-				var obj = Ext.JSON.decode(event.data).data;
-				if (obj.source) {
-					var store = Ext.data.StoreManager.lookup(obj.source) || (Ext.getCmp(obj.source + 'Grid') && Ext.getCmp(obj.source + 'Grid').store);
-					//if (store && store.store)
-					//    store = store.store;
-					//console.log(obj.source, store);
-					if (store) {
-						if (obj.data) {
-							store.loadRawData(obj.data, false);
-						} else {
-							store.removeAll();
-						}
-					} else {
-						if (obj.source == 'statusUA') {
-							refreshSipAccounts(obj);
-						}
-					}
-				}
-			};
+            socket.onmessage = function(event) {
+                //var incomingMessage = event.data;
+                //console.log(incomingMessage);
+                var obj = Ext.JSON.decode(event.data).data;
+                if (obj.source) {
+                    var store = Ext.data.StoreManager.lookup(obj.source) || (Ext.getCmp(obj.source + 'Grid') && Ext.getCmp(obj.source + 'Grid').store);
+                    //if (store && store.store)
+                    //    store = store.store;
+                    //console.log(obj.source, store);
+                    if (store) {
+                        if (obj.data) {
+                            store.loadRawData(obj.data, false);
+                            if (obj.source == 'Dialogs') {
+                                Ext.getCmp('dialogsList').onTimer();
+                            }
+                        } else {
+                            store.removeAll();
+                        }
+                    } else {
+                        if (obj.source == 'statusUA') {
+                            refreshSipAccounts(obj);
+                        }
+                    }
+                }
+            };
 
-			socket.onopen = function() {
-				console.log("WebSocket: Open");
-				IVR.getApplication().wsConnect = 'online';
-				refreshAllData();
-			};
+            socket.onopen = function() {
+                console.log("WebSocket: Open");
+                IVR.getApplication().wsConnect = 'online';
+                refreshAllData();
+            };
 
-			socket.onclose = function(event) {
-				if (event.wasClean) {
-					console.log('WebSocket: Соединение закрыто чисто');
-				} else {
-					console.log('WebSocket: Обрыв соединения'); // Например, "убит" процесс сервера
-				}
-				console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason);
-				IVR.getApplication().wsConnect = 'disable';
-				refreshStatusConnect();
-			};
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log('WebSocket: Соединение закрыто чисто');
+                } else {
+                    console.log('WebSocket: Обрыв соединения'); // Например, "убит" процесс сервера
+                }
+                console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason);
+                IVR.getApplication().wsConnect = 'disable';
+                refreshStatusConnect();
+            };
 
-			socket.onerror = function(error) {
-				console.log("WebSocket: Error " + error.message);
-				IVR.getApplication().wsConnect = 'disable';
-				refreshStatusConnect();
-			};
+            socket.onerror = function(error) {
+                console.log("WebSocket: Error " + error.message);
+                IVR.getApplication().wsConnect = 'disable';
+                refreshStatusConnect();
+            };
 
-			var onsubmit = function() {
-				var outgoingMessage = this.message.value;
-				socket.send(outgoingMessage);
-				return false;
-			};
+            var onsubmit = function() {
+                var outgoingMessage = this.message.value;
+                socket.send(outgoingMessage);
+                return false;
+            };
 
-			function refreshAllData() {
-				refreshStatusConnect();
-				refreshStoreDialogs();
-				refreshSipAccounts();
-			}
-			
-			function refreshStatusConnect() {
-				var ivr = Ext.getCmp("IVR.view.Viewport");
-				var leds = ivr.items.items[0].items.items[0].items.items;
+            function refreshAllData() {
+                refreshStatusConnect();
+                refreshStoreDialogs();
+                refreshSipAccounts();
+            }
 
-				for (var key in leds) {
-					var id = leds[key].id;
+            function refreshStatusConnect() {
+                var ivr = Ext.getCmp("IVR.view.Viewport");
+                var leds = ivr.items.items[0].items.items[0].items.items;
 
-					if (id == 'webSocket') {
-						var updateStatus = leds[key].updateStatus;
-						updateStatus();
-						return;
-					}
-				}
-			}
-			
-			function refreshStoreDialogs() {
-				var store = Ext.data.StoreManager.lookup('Dialogs');
+                for (var key in leds) {
+                    var id = leds[key].id;
 
-				if (store) {
-					store.reload();
-				}
-			}
+                    if (id == 'webSocket') {
+                        var updateStatus = leds[key].updateStatus;
+                        updateStatus();
+                        return;
+                    }
+                }
+            }
 
-			function refreshSipAccounts(obj) {
-				var ivr = Ext.getCmp("IVR.view.Viewport");
-				var sipAccounts = ivr.items.items[0].items.items[1];
-				if (obj && obj.data) {
-					sipAccounts.store.loadData(obj.data);
-					//console.log(obj.data);
-				} else {
-					sipAccounts.onRefresh(sipAccounts);
-				}
-			}
-			
-		}
-	},
+            function refreshStoreDialogs() {
+                var store = Ext.data.StoreManager.lookup('Dialogs');
+
+                if (store) {
+                    store.reload();
+                }
+            }
+
+            function refreshSipAccounts(obj) {
+                var ivr = Ext.getCmp("IVR.view.Viewport");
+                var sipAccounts = ivr.items.items[0].items.items[1];
+                if (obj && obj.data) {
+                    sipAccounts.store.loadData(obj.data);
+                    //console.log(obj.data);
+                } else {
+                    sipAccounts.onRefresh(sipAccounts);
+                }
+            }
+
+        }
+    },
     launch: function() {
-		var app = IVR.getApplication();
-		app.wsLaunch();
+        var app = IVR.getApplication();
+        app.wsLaunch();
 
         Ext.define('overrides.AbstractView', {
             override: 'Ext.view.AbstractView',
