@@ -160,7 +160,7 @@ lang = {
     disabledWebSocket: "Соединение разорвано",
     service_contact: "Сервисный номер",
     idgroup: "ID Группы",
-    call_duration: "Длительность звонка",
+    duration: "Длительность",
     operator_contact: "Номер оператора",
     disabled: "отключен",
     registered: "зарегистрирован",
