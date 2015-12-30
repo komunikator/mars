@@ -15,6 +15,14 @@ Ext.define('IVR.view.dialogs.List', {
     },
     store: 'Dialogs',
     iconCls: 'icon_menu_diag_monitor',
+
+    timer: setInterval(function() {
+        for(var key in window.answeredCalls) {
+            window.answeredCalls[key]++;
+            console.log('window.answeredCalls[key] = ' + window.answeredCalls[key]);
+        }
+    }, 1000),
+
     constructor: function (config) {
         this.selType = 'rowmodel';
         this.tools = [
@@ -27,7 +35,6 @@ Ext.define('IVR.view.dialogs.List', {
                 }
             }
         ];
-
         this.columns = [
             {
                 text: lang.date,
@@ -63,7 +70,8 @@ Ext.define('IVR.view.dialogs.List', {
                 text: lang.service_contact,
                 flex: 1,
                 dataIndex: 'service_contact'
-            }, /*
+            },
+             /*
              {
              text: lang.operator_contact,
              flex: 1,
@@ -74,9 +82,39 @@ Ext.define('IVR.view.dialogs.List', {
                 flex: 1,
                 dataIndex: 'status',
                 renderer: function (value, metaData, record, row, col, store, gridView) {
+                    if (value == 'answered') {
+                        if (!window.answeredCalls) {
+                            window.answeredCalls = {};
+                        }
+                        window.answeredCalls[record.internalId] = 0;
+
+                        /*
+                        for (var i = 0; i < this.columns.length; i++)
+                        {
+                            if (this.columns[i].dataIndex == 'call_duration') {
+                                var callDuration = this.columns[i];
+                                break;
+                            }
+                        }
+                        */
+                    } else if (value == 'ended') {
+                        if (record.internalId in window.answeredCalls) {
+                            delete window.answeredCalls[record.internalId];
+                        }
+                    }
+
                     value = this.renderMsg(value, record);
                     if (record.data.reason)
                         value += '. ' + this.renderMsg(record.data.reason, record)
+                    return value;
+                }
+            },
+            {
+                text: lang.call_duration,
+                flex: 1,
+                dataIndex: 'call_duration',
+                renderer: function (value) {
+                    //console.log('renderer timer = ' + time);
                     return value;
                 }
             },

@@ -33,6 +33,9 @@ Ext.define('IVR.model.Dialog', {
             name: 'status'
         },
         {
+            name: 'call_duration'
+        },
+        {
             name: 'reason'
         },
         {
