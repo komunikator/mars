@@ -113,14 +113,15 @@ Ext.application({
                             };
 
                             var newTime = msg.data;
-                            leds.setValue(lang.serverTime + ': <b>' + formatDate( new Date(newTime) ) + '</b>');
 
                             function updateTime() {
                                 //console.log("Обновление времени");
-                                newTime += 1000;
                                 var curTime = formatDate( new Date(newTime) );
                                 leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
+                                newTime += 1000;
                             }
+
+                            updateTime();
 
                             clearInterval(IVR.getApplication().intervalTime);
                             IVR.getApplication().intervalTime = window.setInterval(updateTime, 1000);
