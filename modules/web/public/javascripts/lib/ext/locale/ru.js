@@ -159,6 +159,7 @@ lang = {
     connectedWebSocket: "Соединение установлено",
     disabledWebSocket: "Соединение разорвано",
     service_contact: "Сервисный номер",
+    serverTime: "Серверное время",
     idgroup: "ID Группы",
     duration: "Длительность",
     operator_contact: "Номер оператора",

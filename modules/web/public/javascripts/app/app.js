@@ -46,6 +46,7 @@ Ext.application({
         //'SettingsList'
     ],
     wsConnect: 'disable',
+    intervalTime: null,
     wsLaunch: function() {
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
@@ -77,6 +78,52 @@ Ext.application({
                     } else {
                         if (obj.source == 'statusUA') {
                             refreshSipAccounts(obj);
+                        }
+                    }
+                } else {
+                    var msg = JSON.parse(event.data);
+
+                    if (msg.source == 'time') {
+                        if (msg.data) {
+                            var ivr = Ext.getCmp("IVR.view.Viewport");
+                            var leds = ivr.items.items[0].items.items[3].items.items[2];
+
+                            function formatDate(date) {
+                                var dd = date.getDate()
+                                if (dd < 10) dd = '0' + dd;
+
+                                var mm = date.getMonth() + 1
+                                if (mm < 10) mm = '0' + mm;
+
+                                var yy = date.getFullYear();
+
+                                var hh = date.getHours();
+                                if (hh < 10) hh = '0' + hh;
+
+                                var min = date.getMinutes();
+                                if (min < 10) min = '0' + min;
+
+                                var sec = date.getSeconds();
+                                if (sec < 10) sec = '0' + sec;
+
+                                var strData = hh + ':' + min + ':' + sec + '';
+                                //var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
+
+                                return strData;
+                            };
+
+                            var newTime = msg.data;
+                            leds.setValue(lang.serverTime + ': <b>' + formatDate( new Date(newTime) ) + '</b>');
+
+                            function updateTime() {
+                                //console.log("Обновление времени");
+                                newTime += 1000;
+                                var curTime = formatDate( new Date(newTime) );
+                                leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
+                            }
+
+                            clearInterval(IVR.getApplication().intervalTime);
+                            IVR.getApplication().intervalTime = window.setInterval(updateTime, 1000);
                         }
                     }
                 }

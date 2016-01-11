@@ -30,7 +30,7 @@ Ext.define('IVR.view.dialogs.List', {
                 return val < 10 ? '0' + val : val;
             }
 
-            function getTime(ms){
+            function getTime(ms) {
                 var sec     = ms  / 1000
                   , hours   = sec / 3600 % 24
                   , minutes = sec / 60 % 60

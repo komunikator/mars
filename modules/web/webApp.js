@@ -236,6 +236,10 @@ function init() {
         bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + webSocketServer.clients.length});
         //        bus.emit('updateData', {source: 'statusUA', data: []});
 
+        var now = new Date();
+        var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
+        ws.send(msgTime);
+
         ws.on('message', function (message) {
         });
 
