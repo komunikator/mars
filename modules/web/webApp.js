@@ -236,9 +236,7 @@ function init() {
         bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + webSocketServer.clients.length});
         //        bus.emit('updateData', {source: 'statusUA', data: []});
 
-        var now = new Date();
-        var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
-        ws.send(msgTime);
+        sendTimeToUser(ws);
 
         ws.on('message', function (message) {
         });
@@ -247,6 +245,22 @@ function init() {
             bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + webSocketServer.clients.length});
         });
     });
+
+    var timerServerTime = setInterval(sendTimeAllUsers, 300000);
+
+    function sendTimeAllUsers () {
+        webSocketServer.clients.forEach(function (ws) {
+            var now = new Date();
+            var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
+            ws.send(msgTime);
+        });
+    }
+
+    function sendTimeToUser (ws) {
+        var now = new Date();
+        var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
+        ws.send(msgTime);
+    }
 
     var onData = function (obj) {
         var controllerPath = './application/controller/',

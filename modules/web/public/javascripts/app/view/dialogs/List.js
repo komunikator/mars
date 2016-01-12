@@ -18,10 +18,9 @@ Ext.define('IVR.view.dialogs.List', {
     iconCls: 'icon_menu_diag_monitor',
 
     onTimer: function () {
-        var store = Ext.getStore('Dialogs'); // Попробовать через this.store
+        var store = Ext.getStore('Dialogs');
         store.each(function(record, idx) {
-            var diffTimeServerClient = 0; // Разница времени в секундах между сервером и клиентом
-            var serverTime = new Date(); // + diffTimeServerClient
+            var serverTime = new Date(IVR.getApplication().serverTime);
             var startTime = new Date(record.data.gdate);
             var diffMs = Math.floor( Math.abs(serverTime - startTime) );
 
@@ -32,7 +31,7 @@ Ext.define('IVR.view.dialogs.List', {
 
             function getTime(ms) {
                 var sec     = ms  / 1000
-                  , hours   = sec / 3600 % 24
+                  , hours   = sec / 3600
                   , minutes = sec / 60 % 60
                   , seconds = sec % 60;
                 return num(hours) + ":" + num(minutes) + ":" + num(seconds);
