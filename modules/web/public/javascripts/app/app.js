@@ -88,7 +88,6 @@ Ext.application({
                     if (msg.source == 'time') {
                         if (msg.data) {
                             var ivr = Ext.getCmp("IVR.view.Viewport");
-                            var leds = ivr.items.items[0].items.items[3].items.items[2];
 
                             function formatDate(date) {
                                 var dd = date.getDate()
@@ -108,8 +107,7 @@ Ext.application({
                                 var sec = date.getSeconds();
                                 if (sec < 10) sec = '0' + sec;
 
-                                var strData = hh + ':' + min + ':' + sec + '';
-                                //var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
+                                var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
 
                                 return strData;
                             };
@@ -118,8 +116,9 @@ Ext.application({
                             IVR.getApplication().deltaTime = new Date().getTime() - IVR.getApplication().serverTime;
 
                             function updateTime() {
-                                IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
+                                IVR.getApplication().serverTime = new Date().getTime() - IVR.getApplication().deltaTime;
                                 var curTime = formatDate( new Date(IVR.getApplication().serverTime) );
+                                var leds = ivr.items.items[0].items.items[3].items.items[2];
                                 leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
                             }
 
