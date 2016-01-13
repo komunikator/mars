@@ -46,8 +46,9 @@ Ext.application({
         //'SettingsList'
     ],
     wsConnect: 'disable',
-    intervalTimer: null,
+    timerClock: null,
     serverTime: 0,
+    deltaTime: 0,
     wsLaunch: function() {
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
@@ -114,17 +115,18 @@ Ext.application({
                             };
 
                             IVR.getApplication().serverTime = msg.data;
+                            IVR.getApplication().deltaTime = new Date().getTime() - IVR.getApplication().serverTime;
 
                             function updateTime() {
+                                IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
                                 var curTime = formatDate( new Date(IVR.getApplication().serverTime) );
                                 leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
-                                IVR.getApplication().serverTime += 1000;
                             }
 
                             updateTime();
 
-                            clearInterval(IVR.getApplication().serverTime);
-                            IVR.getApplication().intervalTimer = window.setInterval(updateTime, 1000);
+                            clearInterval(IVR.getApplication().timerClock);
+                            IVR.getApplication().timerClock = window.setInterval(updateTime, 1000);
                         }
                     }
                 }
@@ -145,14 +147,14 @@ Ext.application({
                 console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
-                clearInterval(IVR.getApplication().intervalTimer);
+                clearInterval(IVR.getApplication().timerClock);
             };
 
             socket.onerror = function(error) {
                 console.log("WebSocket: Error " + error.message);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
-                clearInterval(IVR.getApplication().intervalTimer);
+                clearInterval(IVR.getApplication().timerClock);
             };
 
             var onsubmit = function() {
