@@ -236,13 +236,19 @@ function init() {
         bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + webSocketServer.clients.length});
         //        bus.emit('updateData', {source: 'statusUA', data: []});
 
-        sendTimeToUser(ws);
+        var timerWs = setTimeout(function () { sendTimeToUser(ws) }, 5000);
 
         ws.on('message', function (message) {
         });
 
         ws.on('close', function () {
+            bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + webSocketServer.clients.length});
+            clearTimeout(timerWs);
+        });
+
+        ws.on('disconnect', function () {
             bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + webSocketServer.clients.length});
+            clearTimeout(timerWs);
         });
     });
 
