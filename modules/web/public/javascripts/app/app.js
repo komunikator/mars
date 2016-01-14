@@ -113,10 +113,10 @@ Ext.application({
                             };
 
                             IVR.getApplication().serverTime = msg.data;
-                            IVR.getApplication().deltaTime = new Date().getTime() - IVR.getApplication().serverTime;
+                            IVR.getApplication().deltaTime = IVR.getApplication().serverTime - new Date().getTime();
 
                             function updateTime() {
-                                IVR.getApplication().serverTime = new Date().getTime() - IVR.getApplication().deltaTime;
+                                IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
                                 var curTime = formatDate( new Date(IVR.getApplication().serverTime) );
                                 var leds = ivr.items.items[0].items.items[3].items.items[2];
                                 leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
