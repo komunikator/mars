@@ -144,7 +144,8 @@ Ext.define('IVR.view.Viewport', {
                                     xtype: 'displayfield',
                                     style: {
                                         margin: '0 0 0 25px'
-                                    }
+                                    },
+                                    value: '<b>' + lang.serverTime + '</b>'
                                 }
                             ],
                 },
