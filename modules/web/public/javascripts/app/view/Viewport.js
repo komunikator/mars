@@ -140,6 +140,12 @@ Ext.define('IVR.view.Viewport', {
                                     },
                                     height: 54
                                 },
+                                {
+                                    xtype: 'displayfield',
+                                    style: {
+                                        margin: '0 0 0 25px'
+                                    }
+                                }
                             ],
                 },
                 {
@@ -253,9 +259,6 @@ Ext.define('IVR.view.Viewport', {
                                 marginRight: '5px',
                                 paddingTop: '0px'
                             }
-                        },
-                        {
-                            xtype: 'displayfield'
                         }
                     ]
                 }],

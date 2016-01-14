@@ -118,8 +118,8 @@ Ext.application({
                             function updateTime() {
                                 IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
                                 var curTime = formatDate( new Date(IVR.getApplication().serverTime) );
-                                var leds = ivr.items.items[0].items.items[3].items.items[2];
-                                leds.setValue(lang.serverTime + ': <b>' + curTime + '</b>');
+                                var componentTime = ivr.items.items[0].items.items[0].items.items[2];
+                                componentTime.setValue('<b>' + curTime + '</b>');
                             }
 
                             updateTime();
