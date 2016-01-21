@@ -11,7 +11,19 @@
     function init() {
         sys.bus.emit('refresh', 'config');
         sys.bus.emit('refresh', 'tasks');
+
+        if (module.parent) {
+            var sip = require('./lib/sip/sip');
+
+            module.exports = {
+                events: sys.bus,
+                config: sys.bus.config,
+                dialogs: sip.dialogs,
+                sip: sip
+            };
+        }
     }
+
     init();
 
 })();
