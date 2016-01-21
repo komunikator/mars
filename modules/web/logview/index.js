@@ -88,6 +88,10 @@ module.exports = function (server, bus) {
                         });
                     });
                 bus.request('dialogData', {}, function (data) {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) { data=null};
+
                     if (data)
                         for (var key in data)
                             if (data[key] && data[key].meta && data[key].meta.pin == message) {
