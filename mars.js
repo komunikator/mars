@@ -17,8 +17,6 @@
 
             module.exports = {
                 events: sys.bus,
-                config: sys.bus.config,
-                dialogs: sip.dialogs,
                 sip: sip
             };
         }
