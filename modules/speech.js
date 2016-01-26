@@ -31,3 +31,4 @@ bus.on('tts', function (data) {
     } else
         data.cb(file_name);
 })
+require('require-dir')('speech')

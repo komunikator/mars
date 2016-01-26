@@ -1,4 +1,4 @@
-var bus = require('../lib/system/bus'),
+var bus = require('../../lib/system/bus'),
         config = bus.config;
 
 var ivona_speech = new (require('ivona-node'))(config.get("ivona_speech") || {});

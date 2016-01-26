@@ -1,7 +1,7 @@
-var bus = require('../lib/system/bus'),
+var bus = require('../../lib/system/bus'),
         config = bus.config;
 
-var yandex_speech = require('./recognize/yandex-speech');
+var yandex_speech = require('../recognize/yandex-speech');
 
 bus.on('ttsLaunch', function (data) {
     data.type = data.type || config.get("def_tts");
