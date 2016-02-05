@@ -90,21 +90,21 @@ Ext.application({
                             var ivr = Ext.getCmp("IVR.view.Viewport");
 
                             function formatDate(date) {
-                                var dd = date.getDate()
+                                var dd = date.getUTCDate()
                                 if (dd < 10) dd = '0' + dd;
 
-                                var mm = date.getMonth() + 1
+                                var mm = date.getUTCMonth() + 1
                                 if (mm < 10) mm = '0' + mm;
 
-                                var yy = date.getFullYear();
+                                var yy = date.getUTCFullYear();
 
-                                var hh = date.getHours();
+                                var hh = date.getUTCHours();
                                 if (hh < 10) hh = '0' + hh;
 
-                                var min = date.getMinutes();
+                                var min = date.getUTCMinutes();
                                 if (min < 10) min = '0' + min;
 
-                                var sec = date.getSeconds();
+                                var sec = date.getUTCSeconds();
                                 if (sec < 10) sec = '0' + sec;
 
                                 var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
@@ -113,8 +113,7 @@ Ext.application({
                             };
 
                             IVR.getApplication().serverTime = msg.data;
-                            var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
-                            IVR.getApplication().deltaTime = (IVR.getApplication().serverTime - diff) - new Date().getTime();
+                            IVR.getApplication().deltaTime = IVR.getApplication().serverTime - new Date().getTime();
 
                             function updateTime() {
                                 IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
