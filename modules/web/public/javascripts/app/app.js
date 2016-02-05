@@ -113,7 +113,8 @@ Ext.application({
                             };
 
                             IVR.getApplication().serverTime = msg.data;
-                            IVR.getApplication().deltaTime = IVR.getApplication().serverTime - new Date().getTime();
+                            var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
+                            IVR.getApplication().deltaTime = (IVR.getApplication().serverTime - diff) - new Date().getTime();
 
                             function updateTime() {
                                 IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;

@@ -253,22 +253,23 @@ function init() {
     });
 
     var timerServerTime = setInterval(sendTimeAllUsers, 300000);
+    var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
 
-    function sendTimeAllUsers () {
-        webSocketServer.clients.forEach(function (ws) {
-            var now = new Date();
-            var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
-            ws.send(msgTime);
-        });
-    }
+   function sendTimeAllUsers () {
+       webSocketServer.clients.forEach(function (ws) {
+           var now = new Date();
+           var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+           ws.send(msgTime);
+       });
+   }
 
-    function sendTimeToUser (ws) {
-        var now = new Date();
-        var msgTime = JSON.stringify({source: 'time', data: now.getTime()});
-        ws.send(msgTime);
-    }
+   function sendTimeToUser (ws) {
+       var now = new Date();
+       var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+       ws.send(msgTime);
+   }
 
-    var onData = function (obj) {
+   var onData = function (obj) {
         var controllerPath = './application/controller/',
                 dialogController = require(controllerPath + 'dialog'),
                 statusUAController = require(controllerPath + 'statusUA');
