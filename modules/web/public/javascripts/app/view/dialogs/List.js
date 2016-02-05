@@ -20,7 +20,8 @@ Ext.define('IVR.view.dialogs.List', {
     onTimer: function () {
         var store = Ext.getStore('Dialogs');
         store.each(function(record, idx) {
-            var serverTime = new Date(IVR.getApplication().serverTime);
+            var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
+            var serverTime = new Date(IVR.getApplication().serverTime - diff);
             var startTime = new Date(record.data.gdate);
             var diffMs = Math.floor( Math.abs(serverTime - startTime) );
 
