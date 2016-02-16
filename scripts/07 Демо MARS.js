@@ -13,14 +13,15 @@ exports.src = {
                             d.setDate(d.getDate() + 1);
                             return d;
                         })(), "yyyy.mm.dd") + ' 00:00';
-                    return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
+                    return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: this.caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
                 },
                     next:{ttsPlay: {text: function () {
-                        var res = requestRes && requestRes.items || [];
+                        var abonent = (this.session.params && this.session.params[0])?'Уважаемый ' + this.session.params[0]+'! ':'';
+                        var res = this.requestRes && this.requestRes.items || [];
                         if (!res.length)
-                            return 'Вы позвонили впервые';
+                            return abonent + 'Вы позвонили впервые';
                         var time = res[0].gdate.replace(/^(\d{4})\.(\d{2})\.(\d{2}) (\d{2}\:\d{2})\:\d{2}/, '$4 $3.$2.$1');
-                        return 'Последний раз вы звонили в ' + time;
+                        return abonent + 'Последний раз вы звонили в ' + time;
                     },
                         next : {play: {file:'media/uchet/Ваш_код_.wav;<pin>',
                             next: { mark: 'Главное меню',
@@ -33,8 +34,8 @@ exports.src = {
                                                 '^\\d+$': {
                                                     dtmfData: { next: {
                                                         mark: 'Меню_1',
-                                                        sendMESSAGE: {text: function(){return '№ лицевого счёта: '+ session.dtmfData[0].keys}},
-                                                        play: {file: function(){return 'media/uchet/Вы_ввели_.wav;'+ session.dtmfData[0].keys +';'
+                                                        sendMESSAGE: {text: function(){return '№ лицевого счёта: '+ this.session.dtmfData[0].keys}},
+                                                        play: {file: function(){return 'media/uchet/Вы_ввели_.wav;'+ this.session.dtmfData[0].keys +';'
                                                             + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                             + 'media/uchet/Сигнал_записи.wav'}
                                                               },
@@ -52,8 +53,8 @@ exports.src = {
                                                                       '^\\d+$': {
                                                                           dtmfData: { next: {
                                                                               mark: 'Меню_3',
-                                                                              sendMESSAGE: {text: function(){return 'показание прибора: '+ session.dtmfData[1].keys}},
-                                                                              play: {file: function(){return 'media/uchet/Вы_ввели_.wav;' + session.dtmfData[1].keys +';'
+                                                                              sendMESSAGE: {text: function(){return 'показание прибора: '+ this.session.dtmfData[1].keys}},
+                                                                              play: {file: function(){return 'media/uchet/Вы_ввели_.wav;' + this.session.dtmfData[1].keys +';'
                                                                                   + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                                                   + 'media/uchet/Сигнал_записи.wav'}
                                                                                     },
@@ -68,7 +69,7 @@ exports.src = {
                                                                                              },
                                                                                    '^2$|нет': {
                                                                                        sendMESSAGE: {text: 'показание прибора не подтверждено'},
-                                                                                       goto: function(){session.dtmfData.pop();return 'Меню_2'}
+                                                                                       goto: function(){this.session.dtmfData.pop();return 'Меню_2'}
                                                                                    }
                                                                                   },
                                                                               wait: {time: 20,
@@ -91,7 +92,7 @@ exports.src = {
                                                              },
                                                              '^2$|нет': {
                                                                  sendMESSAGE: {text: '№ лицевого счёта не подтверждён'},
-                                                                 goto: function(){session.dtmfData.pop();return 'Главное меню'}
+                                                                 goto: function(){this.session.dtmfData.pop();return 'Главное меню'}
                                                              }
                                                             },
                                                         wait: {time: 20,

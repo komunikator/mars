@@ -39,26 +39,30 @@
             "disable": 0
         }
     ],
-    "logLevel": {
-        "server": "DEBUG",
-        "call": "DEBUG",
-        "sip": "DEBUG",
-        "http": "ERROR",
-        "ua": "ERROR"
-    },
+     "levels": {
+       "[all]": "trace",
+       "http": "error"
+     },
+    "replaceConsole": "false",
     "appenders": [
         {
             "type": "console",
-            "category_": [
-                "softphone"
-            ],
             "category": [
+                "console",
                 "server",
                 "ua",
                 "call",
-                "company",
-                "remoteClient"
+                "task",
+                "error",
+                "http"
             ]
+        },
+        {
+            "type": "file",
+            "filename": "logs/error.log",
+            "maxLogSize": 1048576,
+            "backups": 3,
+            "category": "error"
         },
         {
             "type": "file",
@@ -97,10 +101,10 @@
         },
         {
             "type": "file",
-            "filename": "logs/company.log",
+            "filename": "logs/task.log",
             "maxLogSize": 1048576,
             "backups": 10,
-            "category": "company"
+            "category": "task"
         },
         {
             "type": "file",
