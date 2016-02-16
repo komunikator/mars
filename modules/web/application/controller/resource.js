@@ -63,16 +63,8 @@ exports.rename = function (req, res) {
     });
 };
 
-<<<<<<< HEAD:web/application/controller/resource.js
-exports.update = function(req, res) {
-    var name = req.body['name'];
-    var create = req.body['name'];
-    var value = req.body['value'];
-    if (!name) {
-=======
 exports.update = function (req, res) {
     if (!req.body['name']) {
->>>>>>> refactoring:modules/web/application/controller/resource.js
         res.end(JSON.stringify({success: false}));
         return;
     }
