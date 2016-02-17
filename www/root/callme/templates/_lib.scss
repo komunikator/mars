@@ -1,0 +1,51 @@
+@mixin border($place, $color) {
+	@if $place == 'all' {
+		border: 1px solid $color;
+	} @else {
+		border-#{$place}: 1px solid $color;
+	}
+}
+@mixin border-radius($radius) { 
+	-webkit-border-radius: $radius; 
+	-moz-border-radius: $radius; 
+	-ms-border-radius: $radius; 
+	border-radius: $radius; 
+}
+@mixin duration($a) { 
+	-webkit-transition-duration: $a; 
+	-o-transition-duration: $a; 
+	-moz-transition-duration: $a; 
+	transition-duration: $a; 
+} 
+@mixin rotate($d) { 
+	transform:rotate($d+deg); 
+	-ms-transform:rotate($d+deg); 
+	-webkit-transform:rotate($d+deg); 
+	-o-transform: rotate($d+deg); 
+}
+@mixin box-shadow($left, $top, $blur, $color){ 
+	-moz-box-shadow: $left $top $blur $color; 
+	-webkit-box-shadow: $left $top $blur $color; 
+	box-shadow: $left $top $blur $color; 
+}
+@mixin text-shadow($color){
+	text-shadow: 0 1px 0 $color;
+}
+@mixin opacity($p) {
+	opacity: $p*0.01;
+	-webkit-opacity: $p*0.01;
+	-khtml-opacity: $p*0.01;
+	-moz-opacity: $p*0.01;
+	filter:alpha(opacity=$p);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$p)";
+}
+@mixin bg($top, $btm) {
+	background: $top;
+	background: -moz-linear-gradient(top, $top 0%, $btm 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$top), color-stop(100%,$btm));
+	background: -webkit-linear-gradient(top, $top 0%,$btm 100%);
+	background: -o-linear-gradient(top, $top 0%,$btm 100%);
+	background: -ms-linear-gradient(top, $top 0%,$btm 100%);
+	background: linear-gradient(to bottom, $top 0%,$btm 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$top', endColorstr='$btm',GradientType=0 );
+}

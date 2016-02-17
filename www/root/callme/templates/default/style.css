@@ -1,0 +1,31 @@
+#callme { height: 151px; position: fixed; *position: absolute; top: 150px; right: 0; width: 22px; z-index: 110; }
+
+.cme-form { border: 1px solid #0f8f0c; -moz-box-shadow: 0 2px 20px #333333; -webkit-box-shadow: 0 2px 20px #333333; box-shadow: 0 2px 20px #333333; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; border-radius: 5px; background: #efefef; z-index: 109; font-family: "Trebuchet MS"; display: none; position: fixed; *position: absolute; right: 50px; top: 150px; width: 305px; color: #777777; }
+.cme-form .has-error { background: #f2dede; }
+.cme-form span { padding: 2px 3px 2px 10px; display: block; color: #777777; font-size: 11px; clear: both; }
+.cme-form .cme-btn { padding: 4px 7px 5px; color: white; font-size: 14px; font-weight: bold; border-radius: 2px; text-shadow: 0 1px 0 #757575; margin: 0; cursor: pointer; width: 140px; outline: 0; }
+.cme-form select { border: 1px solid #98a198; background: white; padding: 4px 3px 3px 9px; width: 100%; font-size: 12px; border-radius: 0px; outline-style: none; height: 21px; line-height: 21px; margin: 0 0 5px 0; font-size: 13px; cursor: pointer; font-family: "Trebuchet MS"; outline: 0; }
+.cme-form .cme-select { width: 280px; margin-left: 10px; height: 27px; line-height: 27px; }
+.cme-form .cme-txt { border: 1px solid #98a198; width: 280px; border-radius: 0px; color: black; font-size: 13px; padding: 5px 3px !important; outline: 0; }
+.cme-form h6 { border-bottom: 1px solid #efefef; color: #148e00; font-size: 14px; padding: 10px 0 9px 10px; margin: 0 0 7px 0; }
+.cme-form span div { float: left; display: inline; margin: 0 5px 0 0; line-height: 19px; }
+.cme-form .cme-cls { text-shadow: 0 1px 0 #4d659f; height: 20px; width: 20px; font-size: 13px; overflow: hidden; border-radius: 2px; text-align: center; padding: 1px 3px 3px; float: right; display: inline; color: white; text-shadow: none; margin: 7px 8px 0 0; cursor: pointer; text-decoration: none; }
+.cme-form .cme-cls:hover { color: white; opacity: 0.8; -webkit-opacity: 0.8; -khtml-opacity: 0.8; -moz-opacity: 0.8; filter: alpha(opacity=80); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$p)"; }
+.cme-form .cme-btn-place span { display: inline; float: right; padding: 7px 12px 0 0 !important; font-size: 8px !important; color: #888 !important; }
+.cme-form .cme-btn-place span a { font-size: 11px; color: #888; }
+.cme-form .cme-btn-place span a:hover { text-decoration: none; }
+.cme-form .callmebody { font-size: 13px; background: #efefef; padding: 5px 10px; }
+.cme-form .callmebody .inf { padding: 0 5px; margin: 0 0 10px 0; font-weight: bold; clear: both; }
+.cme-form .callme-result { background: #efefef url(loading.gif) 10px center no-repeat; display: block; clear: both; margin: 5px 11px 10px 10px; }
+.cme-form .callme-result div { padding: 7px 7px; margin: 4px 0 0 0; }
+.cme-form .callme-result div.sending { padding: 7px 0 7px 35px; display: block; color: #777777; clear: both; }
+.cme-form .callme-result div.c_success { background: #98c462; color: #fff; text-shadow: none; }
+.cme-form .callme-result div.c_error { background: #f76363; color: #fffafa; text-shadow: none; }
+
+#viewform { border: 0; padding: 0; background: url(bttn.png); height: 185px; width: 22px; cursor: pointer; outline: 0; }
+
+#cme-back { display: none; z-index: 108; opacity: 0.5; top: 0; left: 0; width: 100%; height: 100%; position: absolute; background: #333; }
+
+.cme-btn, .cme-form .cme-btn { border: 0; -moz-box-shadow: 0 3px 0 #20a157; -webkit-box-shadow: 0 3px 0 #20a157; box-shadow: 0 3px 0 #20a157; background: #5cb85c; margin-bottom: 5px; }
+
+.cme-cls, .cme-form .cme-cls { background: #ea6f6f; background: -moz-linear-gradient(top, #ea6f6f 0%, #ca251c 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ea6f6f), color-stop(100%, #ca251c)); background: -webkit-linear-gradient(top, #ea6f6f 0%, #ca251c 100%); background: -o-linear-gradient(top, #ea6f6f 0%, #ca251c 100%); background: -ms-linear-gradient(top, #ea6f6f 0%, #ca251c 100%); background: linear-gradient(to bottom, #ea6f6f 0%, #ca251c 100%); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$btm',GradientType=0 ); }

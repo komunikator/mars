@@ -4,10 +4,8 @@
     "stunServer": "stun.sipnet.ru:3478",
     "webAccounts": [
         {
-            "id": 1,
             "username": "admin",
-            "password": "admin",
-            "email": "admin@example.com"
+            "password": "admin"
         }
     ],
     "maxCalls": 10,

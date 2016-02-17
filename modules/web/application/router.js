@@ -3,14 +3,10 @@
  * in real world everything goes automatically
  *
  * @param app
- * @param models
  */
-exports.init = function (app, models)
+exports.init = function (app)
 {
-    var index = require('./controller'),
-            user = require('./controller/user'),
-            menu = require('./controller/menu'),
-            makeCall = require('./controller/makeCall'),
+    var makeCall = require('./controller/makeCall'),
             dialog = require('./controller/dialog'),
             report = require('./controller/report'),
             table = require('./controller/table'),
@@ -20,13 +16,7 @@ exports.init = function (app, models)
             resource = require('./controller/resource'),
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
-            listSIP = require('./controller/listSIP'),
-            userPage = require('./controller/userPage'),
-            moduleReports = require('./controller/module/reports'),
-            moduleScripts = require('./controller/module/scripts'),
-            moduleMedia = require('./controller/module/media'),
-            moduleManager = require('./controller/module/manager'),
-            moduleDialogs = require('./controller/module/dialogs');
+            listSIP = require('./controller/listSIP');
 
     makeCall.init(app.bus);
     dialog.init(app.bus);
@@ -40,30 +30,10 @@ exports.init = function (app, models)
     statusUA.init(app.bus);
     listSIP.init(app.bus);
 
-    /* set models */
-    user.model = models.User;
 
     /* set controllers */
-    app.get('/', app.isLoggedIn, index.index);
-    app.get('/user', app.isLoggedIn, userPage.index);
-
-    app.get('/module/reports', app.isLoggedIn, moduleReports.index);
-    app.get('/module/scripts', app.isLoggedIn, moduleScripts.index);
-    app.get('/module/media', app.isLoggedIn, moduleMedia.index);
-    app.get('/module/manager', app.isLoggedIn, moduleManager.index);
-    app.get('/module/dialogs', app.isLoggedIn, moduleDialogs.index);
-
-    //read
-    app.get('/users', app.isLoggedIn, user.read);
-    //create
-    app.post('/users', user.add);
-    //update
-    app.put('/users', user.update);
-    //remove
-    app.delete('/users', user.destroy);
 
     app.get('/dialogData', dialog.read);
-    app.get('/menu', menu.read);
     app.get('/makeCall/:msisdn', makeCall.post);
     app.get('/makeCall/:sipAccountID/:msisdn/:script', makeCall.post);
 

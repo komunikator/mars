@@ -1,0 +1,205 @@
+#callme {
+	height: 151px;
+	position: fixed;
+	*position: absolute;
+	top: 150px; 
+	right: 0;
+	width: 22px;
+	z-index: $zIndex;
+}
+.cme-form {
+	$formBorder: "" !global !default;
+	@if $formBorder != "" {
+		@include border(all, $formBorder);	
+	}
+	@include box-shadow(0, 2px, 20px, #333);
+	@include border-radius($formBrdRadius);
+	background: $formBg;
+	z-index: $zIndex - 1;
+	font-family: $formFont;
+	display: none;
+	position: fixed;
+	*position: absolute;  
+	right: 50px;
+	top: 150px;
+	width: 305px;
+	color: $formText;
+	.has-error {
+		background: $bgHasError;
+	}
+	span {
+		padding: 2px 3px 2px 10px;
+		display: block;
+		color: $formText;
+		font-size: $formTxtSizeSmall;
+		clear: both;
+	}
+	.cme-btn {
+		@extend .cme-btn;
+		padding: 4px 7px 5px;
+		color: $btnTxtColor;
+		font-size: $btnSize;
+		font-weight: bold;
+		border-radius: $fldBrdSize;
+		text-shadow: 0 1px 0 $btnTxtShadow;
+		margin: 0;
+		cursor: pointer;
+		width: 140px;
+		outline: 0;
+	}
+	select {
+		@include border(all, $fldBrd);
+		background: $fldBg;
+		padding: 4px 3px 3px 9px;
+		width: 100%;
+		font-size: 12px;
+		$fldBrdRad: 0px !global !default;
+		border-radius: $fldBrdRad;
+		outline-style: none;
+		height: 21px;
+		line-height: 21px;
+		margin: 0 0 5px 0;
+		font-size: $formTxtSize;
+		cursor: pointer;
+		font-family: $formFont;
+		outline: 0;
+	}
+	.cme-select {
+		$fldWidth: 280px !global !default;
+		width: $fldWidth;
+		margin-left: 10px;
+		height: 27px;
+		line-height: 27px;
+	}
+	.cme-txt {
+		@include border(all, $fldBrd); 
+		$fldWidth: 280px !global !default;
+		width: $fldWidth;
+		border-radius: $fldBrdRad;
+		color: $fldText;
+		font-size: $formTxtSize;
+		padding: 5px 3px !important;
+		outline: 0;
+	}
+	h6 {
+		$hdrBg: false !default;
+		$hdrTxtShadow: "" !global !default;
+		$hdrBrdRadius: "" !global !default;
+		@extend .h6 !optional; 
+		@include border(bottom, $hdrBrdColor); 
+		@if $hdrBg { background: $hdrBg; }		
+		@if $hdrTxtShadow!="" { @include text-shadow($hdrTxtShadow); }
+		@if $hdrBrdRadius!="" { @include border-radius($hdrBrdRadius); }
+		color: $hdrColor;
+		font-size: $hdrTxtSize;
+		padding: 10px 0 9px 10px;
+		margin: 0 0 7px 0;
+	}
+	span div {
+		float: left;
+		display: inline;
+		margin: 0 5px 0 0;
+		line-height: 19px;
+	}
+	.cme-cls {
+		@include text-shadow($closeTxtShadow);
+		@extend .cme-cls;
+		$closeSize: 20px !global !default;
+		$closeTxt: 14px !global !default;
+		@if $closeSize != "" {
+			height: $closeSize;
+			width: $closeSize;
+		} 
+		$closeTxtSize: 13px !global !default;
+		font-size: $closeTxtSize;
+		overflow: hidden;
+		border-radius: 2px;
+		text-align: center;
+		$closePaddings: 1px 3px 3px !global !default;
+		padding: $closePaddings; 
+		float: right;
+		display: inline;
+		color: $closeTxt;
+		text-shadow: none;
+		margin: 7px 8px 0 0;
+		cursor: pointer;
+		text-decoration: none; 
+		&:hover { 
+			color: $closeTxt;
+			@include opacity(80);
+		}
+	}
+	.cme-btn-place {
+		span {
+			display: inline;
+			float: right;
+			padding: 7px 12px 0 0!important;
+			font-size: 8px !important;
+			color: #888 !important;
+			a {
+				font-size: $formTxtSizeSmall;
+				color: #888;
+				&:hover{ 
+					text-decoration: none; 
+				}
+			}
+		}
+	}
+	.callmebody {
+		font-size: 13px;
+		background: $formBg;
+		padding: 5px 10px;
+		.inf {
+			padding: 0 5px;
+			margin: 0 0 10px 0;
+			font-weight: bold;
+			clear: both;
+		}
+	}
+	.callme-result {
+		background: $formBg url(loading.gif) 10px center no-repeat;
+		display: block;
+		clear: both;
+		margin: 5px 11px 10px 10px;
+		div {
+			padding: 7px 7px;
+			margin: 4px 0 0 0;
+			&.sending {
+				padding: 7px 0 7px 35px;
+				display: block;
+				color: $formText;
+				clear:both;
+			}
+			&.c_success {
+				background: $bgSuccess;
+				color: #fff;
+				text-shadow: none;
+			}
+			&.c_error {
+				background: $bgError;
+				color: #fffafa;
+				text-shadow: none;
+			}
+		}
+	}
+}
+#viewform {
+	border: 0;
+	padding: 0;
+	background: url(bttn.png);
+	height: 185px;
+	width: 22px;
+	cursor: pointer;
+	outline: 0;
+}
+#cme-back {
+	display: none;
+	z-index: $zIndex - 2;
+	opacity: 0.5;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: #333;
+}

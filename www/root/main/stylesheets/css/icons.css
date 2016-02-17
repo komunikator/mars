@@ -1,0 +1,555 @@
+
+.icon_wrench {
+    background-image:url(../../images/icon/wrench.png) !important;
+}
+.icon_table_multiple {
+    background-image:url(../../images/icon/table_multiple.png) !important;
+}
+.icon_disconnect {
+    background-image:url(../../images/icon/disconnect.png) !important;
+}
+.icon_app_resize_full {
+    background-image:url(../../images/icon/application-resize-full.png) !important;
+}
+
+.icon_app_resize_actual {
+    background-image:url(../../images/icon/application-resize-actual.png) !important;
+}
+
+.icon_app_minus {
+    background-image:url(../../images/icon/application--minus.png) !important;
+}
+
+.icon_app_plus {
+    background-image:url(../../images/icon/application--plus.png) !important;
+}
+
+.icon_email_go {
+    background-image:url(../../images/icon/email_go.png) !important;
+}
+
+.icon_user_delete {
+    background-image:url(../../images/icon/user_delete.png) !important;
+}
+
+.icon_user_edit {
+    background-image:url(../../images/icon/user_edit.png) !important;
+}
+
+.icon_user_add {
+    background-image:url(../../images/icon/user_add.png) !important;
+}
+
+.icon_refresh {
+    background-image:url(../../images/icon/refresh.gif) !important;
+}
+
+.icon_excel {
+    background-image:url(../../images/icon/receipt-excel.png) !important;
+}
+
+.icon_excel_blue {
+    background-image:url(../../images/icon/receipt-excel-blue.png) !important;
+}
+
+.icon_menu_show {
+    background-image:url(../../images/icon/menu-show.gif) !important;
+}
+
+.icon_menu_cdr {
+    background-image:url(../../images/icon/document-binary.png) !important;
+}
+
+.icon_menu_billing {
+    background-image:url(../../images/icon/money-coin.png) !important;
+}
+
+.icon_menu_route {
+    background-image:url(../../images/icon/arrow-switch.png) !important;
+}
+
+.icon_menu_inroute {
+    background-image:url(../../images/icon/arrow-in.png) !important;
+}
+
+.icon_menu_inrouteTable {
+    background-image:url(../../images/icon/table-import.png) !important;
+}
+
+.icon_menu_inrouteRewrite {
+    background-image:url(../../images/icon/edit-decimal-decrease.png) !important;
+}
+
+.icon_menu_outroute {
+    background-image:url(../../images/icon/arrow-out.png) !important;
+}
+
+.icon_menu_outrouteTable {
+    background-image:url(../../images/icon/table-export.png) !important;
+}
+
+.icon_menu_outrouteGroups {
+    background-image:url(../../images/icon/tables.png) !important;
+}
+
+.icon_menu_outrouteRewrite {
+    background-image:url(../../images/icon/edit-decimal.png) !important;
+}
+
+.icon_menu_channels {
+    background-image:url(../../images/icon/connect.png) !important;
+}
+
+.icon_menu_chan_pri {
+    background-image:url(../../images/icon/pri-channel.png) !important;
+}
+
+.icon_menu_chan_bri {
+    background-image:url(../../images/icon/bri-channel.png) !important;
+}
+
+.icon_menu_chan_fxo {
+    background-image:url(../../images/icon/fxo-channel.png) !important;
+}
+
+.icon_menu_chan_fxs {
+    background-image:url(../../images/icon/fxs-channel.png) !important;
+}
+
+.icon_menu_chan_trunks {
+    background-image:url(../../images/icon/svazky-channel.png) !important;
+}
+
+.icon_menu_chan_iax {
+    background-image:url(../../images/icon/iax-channel.png) !important;
+}
+
+.icon_menu_chan_sip {
+    background-image:url(../../images/icon/sip-channel.png) !important;
+}
+
+.icon_menu_chan_deny {
+    background-image:url(../../images/icon/cross.png) !important;
+}
+
+.icon_menu_chan_script {
+    background-image:url(../../images/icon/script_code.png) !important;
+}
+.icon_menu_extensions {
+    background-image:url(../../images/icon/telephone.png) !important;
+}
+
+.icon_menu_speeddial {
+    background-image:url(../../images/icon/telephone-share.png) !important;
+}
+
+.icon_menu_callcenter {
+    background-image:url(../../images/icon/group_gear.png) !important;
+}
+
+.icon_menu_queues {
+    background-image:url(../../images/icon/chart_organisation.png) !important;
+}
+
+.icon_menu_agents {
+    background-image:url(../../images/icon/group.png) !important;
+}
+
+.icon_menu_queueStatus {
+    background-image:url(../../images/icon/chart.png) !important;
+}
+
+.icon_menu_services {
+    background-image:url(../../images/icon/subversion.png) !important;
+}
+
+.icon_menu_features {
+    background-image:url(../../images/icon/edit-list.png) !important;
+}
+
+.icon_menu_timetables {
+    background-image:url(../../images/icon/clock-select.png) !important;
+}
+
+.icon_menu_cidlookup {
+    background-image:url(../../images/icon/magnifier.png) !important;
+}
+
+.icon_menu_voicemail {
+    background-image:url(../../images/icon/cassette-label.png) !important;
+}
+
+.icon_menu_switch {
+    background-image:url(../../images/icon/switch.png) !important;
+}
+
+.icon_menu_fax {
+    background-image:url(../../images/icon/telephone-fax.png) !important;
+}
+
+.icon_menu_sms {
+    background-image:url(../../images/icon/mails.png) !important;
+}
+
+.icon_menu_sms_gw {
+    background-image:url(../../images/icon/mobile-phone.png) !important;
+}
+
+.icon_menu_sms_in {
+    background-image:url(../../images/icon/mail-open.png) !important;
+}
+
+.icon_menu_sms_out {
+    background-image:url(../../images/icon/mail--arrow.png) !important;
+}
+
+.icon_menu_audio {
+    background-image:url(../../images/icon/music-beam-16.png) !important;
+}
+
+.icon_menu_audio_voices {
+    background-image:url(../../images/icon/sound.png) !important;
+}
+
+.icon_menu_audio_record {
+    background-image:url(../../images/icon/microphone.png) !important;
+}
+
+.icon_menu_audio_music {
+    background-image:url(../../images/icon/music.png) !important;
+}
+
+.icon_menu_audio_ftp {
+    background-image:url(../../images/icon/server-network.png) !important;
+}
+
+.icon_menu_diag {
+    background-image:url(../../images/icon/system-monitor.png) !important;
+}
+
+.icon_menu_diag_pbxlog {
+    background-image:url(../../images/icon/document-list.png) !important;
+}
+
+.icon_menu_diag_system {
+    background-image:url(../../images/icon/chart_curve.png) !important;
+}
+
+.icon_menu_diag_smokeping {
+    background-image:url(../../images/icon/chart_line.png) !important;
+}
+
+.icon_menu_diag_sipstatus {
+    background-image:url(../../images/icon/document-attribute-s.png) !important;
+}
+
+.icon_menu_diag_iaxstatus {
+    background-image:url(../../images/icon/document-attribute-i.png) !important;
+}
+
+.icon_menu_diag_monitor {
+    background-image:url(../../images/icon/headphone.png) !important;
+}
+
+.icon_menu_sniffer {
+    background-image:url(../../images/icon/magnifier-zoom-fit.png) !important;
+}
+
+.icon_menu_sniffer_start {
+    background-image:url(../../images/icon/control.png) !important;
+}
+
+.icon_menu_sniffer_stop {
+    background-image:url(../../images/icon/control-stop-square.png) !important;
+}
+
+.icon_menu_sniffer_store {
+    background-image:url(../../images/icon/database.png) !important;
+}
+
+.icon_menu_sniffer_rtp {
+    background-image:url(../../images/icon/control-stop.png) !important;
+}
+
+.icon_menu_sniffer_rtpstats {
+    background-image:url(../../images/icon/chart.png) !important;
+}
+
+.icon_menu_backup {
+    background-image:url(../../images/icon/database_refresh.png) !important;
+}
+
+.icon_menu_backup_system {
+    background-image:url(../../images/icon/database_save.png) !important;
+}
+
+.icon_menu_backup_dir {
+    background-image:url(../../images/icon/database.png) !important;
+}
+
+.icon_menu_backup_auto {
+    background-image:url(../../images/icon/database_gear.png) !important;
+}
+
+.icon_menu_net {
+    background-image:url(../../images/icon/network-ethernet.png) !important;
+}
+
+.icon_menu_net_status {
+    background-image:url(../../images/icon/chart_curve.png) !important;
+}
+
+.icon_menu_net_interfaces {
+    background-image:url(../../images/icon/server-network.png) !important;
+}
+
+.icon_menu_net_route {
+    background-image:url(../../images/icon/arrow-merge.png) !important;
+}
+
+.icon_menu_net_dns {
+    background-image:url(../../images/icon/globe-network.png) !important;
+}
+
+.icon_menu_net_smtp {
+    background-image:url(../../images/icon/mail--pencil.png) !important;
+}
+
+.icon_menu_fw {
+    background-image:url(../../images/icon/shield.png) !important;
+}
+
+.icon_menu_fw_input, .icon_menu_fw_forward, .icon_menu_fw_output, .icon_menu_fw_dnat, .icon_menu_fw_snat {
+    background-image:url(../../images/icon/shield.png) !important;
+}
+
+.icon_menu_net_ntp {
+    background-image:url(../../images/icon/clock-frame.png) !important;
+}
+
+.icon_menu_net_tftp {
+    background-image:url(../../images/icon/drive-network.png) !important;
+}
+
+.icon_menu_net_openvpn {
+    background-image:url(../../images/icon/computer-network.png) !important;
+}
+
+.icon_menu_net_restart {
+    background-image:url(../../images/icon/arrow-circle-double-135.png) !important;
+}
+
+.icon_menu_user {
+    background-image:url(../../images/icon/users.png) !important;
+}
+
+.icon_menu_user_sadmin {
+    background-image:url(../../images/icon/user-business.png) !important;
+}
+
+.icon_menu_user_admin {
+    background-image:url(../../images/icon/user-yellow.png) !important;
+}
+
+.icon_menu_user_ssh {
+    background-image:url(../../images/icon/terminal.png) !important;
+}
+
+.icon_menu_api {
+    background-image:url(../../images/icon/server_lightning.png) !important;
+}
+
+.icon_menu_api_manager {
+    background-image:url(../../images/icon/server_edit.png) !important;
+}
+
+.icon_menu_api_extenstatus {
+    background-image:url(../../images/icon/server_connect.png) !important;
+}
+
+.icon_menu_reload, .icon_reload {
+    background-image:url(../../images/icon/arrow-circle-double-135.png) !important;
+}
+
+.icon_create, .icon_add {
+    background-image:url(../../images/icon/add.png) !important;
+}
+
+.icon_table_delete, .icon_table_remove {
+    background-image:url(../../images/icon/table_delete.png) !important;
+}
+
+.icon_tablerow_delete, .icon_tablerow_remove {
+    background-image:url(../../images/icon/table_row_delete.png) !important;
+}
+
+.icon_coins {
+    background-image:url(../../images/icon/coins.png) !important;
+}
+
+.icon_coins_delete, .icon_coins_remove {
+    background-image:url(../../images/icon/coins_delete.png) !important;
+}
+
+.icon_cassette_delete, .icon_cassette_remove {
+    background-image:url(../../images/icon/cassette--minus.png) !important;
+}
+
+
+.icon_delete, .icon_remove {
+    background-image:url(../../images/icon/delete.png) !important;
+}
+
+.icon_apply {
+    background-image:url(../../images/icon/tick.png) !important;
+}
+
+.icon_save {
+    background-image:url(../../images/icon/disk.png) !important;
+}
+
+.icon_cancel {
+    background-image:url(../../images/icon/cancel.png) !important;
+}
+
+.icon_find {
+    background-image:url(../../images/icon/find.png) !important;
+}
+
+.icon_edit {
+    background-image:url(../../images/icon/pencil.png) !important;
+}
+
+.icon_save2_black {
+    background-image:url(../../images/icon/save_black.png) !important;
+}
+.icon_save2_blue {
+    background-image:url(../../images/icon/save_blue.png) !important;
+}
+.icon_save2_pdf {
+    background-image:url(../../images/icon/save_pdf.png) !important;
+}
+.icon_save2_svg {
+    background-image:url(../../images/icon/save_svg.png) !important;
+}
+
+.icon_properties {
+    background-image:url(../../images/icon/property.png) !important;
+}
+
+.icon_inroute_num {
+    background-image:url(../../images/icon/counter.png) !important;
+}
+
+.icon_wizard { 
+    background-image:url(../../images/icon/wand-hat.png) !important;
+}
+
+.icon_record {
+    background-image:url(../../images/icon/control-record.png) !important;
+}
+
+.icon_settings {
+    background-image:url(../../images/icon/wrench-screwdriver.png) !important;
+}
+
+.icon_download {
+    background-image:url(../../images/icon/disk-black.png) !important;
+}
+
+.icon_analyze {
+    background-image:url(../../images/icon/eye.png) !important;
+}
+
+.icon_startstop {
+    background-image:url(../../images/icon/control-stop.png) !important;
+}
+
+.icon_sniffer_sniff {
+    background-image:url(../../images/icon/application-detail.png) !important;
+}
+
+.icon_arrow_switch_lr {
+    background-image:url(../../images/icon/arrow-switch-lr.png) !important;
+}
+
+.icon_tracker {
+    background-image:url(../../images/icon/tracker.png) !important;
+}
+
+.icon_note_alert {
+    background-image:url(../../images/icon/note_alert.png) !important;
+}
+
+.icon_register {
+    background-image:url(../../images/icon/register.png) !important;
+}
+
+.icon_magnifier {
+    background-image:url(../../images/icon/magnifier.png) !important;
+}
+
+.icon_light_on {
+    background-image:url(../../images/icon/light_on.png) !important;
+}
+
+.icon_light_off {
+    background-image:url(../../images/icon/light_off.png) !important;
+}
+
+.icon_table_lightning {
+    background-image:url(../../images/icon/table_lightning.png) !important;
+}
+
+.icon_upload {
+    background-image:url(../../images/icon/upload.png) !important;
+}
+
+.icon_email_send {
+    background-image:url(../../images/icon/email_send.png) !important;
+}
+
+.icon_ok {
+    background-image:url(../../images/icon/ok.png) !important;
+}
+
+.icon_script_edit {
+    background-image:url(../../images/icon/script_edit.png) !important;
+}
+
+.icon_link {
+    background-image:url(../../images/icon/link.png) !important;
+}
+
+.icon_restore_default {
+    background-image:url(../../images/icon/restore_default.png) !important;
+}
+
+.icon_tree {
+    background-image:url(../../images/icon/tree.png) !important;
+}
+
+.icon_rec_start {
+    background-image:url(../../images/icon/rec_start.png) !important;
+}
+
+.icon_rec_stop {
+    background-image:url(../../images/icon/rec_stop.png) !important;
+}
+
+.icon_rec_pause {
+    background-image:url(../../images/icon/rec_pause.png) !important;
+}
+
+.icon_rec_paused {
+    background-image:url(../../images/icon/rec_paused.png) !important;
+}
+
+.icon_google_maps {
+    background-image:url(../../images/icon/google_maps.png) !important;
+}
+
+.icon_blank {
+    display: none !important;
+    background-image: none !important;
+}

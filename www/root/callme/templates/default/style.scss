@@ -1,0 +1,44 @@
+$zIndex: 110;
+ 
+$fldBg: #fff;
+$fldText: #000;
+$fldBrd: #98a198;
+$fldBrdSize: 2px;
+
+$formBg: #efefef;
+$formBorder: #0f8f0c;
+$formFont: "Trebuchet MS";
+$formTxtSize: 13px;
+$formTxtSizeSmall: 11px;
+$formText: #777;
+$formBrdRadius: 5px;
+
+$btnBg: #5cb85c;
+$btnTxtShadow: #757575;
+$btnTxtColor: #fff;
+$btnSize: 14px;
+
+$hdrColor: #148e00;
+$hdrBrdColor: #efefef;
+$hdrTxtSize: 14px;
+
+$closeBg: #4d659f;
+$closeTxtShadow: #4d659f;
+$closeTxt: #fff;
+
+$bgError: #f76363;
+$bgSuccess: #98c462;
+$bgHasError: #f2dede;
+
+@import '../lib';
+@import '../base';
+
+.cme-btn {
+	border: 0;
+	@include box-shadow(0, 3px, 0, #20a157);
+	background: $btnBg;
+	margin-bottom: 5px;
+}
+.cme-cls {
+	@include bg(#ea6f6f, #ca251c);
+}

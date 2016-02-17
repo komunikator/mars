@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MARS</title>
+        <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/bootstrap.css">
+        <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/css/ext.custom.css">
+        <link rel="shortcut icon" href="!{root.webPath}/main/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="!{root.webPath}/main/apple-touch-icon.png">
+        <script type="text/javascript">_webPath = '!{root.webPath}';_username = '!{root.username}';</script>
+        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/ext-all.js"></script>
+        <script type="text/javascript" src="!{root.webPath}/main/javascripts/bootstrap.js"></script>
+        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/locale/ext-lang-ru.js"></script>
+        <script type="text/javascript" src="!{root.webPath}/lang/ru.js"></script>
+        <script type="text/javascript" src="!{root.webPath}/main/javascripts/app/app.js"></script>
+        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/codemirror/lib/codemirror.js"></script>
+    </head>
+    <body>
+        <iframe id="exportframe" name="exportframe" class="x-hidden"></iframe>
+        <form id="exportform" method="get" target="exportframe">
+            <input id="excelconfig" type="hidden" name="config" value=""></form>
+        <div id="main"></div>
+    </body>
+</html>

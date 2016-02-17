@@ -1,5 +1,6 @@
 Ext.define('IVR.view.Viewport', {
-    extend: 'Ext.container.Viewport',
+    extend: 'Ext.container.Container',//Viewport',//
+    renderTo: 'main', height: 300,
     id: 'IVR.view.Viewport',
     layout: 'border',
     title: lang.mainTitle,

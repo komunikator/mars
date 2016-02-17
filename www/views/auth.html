@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Авторизация</title>
+        <link rel="stylesheet" type="text/css" href="/auth/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <section id="content">
+                <form method="post" action="?referer=!{root.referer}">
+                    <h1>Авторизация</h1>
+                    <div><!--span= user-->
+                        <span id="message">!{root.message}</span>
+                    </div>
+                    <div>
+                        <input id="username" type="text" placeholder="Логин" required="" name="username">
+                    </div>
+                    <div>
+                        <input id="password" type="password" placeholder="Пароль" required="" name="password">
+                    </div>
+                    <div>
+                        <input type="submit" value="Войти">
+                    </div>
+                </form><!--form-->
+            </section>
+            <!--content-->
+        </div><!--container-->
+    </body>
+</html>

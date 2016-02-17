@@ -1,0 +1,46 @@
+#tree,#tree2{float:left;margin:20px;}
+.play{background:url('../images/ivr/Play-Green-Button-icon.png') no-repeat center center!important;}
+.stopPlay{background:url('../images/ivr/player_stop.png') no-repeat center center!important;}
+.recOn{background:url('../images/ivr/Record.png') no-repeat center center!important;}
+.recOff{background:url('../images/ivr/player_record.png') no-repeat center center!important;}
+.dtmfOn{background:url('../images/ivr/dtmf.png') no-repeat center center!important;}
+.property{background:url('../images/ivr/gear-icon.gif') no-repeat center center!important;}
+.file{background:url('../images/ivr/anchor.png') no-repeat center center!important;}
+.sound{background:url('../images/ivr/volume_loud.png') no-repeat center center!important;}
+.dtmfData{background:url('../images/ivr/disk.png') no-repeat center center!important;}
+.mark{background:url('../images/ivr/label.png') no-repeat center center!important;}
+.keys{background:url('../images/ivr/key.png') no-repeat center center!important;}
+.pause{background:url('../images/ivr/control_pause_blue.png') no-repeat center center!important;}
+.time{background:url('../images/ivr/chronometer.png') no-repeat center center!important;}
+.next{background:url('../images/ivr/agt_forward.png') no-repeat center center!important;}
+.wait{background:url('../images/ivr/hourglass.png') no-repeat center center!important;}
+.hangUp{background:url('../images/ivr/stock_landline_phone.png') no-repeat center center!important;}
+.goto{background:url('../images/ivr/edit_redo.png') no-repeat center center!important;}
+.script{background:url('../images/ivr/script.png') no-repeat center center!important;}
+.menu{background:url('../images/ivr/menu.png') no-repeat center center!important;}
+.list{background:url('../images/ivr/list.png') no-repeat center center!important;}
+.connect{background:url('../images/ivr/connect.png') no-repeat center center!important;}
+.terminal{background:url('../images/ivr/terminal.png') no-repeat center center!important;}
+.true{background:url('../images/ivr/true.png') no-repeat center center!important;}
+.false{background:url('../images/ivr/false.png') no-repeat center center!important;}
+.refer{background:url('../images/ivr/refer.png') no-repeat center center!important;}
+.target{background:url('../images/ivr/office5.png') no-repeat center center!important;}
+.insert_text{background:url('../images/ivr/insert_text.png') no-repeat center center!important;}
+.button-search{background:url(../images/ivr/search.png) no-repeat;background-size:95% 95%;}
+.button-remove{background:url(../images/ivr/recycleBin.png) no-repeat;background-size:95% 95%;}
+.button-refresh{background:url(../images/ivr/refresh.png) no-repeat;background-size:95% 95%;}
+.button-add{background:url(../images/ivr/add.png) no-repeat;background-size:95% 95%;}
+.button-edit{background:url(../images/ivr/pencil.png) no-repeat;background-size:95% 95%;}
+.button-copy{background:url(../images/ivr/copy.png) no-repeat;background-size:95% 95%;}
+.folder-value{background:url(../images/ivr/folder_go.png) no-repeat;background-size:95% 95%;}
+.param-value{background:url(../images/ivr/cog.png) no-repeat;background-size:95% 95%;}
+.exportExcel{background:url(../images/ivr/doc_excel_table.png) no-repeat;}
+.ua-online{background:url(../images/ivr/online.gif) no-repeat center center!important;}
+.ua-offline{background:url(../images/ivr/offline.gif) no-repeat center center!important;}
+.ua-disable{background:url(../images/ivr/mini_circle.png) no-repeat center center!important;}
+.ws-online{background:url(../images/ivr/online.gif) no-repeat center center!important;}
+.ws-offline{background:url(../images/ivr/offline.gif) no-repeat center center!important;}
+.ws-disable{background:url(../images/ivr/offline.gif) no-repeat center center!important;}
+.menu_editor{background:url(../images/ivr/menu_editor.png) no-repeat;}
+.stt{background: url(../images/ivr/stt.png) no-repeat center center!important;}
+.tts{background: url(../images/ivr/tts.png) no-repeat center center!important;}
