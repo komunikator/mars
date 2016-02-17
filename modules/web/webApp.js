@@ -39,6 +39,7 @@ if (redisCfg) {
 session.store = sessionStore;
 app.use(Express.session(session));
 app.set('webPath', bus.config.get("webPath") || '');
+app.set('trustedNet', bus.config.get("trustedNet"));
 
 //http server
 app.set('lang', require(process.cwd() + '/www/root/lang/ru.js').msg);

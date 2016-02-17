@@ -260,3 +260,7 @@ form:after {
 }
 
 #message { color: red; }
+
+#trusted-login{
+    padding-bottom: 10px;
+}

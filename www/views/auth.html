@@ -4,12 +4,12 @@
         <meta charset="utf-8">
         <title>Авторизация</title>
         <link rel="stylesheet" type="text/css" href="/auth/style.css">
-    </head>
     <body>
         <div class="container">
             <section id="content">
                 <form method="post" action="?referer=!{root.referer}">
                     <h1>Авторизация</h1>
+		    <div id='trusted-login'></div>    
                     <div><!--span= user-->
                         <span id="message">!{root.message}</span>
                     </div>
@@ -26,5 +26,7 @@
             </section>
             <!--content-->
         </div><!--container-->
+	<script>document.getElementById("trusted-login").setAttribute("data-login", '{"display":"big","providers":["trustednet","vk","fbook","google"],"hidden":"none","form":"circle","redirect_uri":"'+ window.location.origin +'!{root.redirect_uri}","client_id":"!{root.cliend_id}"}');</script>
+	<script src='https://net.trusted.ru/static/js/tlogin.js'></script>
     </body>
 </html>
