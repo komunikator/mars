@@ -91,7 +91,7 @@ function init(app) {
 
         var data = {
             redirect_uri: trustedNetCfg.redirect_uri,
-            cliend_id: trustedNetCfg.cliend_id,
+            client_id: trustedNetCfg.client_id,
             user: req.user,
             message: req.flash('error')
         };
@@ -117,8 +117,8 @@ function init(app) {
                         redirect_uri: reqUrl.protocol + '//' + reqUrl.host + trustedNetCfg.redirect_uri
                     },
                     auth: {
-                        user: trustedNetCfg.cliend_id,
-                        pass: 'secret',
+                        user: trustedNetCfg.client_id,
+                        pass: trustedNetCfg.client_secret,
                         sendImmediately: false
                     }
                 },

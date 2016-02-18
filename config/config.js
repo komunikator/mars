@@ -14,7 +14,8 @@
         "tokenURL":"https://net.trusted.ru/idp/sso/oauth/token",
         "profileURL": "https://net.trusted.ru/trustedapp/rest/person/profile/get",
         "redirect_uri": "/auth/trusted",
-        "cliend_id": "TRUSTED_LOGIN_CLIENT_ID"        
+        "client_id": "TRUSTED_LOGIN_CLIENT_ID",
+        "client_secret": "TRUSTED_LOGIN_CLIENT_SECRET"
     },
     "maxCalls": 10,
     "ringingTimeout": "30",
