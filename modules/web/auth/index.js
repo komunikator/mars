@@ -11,9 +11,18 @@ var bus = require('../../../lib/system/bus'),
 var lang = {},
         users = [];
 
-bus.request('webAccounts', {}, function (err, data) {
-    users = data || [];
-});
+function refreshWebAccounts() {
+    bus.request('webAccounts', {}, function (err, data) {
+        users = data || [];
+    });
+}
+refreshWebAccounts();
+
+bus.on('updateData', function (obj) {
+    if (obj.source === 'config')
+        refreshWebAccounts();
+}
+);
 
 function findById(id, fn) {
     if (users[id]) {
