@@ -18,8 +18,8 @@ function refreshWebAccounts() {
 }
 refreshWebAccounts();
 
-bus.on('updateData', function (obj) {
-    if (obj.source === 'config')
+bus.on('refresh', function (type) {
+    if (type === 'config')
         refreshWebAccounts();
 }
 );
