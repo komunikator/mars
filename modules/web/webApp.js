@@ -43,6 +43,9 @@ app.set('trustedNet', bus.config.get("trustedNet"));
 
 //http server
 app.set('lang', require(process.cwd() + '/www/root/lang/ru.js').msg);
+bus.onRequest('lang', function (param, cb) {
+    cb(null, app.get('lang') || {});
+});
 app.use(require('body-parser')());
 app.engine('html', gaikan);
 app.set('view engine', '.html');
@@ -180,9 +183,6 @@ var onData = function (obj) {
     });
 };
 bus.on('updateData', onData);
-bus.onRequest('lang', function (param, cb) {
-    cb(null, app.get('lang') || {});
-});
 
 app.use("/rec", Express.static('./rec'));
 app.use("/media", Express.static('./media'));
