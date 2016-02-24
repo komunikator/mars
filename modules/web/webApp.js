@@ -89,14 +89,14 @@ var server = Http.createServer(app).listen(port, function () {
 });
 
 server.on('upgrade', function (req, socket, upgradeHead) {
+    if (bus.config.get("webAuth") === "disable")
+        return;
     var cookies = new Cookies(req);
     var sessionID = cookies.get(session.key || 'connect.sid').replace(/^s%3A(.+)\..+/, "$1");
     //console.log(sessionStore);
     sessionStore.get(sessionID, function (err, data) {
         //console.log(sessionID, err, data);
         //bus.emit('message', {category: 'http', type: 'debug', msg: data});
-        if (bus.config.get("webAuth") === "disable")
-            return;
 
         var instanceAuth = app.get('instanceAuth');
         if (data && instanceAuth && instanceAuth.call(data)) {
@@ -107,7 +107,7 @@ server.on('upgrade', function (req, socket, upgradeHead) {
             return;
 
         socket.end();
-        console.log(data);
+        //console.log(data);
         bus.emit('message', {category: 'http', type: 'error', msg: 'Websocket access denied'});
     });
 });
