@@ -86,7 +86,7 @@ var port = process.env.PORT || bus.config.get("webPort") || 8080;
 
 var server = Http.createServer(app).listen(port, function () {
     bus.emit('message', {category: 'server', type: 'info', msg: 'Web server start on port ' + this.address().port});
-    bus.emit('startWebServer', {port: this.address().port});
+    bus.emit('startWebServer', { port: this.address().port });
 });
 
 server.on('upgrade', function (req, socket, upgradeHead) {
