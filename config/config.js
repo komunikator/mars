@@ -21,7 +21,7 @@
     "ringingTimeout": "30",
     "serviceName": "MARS",
     "activeAccount": 0,
-    "def_tts": "ivona",
+    "def_tts": "yandex",
     "ivona_speech": {
         "accessKey": "XXXXXXXXX",
         "secretKey": "XXXXXXXXX",
@@ -43,7 +43,7 @@
             "expires": 60,
             "password": "XXXXXXXXX",
             "user": "XXXXXXXXX",
-            "disable": 0
+            "disable": 1
         }
     ],
      "levels": {
