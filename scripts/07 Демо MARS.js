@@ -2,22 +2,22 @@ exports.src = {
     recOn: true,
         mark: 'Начало',
             play: { file: 'media/Добро_пожаловать_в демонстрацию_системы_MARS.wav',
-                next: { request: {source: 'reportData', query: function () {
-                        var gdateS = require('dateformat')((function () {
+                next: { request: {source: 'reportData', query: function (self) {
+                        var gdateS = require('dateformat')((function (self) {
                             var d = new Date();
                             d.setDate(d.getDate() - 30);//- 30 days
                             return d;
                         })(), "yyyy.mm.dd") + ' 00:00';
-                        var gdateE = require('dateformat')((function () {
+                        var gdateE = require('dateformat')((function (self) {
                             var d = new Date();
                             d.setDate(d.getDate() + 1);
                             return d;
                         })(), "yyyy.mm.dd") + ' 00:00';
-                    return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: this.caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
+                    return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: self.caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
                 },
-                    next:{ttsPlay: {text: function () {
-                        var abonent = (this.session.params && this.session.params[0])?'Уважаемый ' + this.session.params[0]+'! ':'';
-                        var res = this.requestRes && this.requestRes.items || [];
+                    next:{ttsPlay: {text: function (self) {
+                        var abonent = (self.session.params && self.session.params[0])?'Уважаемый ' + self.session.params[0]+'! ':'';
+                        var res = self.requestRes && self.requestRes.items || [];
                         if (!res.length)
                             return abonent + 'Вы позвонили впервые';
                         var time = res[0].gdate.replace(/^(\d{4})\.(\d{2})\.(\d{2}) (\d{2}\:\d{2})\:\d{2}/, '$4 $3.$2.$1');
@@ -34,8 +34,8 @@ exports.src = {
                                                 '^\\d+$': {
                                                     dtmfData: { next: {
                                                         mark: 'Меню_1',
-                                                        sendMESSAGE: {text: function(){return '№ лицевого счёта: '+ this.session.dtmfData[0].keys}},
-                                                        play: {file: function(){return 'media/uchet/Вы_ввели_.wav;'+ this.session.dtmfData[0].keys +';'
+                                                        sendMESSAGE: {text: function(self){return '№ лицевого счёта: '+ self.session.dtmfData[0].keys}},
+                                                        play: {file: function(self){return 'media/uchet/Вы_ввели_.wav;'+ self.session.dtmfData[0].keys +';'
                                                             + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                             + 'media/uchet/Сигнал_записи.wav'}
                                                               },
@@ -53,8 +53,8 @@ exports.src = {
                                                                       '^\\d+$': {
                                                                           dtmfData: { next: {
                                                                               mark: 'Меню_3',
-                                                                              sendMESSAGE: {text: function(){return 'показание прибора: '+ this.session.dtmfData[1].keys}},
-                                                                              play: {file: function(){return 'media/uchet/Вы_ввели_.wav;' + this.session.dtmfData[1].keys +';'
+                                                                              sendMESSAGE: {text: function(self){return 'показание прибора: '+ self.session.dtmfData[1].keys}},
+                                                                              play: {file: function(self){return 'media/uchet/Вы_ввели_.wav;' + self.session.dtmfData[1].keys +';'
                                                                                   + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                                                   + 'media/uchet/Сигнал_записи.wav'}
                                                                                     },
@@ -69,7 +69,7 @@ exports.src = {
                                                                                              },
                                                                                    '^2$|нет': {
                                                                                        sendMESSAGE: {text: 'показание прибора не подтверждено'},
-                                                                                       goto: function(){this.session.dtmfData.pop();return 'Меню_2'}
+                                                                                       goto: function(self){self.session.dtmfData.pop();return 'Меню_2'}
                                                                                    }
                                                                                   },
                                                                               wait: {time: 20,
@@ -92,7 +92,7 @@ exports.src = {
                                                              },
                                                              '^2$|нет': {
                                                                  sendMESSAGE: {text: '№ лицевого счёта не подтверждён'},
-                                                                 goto: function(){this.session.dtmfData.pop();return 'Главное меню'}
+                                                                 goto: function(self){self.session.dtmfData.pop();return 'Главное меню'}
                                                              }
                                                             },
                                                         wait: {time: 20,
