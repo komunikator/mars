@@ -20,7 +20,7 @@ refreshWebAccounts();
 
 bus.on('refresh', function (type) {
     if (type === 'config')
-        refreshWebAccounts();
+        setTimeout(refreshWebAccounts, 1000); //refersh huck
 }
 );
 
