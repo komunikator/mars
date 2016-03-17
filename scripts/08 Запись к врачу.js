@@ -66,7 +66,6 @@ exports.src = {
                                                                                                                                     var record = JSON.stringify(user.record) + '\n'; // добаляем перевод строки, чтобы следующая строка в файле писалась с новой строки
                                                                                                                                     var fs = require('fs');
                                                                                                                                     var file = 'scripts/08 Запись к врачу/record.txt';
-                                                                                                                                    var res = false;
                                                                                                                                     fs.open(file, "a", function(err, fd) {
                                                                                                                                     if (!err)
                                                                                                                                     {
@@ -74,31 +73,34 @@ exports.src = {
                                                                                                                                             if (!err)
                                                                                                                                             {
                                                                                                                                                 // Всё прошло хорошо
-                                                                                                                                                res = true;
                                                                                                                                                 console.log("File write successfully.");
                                                                                                                                                 fs.close(fd, function(err){
                                                                                                                                                          if (err){
                                                                                                                                                             console.log('err_close: ', err);
-                                                                                                                                                         } else console.log("File closed successfully.");
+                                                                                                                                                         } else
+                                                                                                                                                           {
+                                                                                                                                                             console.log("File closed successfully.");
+                                                                                                                                                             self.cb(true);
+                                                                                                                                                           }
                                                                                                                                                       });
                                                                                                                                             } else {
                                                                                                                                                 // Произошла ошибка при записи
                                                                                                                                                 console.log('err_write: ', err);
-                                                                                                                                                res = false;
+                                                                                                                                                self.cb(false);
                                                                                                                                             }
                                                                                                                                         });
                                                                                                                                     } else {
                                                                                                                                         // Обработка ошибок при открытии
                                                                                                                                         console.log('err_open: ', err)
-                                                                                                                                        res = false;
+                                                                                                                                        self.cb(false);
                                                                                                                                     }
                                                                                                                                     });
-                                                                                                                                    self.cb(res);
                                                                                                                                 },
                                                                                                                           next: {
                                                                                                                                     // переход в зависимости от того, удалось записать данные в файл или нет
                                                                                                                                     goto: function(self){
                                                                                                                                             var res = '';
+                                                                                                                                            console.log('actionRes: ', self.actionRes);
                                                                                                                                             if (self.actionRes === true)
                                                                                                                                             {
                                                                                                                                                 res = 'меню_6';
