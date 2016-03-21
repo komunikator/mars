@@ -1,4 +1,5 @@
-exports.src = {recOn: true,
+exports.src = {recOn: {type:'stereo'},
+    dtmfDataFields: ['Оценка оператора'], 
     play: {
         file:'media/Приветствие.wav',
             next: {
