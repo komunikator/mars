@@ -8,7 +8,7 @@ Ext.define('IVR.view.scripts.Tree', {
     rootVisible: false,
     lines: true,
     //singleExpand: true,
-    useArrows: true,
+    //useArrows: true,
     store: 'Scripts',
     loadScript: function(name){
             if (!/\.js$/.test(name))
