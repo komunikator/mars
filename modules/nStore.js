@@ -74,7 +74,7 @@ bus.on('cdr', function (data) {
         //console.log(dtmfString);
         while (++i < len)
         {
-            dtmfString += ';' + String((data.dtmfData[0] && data.dtmfData[0].name ? data.dtmfData[0].name + ':' : '') + data.dtmfData[i].keys).replace(';', '');
+            dtmfString += ';' + String((data.dtmfData[i] && data.dtmfData[i].name ? data.dtmfData[i].name + ':' : '') + data.dtmfData[i].keys).replace(';', '');
         }
     }
 
