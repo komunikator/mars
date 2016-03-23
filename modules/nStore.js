@@ -70,11 +70,11 @@ bus.on('cdr', function (data) {
 
     var date = data.dtmfData ? new Date(data.times.ringing) : new Date(data.times.end);
     if (data.dtmfData && data.dtmfData[0] && data.dtmfData[0].keys) {
-        dtmfString = String(data.dtmfData[0].keys).replace(';', '');
+        dtmfString = String((data.dtmfData[0] && data.dtmfData[0].name ? data.dtmfData[0].name + ': ' : '') + data.dtmfData[0].keys).replace(';', '');
         //console.log(dtmfString);
         while (++i < len)
         {
-            dtmfString += ';' + String(data.dtmfData[i].keys).replace(';', '');
+            dtmfString += ';' + String((data.dtmfData[i] && data.dtmfData[i].name ? data.dtmfData[i].name + ': ' : '') + data.dtmfData[i].keys).replace(';', '');
         }
     }
 
