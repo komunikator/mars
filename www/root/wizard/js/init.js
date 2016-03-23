@@ -188,6 +188,11 @@ function createConnections() {
                     $("#enter_login_password > div > form > span").hide();
                 }else {
                     $("#enter_login_password > div > form > span").show();
+                    if($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Youmagic.pro"){
+                        $("#enter_login_password > div > form > span > a").attr("href","https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643");
+                    } else {
+                        $("#enter_login_password > div > form > span > a").attr("href","http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034");
+                    }
                 }
                 $("#header_decription").html("Введите данные вашего Sip аккаунта");
                 $("#enter_login_password").show();
@@ -278,6 +283,8 @@ function createConnections() {
             $("#header_decription").text("Выберите предложенный сервис синтеза и распознавания речи");
         } else if ($("#edit_connection").is(":visible")){
             $("#edit_connection").hide();
+            $("#prev_button").hide();
+            $("#done_button").show();
             $("#page_1").show();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
@@ -360,7 +367,7 @@ function createConnections() {
             //     myAlert("Внимание","Поле ключ должно быть заполнено и голос должен быть выбран");
             // };   
         } else
-        if ($("#enter_login_password").is(":visible")){
+        if ($("#enter_login_password").is(":visible")) {
             if ($("#enter_login").val() && $("#enter_password").val()){
                 $("#header > div.col.s12.header_bottom").hide();
                 $("#header_top > div > h1").hide();
@@ -440,6 +447,7 @@ function createConnections() {
                     $("#password").val(from_pass);
                     $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".accaunt_uri").text());
                     $("#header_decription").text("Измените данные и нажмите сохранить");
+                    $("#prev_button").show();
                     $("#done_button").hide();
                     $("#edit_connection").show();
                 });
@@ -534,6 +542,7 @@ function createConnections() {
         $("#password").val(from_pass);
         $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".accaunt_uri").text());
         $("#header_decription").text("Измените данные и нажмите сохранить");
+        $("#prev_button").show();
         $("#done_button").hide();
         $("#edit_connection").show();
     });
@@ -544,6 +553,7 @@ function createConnections() {
             $("#page_1").show();
             $("#prev_button").hide();
             $("#done_button").show();
+            $("#prev_button").hide();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
             var from_uri = from_elem.children(".accaunt_uri").text();
@@ -646,8 +656,8 @@ function recordSipConnection(response) {
         expires: 60,
         user: login,
         password: pass,
-        disable: 1
     };
+
     if (!host) {
         if (data && data.sipAccounts &&
             data.sipAccounts[idSipRecord] &&
@@ -665,6 +675,11 @@ function recordSipConnection(response) {
         }
     }
 
+    sipAccount['disable'] = data.sipAccounts[idSipRecord].disable;
+
+    //     sipAccount['disable'] = 1;
+    // }
+    
     //choose add or edit
     (idSipRecord === null) ?
             data.sipAccounts[data.sipAccounts.length] = sipAccount :

@@ -237,14 +237,14 @@ Ext.define('IVR.view.Viewport', {
                             }
                         }]
                 },
-                {
-                    xtype: 'button',
-                    text: 'Запустить мастер настройки',
-                    renderTo: Ext.getBody(),        
-                    handler: function() {
-                        window.location = "wizard/";
-                    }
-                },
+                // {
+                //     xtype: 'button',
+                //     text: 'Запустить мастер настройки',
+                //     renderTo: Ext.getBody(),        
+                //     handler: function() {
+                //         window.location = "wizard/";
+                //     }
+                // },
                 {
                     xtype: 'container',
                     flex: 4

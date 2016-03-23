@@ -16,23 +16,23 @@
     </head>
     <body id="body">
     <div id="header" style="display: block;">
-        <div id="header_top" class="col s12 row header_top">
+        <div id="header_top" class="col s12 row header_top z-depth-1">
             <div class="col s8 offset-s2 header_top_logo">
-                <a id="close_master" href="../../" class="close_master">Закрыть мастер настройки</a>
+        <!--         <a id="close_master" href="../../" class="close_master">Закрыть мастер настройки</a> -->
                 <img class="header_top_logo_banner" src="images/mars-logo-white.png" alt="mars-white">
-                <h1 class="header_top_logo_title">Мастер настройки</h1>
+         <!--        <h1 class="header_top_logo_title ">Мастер настройки</h1> -->
             </div>
         </div>
         <div class="col s12 header_middle">
-            <h2 id="header_title" class="header_title"></h2>
+            <h2 id="header_title" class="header_title blue-text light"></h2>
         </div>
         <div class="col s12 header_bottom">
-            <p id="header_decription" class="header_decription"></p>
+            <p id="header_decription" class="header_decription blue-text light"></p>
         </div>
     </div>
     <div id="content" class="container valign-wrapper row" style="display: flex;">
         <div id="work_mode" class="valign col offset-s2 s8" style="display: none;">
-             <ul class="collection center-align">
+             <ul class="collection center-align z-depth-1">
                 <li id="sip_sett" class="collection-item">
                     <span class="title provider_name">Настройка Sip подключений</span>
                 </li>
@@ -42,7 +42,7 @@
             </ul>
         </div>
         <div id="current_connections" class="valign col offset-s3 s6" style="display: block;">
-            <ul class="collection collection_with_del center-align">
+            <ul class="collection collection_with_del center-align z-depth-1">
               
             </ul> 
             <div class="col center-align s12" id="add_button">
@@ -50,7 +50,7 @@
             </div>     
         </div>
         <div id="provider_choose" class="valign col offset-s3 s6" style="display: none;">
-             <ul class="collection center-align">
+             <ul class="collection center-align z-depth-1">
                <!--  <li class="collection-item">
                     <div class="left povider_logo_cont">
                         <img src="images/providers/megafon.png" alt="megafon" url="megafon.ru" class="provider_logo">
@@ -73,7 +73,7 @@
         </div>
         <div id="edit_connection" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
-                <form class="col s12 master_form">
+                <form class="col s12 master_form z-depth-1">
                     <div class="input-field">
                         <input id="login" type="text" class="validate">
                         <label for="login">Логин</label>
@@ -100,7 +100,7 @@
         </div>
         <div id="voice_choose" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
-                <form class="col s12 master_form">
+                <form class="col s12 master_form z-depth-1">
                     <div class="row">
                         <div class="input-field col s12">
                             <input id="key" type="text" class="">
@@ -133,7 +133,7 @@
         </div>
         <div id="enter_login_password" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
-                <form class="col s12 master_form">
+                <form class="col s12 master_form z-depth-1">
                     <div class="input-field">
                         <input id="enter_login" type="text" class="validate">
                         <label for="enter_login">Логин</label>
@@ -147,7 +147,7 @@
             </div>
         </div>
     </div>
-    <footer class="row page-footer valign-wrapper" style="display: flex;">
+    <footer class="row page-footer valign-wrapper light-grey" style="display: flex;">
         <div class="col center-align s3 valign ">
             <a id="prev_button" class="waves-effect btn btn_prev"><span class="arrow"><</span> Назад</a>
         </div>

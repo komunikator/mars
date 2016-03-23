@@ -79,7 +79,9 @@ Ext.define('IVR.view.menu.Tree', {
             //console.log(n);
             if ((n.leaf || n._leaf) && n.id != sn.id) {  // ignore clicks on folders and currently selected node
                 /* show panel */
-                if (n.id == 'logout')
+                if (n.id == 'settingsMaster'){
+                    window.location = "wizard/";
+                }else if (n.id == 'logout')
                     window.location.href = '/logOut';
                 else
                     this.showPanel(n.id, n.parentId, n, e.shiftKey, e.ctrlKey);

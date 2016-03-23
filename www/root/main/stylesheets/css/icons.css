@@ -251,6 +251,10 @@
     background-image:url(../../images/icon/headphone.png) !important;
 }
 
+.icon_menu_diag_sett_master{
+    background-image:url(../../images/icon/sett_master.png) !important;
+}
+
 .icon_menu_sniffer {
     background-image:url(../../images/icon/magnifier-zoom-fit.png) !important;
 }
