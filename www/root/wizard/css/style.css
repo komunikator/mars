@@ -145,7 +145,7 @@ body {
 }
 .del_icon{
 	position: absolute;
-	right: 0;
+	right: 0.2vw;
 	margin-top: -0.5vh;
 }
 #current_connections > .collection{

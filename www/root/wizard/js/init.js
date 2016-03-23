@@ -21,8 +21,8 @@ function init_master() {
     $("#work_mode").show();
     $("#done_button").css("display","block");
     $("#page_1, #page_2, #page_3").hide();
-    $("#header_title").text("Мастер настройки");
-    // $("#header_decription").text("Выберите режим работы мастера настройки");
+    $("#header_title").text("Мастер настроек");
+    // $("#header_decription").text("Выберите режим работы мастера настроек");
     $("#header > div.col.s12.header_bottom").hide();
     $("#header_top > div > h1").hide();
     $("#done_button > a").text("Закрыть");
@@ -188,11 +188,12 @@ function createConnections() {
                     $("#enter_login_password > div > form > span").hide();
                 }else {
                     $("#enter_login_password > div > form > span").show();
-                    if($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Youmagic.pro"){
-                        $("#enter_login_password > div > form > span > a").attr("href","https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643");
-                    } else {
-                        $("#enter_login_password > div > form > span > a").attr("href","http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034");
-                    }
+                    $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
+                    // if($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Youmagic.pro"){
+                    //     $("#enter_login_password > div > form > span > a").attr("href","https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643");
+                    // } else {
+                    //     $("#enter_login_password > div > form > span > a").attr("href","http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034");
+                    // }
                 }
                 $("#header_decription").html("Введите данные вашего Sip аккаунта");
                 $("#enter_login_password").show();
@@ -234,8 +235,8 @@ function createConnections() {
             $("#page_1").hide();
             $("#done_button").show();
             $("#work_mode").show();
-            $("#header_title").text("Мастер настройки");
-            // $("#header_decription").text("Выберите режим работы мастера настройки");
+            $("#header_title").text("Мастер настроек");
+            // $("#header_decription").text("Выберите режим работы мастера настроек");
         } else if ($("#provider_choose").is(":visible")){
             $("#provider_choose").hide();
             $("#next_button").hide();
@@ -268,8 +269,8 @@ function createConnections() {
             $("#speech_recognize > ul > .active_item").removeClass("active_item");
             $("#done_button").show();
             $("#work_mode").show();
-            $("#header_title").text("Мастер настройки");
-            // $("#header_decription").text("Выберите режим работы мастера настройки");
+            $("#header_title").text("Мастер настроек");
+            // $("#header_decription").text("Выберите режим работы мастера настроек");
         } else if ($("#voice_choose").is(":visible")){
             $("#voice_choose").hide();
             $("#next_button").show();
@@ -323,7 +324,7 @@ function createConnections() {
                 // $("#voice_choose > div > form").trigger('reset');
                 $("#sintez_fields").hide();
                 $("#work_mode").show();
-                $("#header_title").text("Мастер настройки");
+                $("#header_title").text("Мастер настроек");
 
                 $.ajax({
                 url: '/resourceData/settings',
@@ -362,7 +363,7 @@ function createConnections() {
 
             };
                 
-                // $("#header_decription").text("Выберите режим работы мастера настройки");
+                // $("#header_decription").text("Выберите режим работы мастера настроек");
             // } else {
             //     myAlert("Внимание","Поле ключ должно быть заполнено и голос должен быть выбран");
             // };   
@@ -459,8 +460,8 @@ function createConnections() {
                 
                 //$("#enter_login_password > div > form").trigger('reset');
                 $("#work_mode").show();
-                $("#header_title").text("Мастер настройки");
-                // $("#header_decription").text("Выберите режим работы мастера настройки");
+                $("#header_title").text("Мастер настроек");
+                // $("#header_decription").text("Выберите режим работы мастера настроек");
                 $("#sip_sett").click();
             } else {
                 myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
@@ -477,8 +478,8 @@ function createConnections() {
             $("#page_1").hide();
             $("#done_button").show();
             $("#work_mode").show();
-            $("#header_title").text("Мастер настройки");
-            // $("#header_decription").text("Выберите режим работы мастера настройки");
+            $("#header_title").text("Мастер настроек");
+            // $("#header_decription").text("Выберите режим работы мастера настроек");
         } else if ($("#work_mode").is(":visible")) {
             window.location = '../../';
         }

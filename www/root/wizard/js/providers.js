@@ -12,25 +12,37 @@ var providersList =
                     id: 'MangoTel',
                     name_ru: 'Манго Телеком',
                     img: 'images/providers/MangoTel.png',
-                    host: 'mangosip.ru'
+                    host: 'mangosip.ru',
+                    ref_link: 'http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034'
                 },
                 {
                     id: 'youmagicpro',
                     name_ru: 'Youmagic.pro',
                     img: 'images/providers/youmagicpro.png',
-                    host: 'youmagic.pro'
+                    host: 'youmagic.pro',
+                    ref_link: 'https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643'
                 }
             ]
         };
  
 function getProvidersList() {
     for (var key in providersList.providers) {
-        $('#provider_choose > .collection').append('<li class="collection-item">'+
+        if (providersList.providers[key].ref_link){
+            $('#provider_choose > .collection').append('<li class="collection-item">'+
             '<div class="left povider_logo_cont">'+
-                '<img src="'+providersList.providers[key].img+'" alt="'+providersList.providers[key].name_ru+'" url="'+providersList.providers[key].host+'" class="provider_logo">'+
+                '<img src="'+providersList.providers[key].img+'" alt="'+providersList.providers[key].name_ru+'" url="'+providersList.providers[key].host+'" ref="'+providersList.providers[key].ref_link+'" class="provider_logo">'+
             '</div>'+
             '<span class="title provider_name">'+providersList.providers[key].name_ru+'</span>'+
         '</li>');
+        }else {
+            $('#provider_choose > .collection').append('<li class="collection-item">'+
+                '<div class="left povider_logo_cont">'+
+                    '<img src="'+providersList.providers[key].img+'" alt="'+providersList.providers[key].name_ru+'" url="'+providersList.providers[key].host+'" class="provider_logo">'+
+                '</div>'+
+                '<span class="title provider_name">'+providersList.providers[key].name_ru+'</span>'+
+            '</li>');
+        }
+       
     }
 };
 
