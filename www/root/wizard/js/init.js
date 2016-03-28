@@ -37,7 +37,6 @@ $(document).ready(function() {
     getAccountsList();
     var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" :"") + "://" + window.location.hostname + ":" + window.location.port);
     socket.onmessage = function(event) {
-
         if (JSON.parse(event.data).data.source == "statusUA"){
             var data_arr = (JSON.parse(event.data).data.data[0]);
             var size = 0;
@@ -407,6 +406,7 @@ function createConnections() {
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
             from_elem.removeClass("active_item");
+            from_elem.children(".right_cont").removeClass("active_item");
             $("#edit_connection > div >form").trigger( 'reset' );
             $("#current_connections").show();
             $.ajax({
@@ -609,6 +609,11 @@ function createConnections() {
                     });
                 });
                 $(".click_area").on('click',function() {
+                    from_elem = $(this).parent();
+                    if (from_elem.hasClass('right_cont')){
+                        from_elem = from_elem.parent();
+                        $(this).parent().removeClass("active_item");
+                    }
                     $(this).parent().parent().children(".active_item").removeClass("active_item");
                     if ($(this).parent().hasClass("active_item")){
                         $(this).parent().removeClass("active_item");
@@ -617,11 +622,7 @@ function createConnections() {
                     }
                     $("#current_connections").hide();
                     $("#page_1").hide();
-                    from_elem = $(this).parent();
-                    if (from_elem.hasClass('right_cont')){
-                        from_elem = from_elem.parent();
-                        $(this).removeClass("active_item");
-                    }
+                    
                     var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
                     var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
                     $("#login + label").addClass("active");
@@ -764,7 +765,13 @@ function createConnections() {
         from_elem = $(this).parent();
         if (from_elem.hasClass('right_cont')){
             from_elem = from_elem.parent();
-            $(this).removeClass("active_item");
+            $(this).parent().removeClass("active_item");
+        }
+        $(this).parent().parent().children(".active_item").removeClass("active_item");
+        if ($(this).parent().hasClass("active_item")){
+            $(this).parent().removeClass("active_item");
+        }else{
+            $(this).parent().addClass("active_item");
         }
         var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
         var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");

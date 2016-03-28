@@ -42,7 +42,7 @@
             "expires": 60,
             "user": "ghjghjg",
             "password": "ghjghj",
-            "disable": 1,
+            "disable": 0,
             "domain": "multifon.ru"
         },
         {
@@ -58,7 +58,7 @@
             "user": "222",
             "password": "222",
             "domain": "multifon.ru",
-            "disable": 1
+            "disable": 0
         },
         {
             "host": "193.201.229.35",
@@ -67,6 +67,35 @@
             "password": "ghjg",
             "disable": 1,
             "domain": "multifon.ru"
+        },
+        {
+            "host": "mangosip.ru",
+            "expires": 60,
+            "user": "ghj",
+            "password": "ghjg",
+            "disable": 1
+        },
+        {
+            "host": "youmagic.pro",
+            "expires": 60,
+            "user": "fghgf",
+            "password": "ghfgh",
+            "disable": 1
+        },
+        {
+            "host": "193.201.229.35",
+            "expires": 60,
+            "user": "fgh",
+            "password": "fgh",
+            "disable": 1,
+            "domain": "multifon.ru"
+        },
+        {
+            "host": "youmagic.pro",
+            "expires": 60,
+            "user": "fghfg",
+            "password": "fghf",
+            "disable": 1
         }
     ],
     "levels": {
