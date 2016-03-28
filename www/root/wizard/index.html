@@ -73,13 +73,17 @@
         <div id="edit_connection" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
                 <form class="col s12 master_form z-depth-1">
-                    <div class="input-field">
-                        <input id="login" type="text" class="validate">
-                        <label for="login">Логин</label>
-                    </div>
-                    <div class="input-field">
-                        <input id="password" type="password" class="validate">
-                        <label for="password">Пароль</label>
+                    <div class="img_provider"><img src=""/></div>
+                    <div class="right width75">
+                        <div class="input-field">
+                            <input id="login" type="text" class="validate">
+                            <label for="login">Логин</label>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <div class="input-field">
+                            <input id="password" type="password" class="validate">
+                            <label for="password">Пароль</label>
+                        </div>
                     </div>
                 </form>
                 <div class="col center-align s12">
@@ -182,8 +186,8 @@
     </div>
     <div id="my_alert" class="modal">
         <div class="modal-content">
-            <h4></h4>
-            <p></p>
+            <h4 id="alert_header"></h4>
+            <p id="alert_text"></p>
         </div>
         <div class="modal-footer">
             <a href="javascript:void(0)" class=" modal-action modal-close waves-effect waves-light btn">OK</a>

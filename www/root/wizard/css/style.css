@@ -136,8 +136,8 @@ body {
 	text-align: center;
 }
 .provider_logo{
-    max-height: 3.5rem;
-    max-width: 8rem;
+    max-height: 2rem;
+    max-width: 5rem;
   /*  float: left;*/
 }
 .currents_icon{
@@ -149,7 +149,23 @@ body {
 	right: 0.2vw;
 	margin-top: -0.5vh;*/
 }
-
+.img_provider{
+	position: relative;	
+	float: left;
+	line-height: 9rem;
+	margin-left: -3.5rem;
+}
+.width75{
+	width: 75%;
+}
+.img_provider img{
+	max-width: 150px;
+	max-height: 150px; 
+	vertical-align: middle;
+}
+.edit_form_field{
+	float: right;
+}
 .top_margin{
 	margin-top: 1.5vh !important;
 }

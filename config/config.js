@@ -50,7 +50,7 @@
             "expires": 60,
             "user": "dfgdfg",
             "password": "dfgdfg",
-            "disable": 1
+            "disable": 0
         },
         {
             "host": "193.201.229.35",

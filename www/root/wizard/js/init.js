@@ -35,7 +35,34 @@ $(document).ready(function() {
     init_master();
     getProvidersList();
     getAccountsList();
-    
+    var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" :"") + "://" + window.location.hostname + ":" + window.location.port);
+    socket.onmessage = function(event) {
+
+        if (JSON.parse(event.data).data.source == "statusUA"){
+            var data_arr = (JSON.parse(event.data).data.data[0]);
+            var size = 0;
+            for (var i = 10; i < data_arr.length; i++){if (data_arr[i] != null){size++}}
+            for (var i=0; i<size; i++){
+                if (data_arr[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                else if (data_arr[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
+                else if (data_arr[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
+            }
+            // $.ajax({
+            //     url: '/statusUA',
+            //     method: 'get',
+            //     success: function (response) {
+            //         var size = 0;
+            //         for (var i = 10; i < response.data[0].length; i++){if (response.data[0][i] != null){size++}}
+            //         var data = response.data[0];
+            //         for (var i=0; i<size; i++){
+            //             if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+            //             else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
+            //             else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
+            //         }
+            //     }
+            // }); 
+        }
+    }
 });
 
 function getUrlVars()
@@ -77,6 +104,8 @@ function getAccountsList() {
             ivona_sett = jQuery.parseJSON(returnedData.data[0].value).ivona_speech;
             createConnections();
         }
+    }).fail(function() {
+        window.location = "../../";
     });
 }
 
@@ -177,20 +206,7 @@ function createConnections() {
         }
     }
 
-    $.ajax({
-        url: '/statusUA',
-        method: 'get',
-        success: function (response) {
-            var size = 0;
-            for (var i = 10; i < response.data[0].length; i++){if (response.data[0][i] != null){size++}}
-            var data = response.data[0];
-            for (var i=0; i<size; i++){
-                if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
-                else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
-                else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
-            }
-        }
-    }); 
+    
 
     $("#sip_sett").on('click',function() {
         $("#header > div.col.s12.header_bottom").show();
@@ -612,7 +628,8 @@ function createConnections() {
                     $("#login").val(from_uri);
                     $("#password + label").addClass("active");
                     $("#password").val(from_pass);
-                    $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text()+" ("+from_elem.children(".click_area").children(".povider_logo_cont").children().attr('alt')+")");
+                    $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
+                    $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
                     $("#header_decription").text("Измените данные и нажмите сохранить");
                     $("#prev_button").show();
                     $("#done_button").hide();
@@ -749,14 +766,14 @@ function createConnections() {
             from_elem = from_elem.parent();
             $(this).removeClass("active_item");
         }
-
         var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
         var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
         $("#login + label").addClass("active");
         $("#login").val(from_uri);
         $("#password + label").addClass("active");
         $("#password").val(from_pass);
-        $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text()+" ("+from_elem.children(".click_area").children(".povider_logo_cont").children().attr('alt')+")");
+        $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
+        $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
         $("#header_decription").text("Измените данные и нажмите сохранить");
         $("#prev_button").show();
         $("#done_button").hide();
