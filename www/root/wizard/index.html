@@ -42,9 +42,8 @@
                 </li>
             </ul>
         </div>
-        <div id="current_connections" class="valign col offset-s3 s6" style="display: block;">
-            <ul class="collection collection_with_del center-align z-depth-1">
-              
+        <div id="current_connections" class="valign col s12" style="display: block;">
+            <ul class="collection collection_with_del z-depth-1">
             </ul> 
             <div class="col center-align s12" id="add_button">
                 <a id="add_conn_btn" class="waves-effect waves-light btn add_connection_btn">Добавить</a>
@@ -75,15 +74,22 @@
         <div id="edit_connection" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
                 <form class="col s12 master_form z-depth-1">
-                    <div class="input-field">
-                        <input id="login" type="text" class="validate">
-                        <label for="login">Логин</label>
-                    </div>
-                    <div class="input-field">
-                        <input id="password" type="password" class="validate">
-                        <label for="password">Пароль</label>
+                    <div class="img_provider"><img src=""/></div>
+                    <div class="right width75">
+                        <div class="input-field">
+                            <input id="login" type="text" class="validate">
+                            <label for="login">Логин</label>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <div class="input-field">
+                            <input id="password" type="password" class="validate">
+                            <label for="password">Пароль</label>
+                        </div>
                     </div>
                 </form>
+                <div class="col center-align s12">
+                <a id="del_connection_btn" class="waves-effect waves-light flat_btn top_margin red_text">УДАЛИТЬ</a>
+                </div>
                 <div class="col center-align s12">
                     <a id="save_conn_btn" class="waves-effect waves-light btn-large save_conn_btn">Сохранить</a>
                 </div>
@@ -181,8 +187,8 @@
     </div>
     <div id="my_alert" class="modal">
         <div class="modal-content">
-            <h4></h4>
-            <p></p>
+            <h4 id="alert_header"></h4>
+            <p id="alert_text"></p>
         </div>
         <div class="modal-footer">
             <a href="javascript:void(0)" class=" modal-action modal-close waves-effect waves-light btn">OK</a>
