@@ -1,7 +1,7 @@
 var bus = require('../../lib/system/bus'),
         config = bus.config;
 
-var yandex_speech = require('../recognize/yandex-speech');
+var yandex_speech = require('yandex-speech');
 
 bus.on('ttsLaunch', function (data) {
     data.type = data.type || config.get("def_tts");
@@ -9,8 +9,7 @@ bus.on('ttsLaunch', function (data) {
         yandex_speech.TTS({
             text: data.text,
             format: 'wav',
-            file: data.file,
-            transform: data.transcode
+            file: data.file
         }, data.cb);
     }
 });

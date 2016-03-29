@@ -1,6 +1,6 @@
 'use strict';
 
-var yandex_speech = require('./yandex-speech'),
+var yandex_speech = require('yandex-speech'),
     xml2js = require('xml2js');
 
 var parser = new xml2js.Parser();

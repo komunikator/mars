@@ -13,6 +13,6 @@ bus.on('ttsLaunch', function (data) {
                 outputFormat: {codec: 'AU'},
                 voice: config.get("ivona_speech")
             }
-        }).pipe(data.transcode).pipe(fileWriter);
+        }).pipe(fileWriter);
     }
 });

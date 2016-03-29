@@ -1,33 +1,38 @@
 var bus = require('../lib/system/bus'),
-        config = bus.config;
+        config = bus.config,
+        fs = require('fs');
+
+function wavEncode(data, file_name, cb) {
+    bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'Start encode file "' + file_name + '"'});
+
+    var spawn = require('child_process').spawn,
+            args =
+            [file_name, '--bits', 8, '--rate', 8000, '--channels', 1, '--encoding', 'u-law', '--type', 'wav', file_name.slice(0, -4)],
+            sox = spawn('sox', args);
+
+    sox.on('error', function (e) {
+        bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: 'Sox Error: ' + e.toString()});
+        fs.unlink(file_name, cb());
+    });
+
+    sox.stdout.on('finish', function () {
+        fs.unlink(file_name, cb());
+    });
+}
 
 bus.on('tts', function (data) {
-    var sox = require('sox-stream');
-    var transcode = sox({
-        bits: 8,
-        rate: 8000,
-        channels: 1,
-        encoding: 'u-law',
-        type: 'wav'
-    });
-
     var file_name = 'media/temp/' + data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') + '.wav';
-    transcode.on('error', function (err) {
-        data.cb(file_name);
-        data.cb = function () {
-        };
-        //consolbus.log(err.message)
-    });
-
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
-    if (data.rewrite || !require('fs').existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name))
+    if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name))
     {
         function ttsDone() {
-            //consolbus.log('done');
-            bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts file "' + file_name + '"'});
-            data.cb(file_name);
+            wavEncode(data, file_name + '.tmp', function () {
+                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts file "' + file_name + '"'});
+                data.cb(file_name);
+            });
         }
-        bus.emit('ttsLaunch', {type: data.type, text: data.text, file: file_name, transcode: transcode, cb: ttsDone});
+        bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'Start generate speech from text "' + data.text + '"'});
+        bus.emit('ttsLaunch', {type: data.type, text: data.text, file: file_name + '.tmp', cb: ttsDone});
     } else
         data.cb(file_name);
 })
