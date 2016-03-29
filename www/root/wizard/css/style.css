@@ -272,6 +272,7 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 .pagination > nav > div > div > a{
 	color:#5F9FCB !important;
+	font-size: 1.3vw !important;
 }
 #page_4:before{
 	display: none !important;
