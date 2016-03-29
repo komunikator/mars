@@ -567,7 +567,7 @@ function createConnections() {
                     });   
                 });
 
-                $('input[type="checkbox"]').on("change", function() {
+                $('#current_connections > .collection > .collection-item:last-child input[type="checkbox"]').on("change", function() {
                     var tmp_id = $(this).parent().parent().parent().parent().attr("id").substr(5);
                     if ($(this).prop('checked')){
                         cur_acc_list[tmp_id].disable = 0;
@@ -611,7 +611,7 @@ function createConnections() {
                         }
                     });
                 });
-                $(".click_area").on('click',function() {
+                $("#current_connections > .collection > .collection-item:last-child .click_area").on('click',function() {
                     from_elem = $(this).parent();
                     if (from_elem.hasClass('right_cont')){
                         from_elem = from_elem.parent();

@@ -42,7 +42,7 @@
             "expires": 60,
             "user": "ghjghjg",
             "password": "ghjghj",
-            "disable": 1,
+            "disable": 0,
             "domain": "multifon.ru"
         },
         {
@@ -73,6 +73,20 @@
             "user": "fgh",
             "password": "fgh",
             "domain": "multifon.ru",
+            "disable": 1
+        },
+        {
+            "host": "mangosip.ru",
+            "expires": 60,
+            "user": "123",
+            "password": "123",
+            "disable": 1
+        },
+        {
+            "host": "youmagic.pro",
+            "expires": 60,
+            "user": "111",
+            "password": "111",
             "disable": 1
         }
     ],
