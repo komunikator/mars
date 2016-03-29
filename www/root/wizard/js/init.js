@@ -796,6 +796,8 @@ function createConnections() {
             $("#prev_button").hide();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+            from_elem.removeClass("active_item");
+            from_elem.children(".right_cont").removeClass("active_item");
             var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
 
             $.ajax({
