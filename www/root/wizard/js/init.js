@@ -576,6 +576,9 @@ function createConnections() {
                         cur_acc_list[tmp_id].disable = 1;
                         $(this).parent().attr("title","Подключить аккаунт");
                     }
+                    console.log($(this));
+                    $(this).prop('disabled', true);
+                    var checkbox = $(this);
                     $.ajax({
                         url: '/resourceData/settings',
                         method: 'get',
@@ -589,7 +592,7 @@ function createConnections() {
                                 url: "/resourceData/update",
                                 method: 'put',
                                 data: response.data[0],
-                                success: function () {}
+                                success: function () {checkbox.prop('disabled', false);}
                             });
                         }
                     });
@@ -714,6 +717,8 @@ function createConnections() {
             cur_acc_list[tmp_id].disable = 1;
             $(this).parent().attr("title","Подключить аккаунт");
         }
+        $(this).prop('disabled', true);
+        var checkbox = $(this);
         $.ajax({
             url: '/resourceData/settings',
             method: 'get',
@@ -728,6 +733,7 @@ function createConnections() {
                     method: 'put',
                     data: response.data[0],
                     success: function () {
+                        checkbox.prop('disabled', false);
                     }
                 });
             }

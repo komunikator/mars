@@ -42,7 +42,7 @@
             "expires": 60,
             "user": "ghjghjg",
             "password": "ghjghj",
-            "disable": 0,
+            "disable": 1,
             "domain": "multifon.ru"
         },
         {
@@ -50,21 +50,13 @@
             "expires": 60,
             "user": "dfgdfg",
             "password": "dfgdfg",
-            "disable": 0
+            "disable": 1
         },
         {
             "host": "193.201.229.35",
             "expires": 60,
             "user": "222",
             "password": "222",
-            "domain": "multifon.ru",
-            "disable": 0
-        },
-        {
-            "host": "193.201.229.35",
-            "expires": 60,
-            "user": "ghjgh",
-            "password": "ghjg",
             "domain": "multifon.ru",
             "disable": 1
         },
@@ -76,25 +68,11 @@
             "disable": 1
         },
         {
-            "host": "youmagic.pro",
-            "expires": 60,
-            "user": "fghgf",
-            "password": "ghfgh",
-            "disable": 1
-        },
-        {
             "host": "193.201.229.35",
             "expires": 60,
             "user": "fgh",
             "password": "fgh",
             "domain": "multifon.ru",
-            "disable": 1
-        },
-        {
-            "host": "youmagic.pro",
-            "expires": 60,
-            "user": "fghfg",
-            "password": "fghf",
             "disable": 1
         }
     ],
