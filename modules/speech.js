@@ -12,15 +12,30 @@ function wavEncode(data, file_name, cb) {
 
     sox.on('error', function (e) {
         bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: 'Sox Error: ' + e.toString()});
-        fs.unlink(file_name, cb());
+        fs.exists(file_name, function (exist) {
+            if (exist)
+                fs.unlink(file_name, cb());
+            else
+                cb();
+        });
     });
 
     sox.stdout.on('finish', function () {
-        fs.unlink(file_name, cb());
+        fs.exists(file_name, function (exist) {
+            if (exist)
+                fs.unlink(file_name, cb());
+            else
+                cb();
+        });
     });
 }
 
 bus.on('tts', function (data) {
+    if (!data.text) {
+        bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: 'tts text is empty!'});
+        data.cb(file_name);
+        return;
+    }
     var file_name = 'media/temp/' + data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
     if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name))
