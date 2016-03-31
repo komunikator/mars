@@ -19,7 +19,7 @@ var providersList =
                     id: 'youmagicpro',
                     name_ru: 'Youmagic.pro',
                     img: 'images/providers/youmagicpro.png',
-                    host: 'youmagic.pro',
+                    host: 'voip.mtt.ru',
                     ref_link: 'https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643'
                 }
             ]
