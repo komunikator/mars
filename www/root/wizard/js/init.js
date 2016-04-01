@@ -285,7 +285,8 @@ function createConnections() {
                 $("#provider_choose").hide();
                 $("#next_button").hide();
                 $("#done_button").show();
-                $("#header_title").html("Настройки Sip подключения<br/>"+$("#provider_choose > .collection > .collection-item.active_item > span.title").text());
+                $("#header_title").html("Настройки Sip подключения");
+                $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
                 if ($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Мегафон"){
                     $("#enter_login_password > div > form > span").hide();
                 }else {
