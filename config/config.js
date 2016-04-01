@@ -1,5 +1,6 @@
 {
     "webPort": 8000,
+    "audioCodec" : "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
     "webAccounts": [
         {
