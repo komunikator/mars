@@ -4,9 +4,7 @@
         "iconCls": "icon_menu_diag_sett_master",
         "enabled": true,
         "id": "settingsMaster",
-        "expanded": false,
-        "leaf": true,
-        "enabled": true
+        "leaf": true
     },
     {
         "text": "tasks",

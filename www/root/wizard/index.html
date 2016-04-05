@@ -3,9 +3,9 @@
     <head>
         <title>Мастер настроек</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <link rel="stylesheet" href="css/style.css" type="text/css" />
+        <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />   
         <link rel="stylesheet" href="css/materialize.css" type="text/css" />
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
        <!--  <link rel="stylesheet" href="css/user.css" type="text/css" /> -->
         <script src="js/jquery-1.12.1.min.js"></script>
         <script src="js/materialize.js"></script> 
@@ -15,6 +15,7 @@
 
     </head>
     <body id="body">
+
     <div id="header" style="display: block;">
         <div id="header_top" class="col s12 row header_top z-depth-1">
             <div class="col s8 offset-s2 header_top_logo">
@@ -50,29 +51,12 @@
         </div>
         <div id="provider_choose" class="valign col offset-s3 s6" style="display: none;">
              <ul class="collection center-align z-depth-1">
-               <!--  <li class="collection-item">
-                    <div class="left povider_logo_cont">
-                        <img src="images/providers/megafon.png" alt="megafon" url="megafon.ru" class="provider_logo">
-                    </div>
-                    <span class="title provider_name">Мегафон</span>
-                </li>
-                <li class="collection-item">
-                    <div class="left povider_logo_cont">
-                        <img src="images/providers/MangoTel.png" alt="MangoTel" url="MangoTel.com" class="provider_logo">
-                    </div>
-                    <span class="title provider_name">Mongo telecom</span>
-                </li>
-                <li class="collection-item">
-                    <div class="left povider_logo_cont">
-                        <img src="images/providers/youmagicpro.png" alt="youmagicpro" url="youmagic.pro" class="provider_logo">
-                    </div>
-                    <span class="title provider_name">Youmagic.pro</span>
-                </li> -->
             </ul> 
         </div>
         <div id="edit_connection" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
                 <form class="col s12 master_form z-depth-1">
+                    <div class="close_icon"><img src="images/close.png"></div>
                     <div class="img_provider"><img src=""/></div>
                     <div class="right width75">
                         <div class="input-field">
@@ -107,9 +91,11 @@
         <div id="voice_choose" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
                 <form class="col s12 master_form z-depth-1">
+                    
                     <div class="row">
-                        <div class="input-field col s12">
-                            <input id="key" type="text" class="">
+                        <a href="https://developer.tech.yandex.ru/"><img class="logo_speech" src="images/providers/yandex-logo.png"></a>
+                        <div class="input-field width70 col s12">
+                            <input id="key" type="password" class="">
                             <label for="key">Ключ распознавания Яндекс</label>
                         </div>
                         <div class="input-field col s12">
@@ -119,13 +105,15 @@
                             </select>
                             <label>Сервис синтеза речи</label>
                         </div>
+
                         <div id="sintez_fields">
-                            <div class="input-field col s12">
-                                <input id="access_key_sintez" type="text" class="">
+                            <a href="http://www.ivona.com/us/"><img class="logo_speech sintez_logo" src="images/providers/ivona.png"></a>    
+                            <div class="input-field width70 col s12">
+                                <input id="access_key_sintez" type="password" class="">
                                 <label for="access_key_sintez">Ключ доступа Ivona</label>
                             </div>
-                            <div class="input-field col s12">
-                                <input id="secret_key_sintez" type="text" class="">
+                            <div class="input-field width70 col s12">
+                                <input id="secret_key_sintez" type="password" class="">
                                 <label for="secret_key_sintez">Секретный ключ Ivona</label>
                             </div>
                         </div>
@@ -140,6 +128,7 @@
         <div id="enter_login_password" class="valign col offset-s3 s6" style="display: none;">
             <div class="row">
                 <form class="col s12 master_form z-depth-1">
+                    <div class="close_icon"><img src="images/close.png"></div>
                     <div class="img_provider"><img src=""/></div>
                     <div class="right width75">
                         <div class="input-field">

@@ -53,9 +53,12 @@ Ext.define('IVR.view.menu.Tree', {
     },
     showPanel: function(panelId, parentId, n, shiftKey, ctrlKey) {
         //console.log(panelId, parentId, n, shiftKey, ctrlKey);
-        if (!checkXtypeExist(panelId))
+        if (!checkXtypeExist(panelId)){
+           // console.log("xtype not exist!");
             return;
+        }
         if (typeof(this.panels[panelId]) === 'undefined') {
+            //console.log("id undefined!");
             Ext.getCmp('content-panel').add({xtype: panelId, itemId: panelId});
             Ext.getCmp('content-panel').doLayout();
             this.panels[panelId] = true;
@@ -79,9 +82,10 @@ Ext.define('IVR.view.menu.Tree', {
             //console.log(n);
             if ((n.leaf || n._leaf) && n.id != sn.id) {  // ignore clicks on folders and currently selected node
                 /* show panel */
-                if (n.id == 'settingsMaster'){
-                    window.location = "wizard/";
-                }else if (n.id == 'logout')
+                // if (n.id == 'settingsMaster'){
+                //     window.location = "wizard/";
+                // }else 
+                if (n.id == 'logout')
                     window.location.href = '/logOut';
                 else
                     this.showPanel(n.id, n.parentId, n, e.shiftKey, e.ctrlKey);

@@ -46,26 +46,19 @@
             "domain": "multifon.ru"
         },
         {
-            "host": "mangosip.ru",
-            "expires": 60,
-            "user": "dfgdfg",
-            "password": "dfgdfg",
-            "disable": 1
-        },
-        {
             "host": "193.201.229.35",
             "expires": 60,
             "user": "222",
             "password": "222",
             "domain": "multifon.ru",
-            "disable": 1
+            "disable": 0
         },
         {
             "host": "mangosip.ru",
             "expires": 60,
             "user": "ghj",
             "password": "ghjg",
-            "disable": 1
+            "disable": 0
         },
         {
             "host": "193.201.229.35",
@@ -73,21 +66,37 @@
             "user": "fgh",
             "password": "fgh",
             "domain": "multifon.ru",
-            "disable": 1
+            "disable": 0
+        },
+        {
+            "host": "193.201.229.35",
+            "expires": 60,
+            "user": "вап",
+            "password": "вап",
+            "disable": 1,
+            "domain": "multifon.ru"
         },
         {
             "host": "mangosip.ru",
             "expires": 60,
-            "user": "123",
-            "password": "123",
+            "user": "12",
+            "password": "12",
             "disable": 1
         },
         {
-            "host": "youmagic.pro",
+            "host": "voip.mtt.ru",
+            "expires": 60,
+            "user": "444",
+            "password": "444",
+            "disable": 1
+        },
+        {
+            "host": "193.201.229.35",
             "expires": 60,
             "user": "111",
             "password": "111",
-            "disable": 1
+            "disable": 1,
+            "domain": "multifon.ru"
         }
     ],
     "levels": {

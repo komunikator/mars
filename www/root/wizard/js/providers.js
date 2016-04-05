@@ -7,6 +7,7 @@ var providersList =
                     img: 'images/providers/megafon.png',
                     host: '193.201.229.35',
                     domain: 'multifon.ru',
+                    ref_link: 'http://multifon.ru/help'
                 },
                 {
                     id: 'MangoTel',

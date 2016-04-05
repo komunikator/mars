@@ -6,6 +6,7 @@ body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    overflow: hidden;
 }
 .blue {
     background-color: #489FD1 !important;
@@ -50,7 +51,16 @@ body {
 	padding: 0 3vw !important;
 	background: #5F9FCB !important;
 }
+.close_icon {
+	cursor: pointer;
+    float: right;
+    margin-right: -3rem;
+}
 
+.close_icon img{
+	width: 1.5rem;
+    height: 1.5rem;
+}
 #my_alert > div.modal-content > h4{
 	color: #4682B4 !important;
 }
@@ -74,7 +84,7 @@ body {
 }
 
 .header_top_logo_banner {
-	max-width: 40vw;
+	max-width: 20vw;
 }
 
 .header_top_logo{
@@ -176,6 +186,22 @@ body {
 	float: left;
     min-width: 75px;
     width: 17%;
+}
+.logo_speech{
+	float: left;
+	height: 3rem;
+	width: 6.7rem;
+}
+.sintez_logo{
+	margin-top: 3rem !important;
+}
+.width70{
+	width: 70% !important;
+	float: right !important;
+}
+#current_connections {	
+	overflow-y: scroll;
+	height: 64vh;
 }
 #current_connections > .collection{
 	/*padding-right: 1vw !important; */

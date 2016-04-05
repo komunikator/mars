@@ -5,6 +5,7 @@ var cur_speech_recognize;
 var cur_speech_sintez;
 var ivona_sett;
 var from_elem;
+var isInIframe = (window.location != window.parent.location) ? true : false;
 function init_master() {
     $("#header").css("display", "block");
     $("#content").css("display", "flex");
@@ -22,10 +23,14 @@ function init_master() {
     $("#done_button").css("display","block");
     $("#page_1, #page_2, #page_3").hide();
     $("#header_title").text("Мастер настроек");
+   
     // $("#header_decription").text("Выберите режим работы мастера настроек");
     $("#header > div.col.s12.header_bottom").hide();
     $("#header_top > div > h1").hide();
     $("#done_button > a").text("Закрыть");
+    if (isInIframe){
+        $("#done_button").hide();
+    }
     $("#sintez_fields").hide();
 }
 
@@ -204,7 +209,6 @@ function createConnections() {
             }
         }
     }
-
     
 
     $("#sip_sett").on('click',function() {
@@ -215,6 +219,11 @@ function createConnections() {
         $("#done_button").show();
         $("#prev_button").hide();
         $("#current_connections").show();
+        if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+            $("#current_connections").css("overflow-y","hidden");
+        }else{
+            $("#current_connections").css("overflow-y","scroll");
+        }
         $.ajax({
             url: '/statusUA',
             method: 'get',
@@ -287,17 +296,17 @@ function createConnections() {
                 $("#done_button").show();
                 $("#header_title").html("Настройки Sip подключения");
                 $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
-                if ($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Мегафон"){
-                    $("#enter_login_password > div > form > span").hide();
-                }else {
-                    $("#enter_login_password > div > form > span").show();
-                    $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
+                // if ($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Мегафон"){
+                //     $("#enter_login_password > div > form > span").hide();
+                // }else {
+                $("#enter_login_password > div > form > span").show();
+                $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
                     // if($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Youmagic.pro"){
                     //     $("#enter_login_password > div > form > span > a").attr("href","https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643");
                     // } else {
                     //     $("#enter_login_password > div > form > span > a").attr("href","http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034");
                     // }
-                }
+                // }
                 $("#header_decription").html("Введите данные вашего Sip аккаунта");
                 $("#enter_login_password").show();
                 $("#page_3").show();
@@ -337,6 +346,9 @@ function createConnections() {
             $("#prev_button").hide();
             $("#page_1").hide();
             $("#done_button").show();
+            if (isInIframe){
+                $("#done_button").hide();
+            }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
             // $("#header_decription").text("Выберите режим работы мастера настроек");
@@ -348,6 +360,11 @@ function createConnections() {
             $("#provider_choose > ul > .active_item").removeClass("active_item");
             //$("footer > div.col.center-align.s6.pagination").addClass("margin_right25");
             $("#current_connections").show();
+            if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) {
+                $("#current_connections").css("overflow-y","hidden");
+            }else{
+                $("#current_connections").css("overflow-y","scroll");
+            }
             $("#page_2").hide();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
@@ -363,6 +380,9 @@ function createConnections() {
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    myAlert(textStatus,errorThrown);
                 }
             }); 
         } else if ($("#enter_login_password").is(":visible")){
@@ -378,6 +398,7 @@ function createConnections() {
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
             $("#done_button > a").text("Закрыть");
+            
             $("#work_mode > .collection > .collection-item").removeClass("active_item");
             $("#speech_recognize").hide();
             $("#next_button").hide();
@@ -385,6 +406,9 @@ function createConnections() {
             //$("#page_4").hide();
             $("#speech_recognize > ul > .active_item").removeClass("active_item");
             $("#done_button").show();
+            if (isInIframe){
+                $("#done_button").hide();
+            }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
             // $("#header_decription").text("Выберите режим работы мастера настроек");
@@ -410,6 +434,11 @@ function createConnections() {
             from_elem.children(".right_cont").removeClass("active_item");
             $("#edit_connection > div >form").trigger( 'reset' );
             $("#current_connections").show();
+            if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+                $("#current_connections").css("overflow-y","hidden");
+            }else{
+                $("#current_connections").css("overflow-y","scroll");
+            }
             $.ajax({
                 url: '/statusUA',
                 method: 'get',
@@ -422,6 +451,9 @@ function createConnections() {
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    myAlert(textStatus,errorThrown);
                 }
             }); 
         }
@@ -448,6 +480,9 @@ function createConnections() {
                 $("#header > div.col.s12.header_bottom").hide();
                 $("#header_top > div > h1").hide();
                 $("#done_button > a").text("Закрыть");
+                if (isInIframe){
+                    $("#done_button").hide();
+                }
                 $("#work_mode > .collection > .collection-item").removeClass("active_item");
                 $("#voice_choose").hide();
                 $("#prev_button").hide();
@@ -488,8 +523,14 @@ function createConnections() {
                                     $("#speech_recognize > ul > .active_item").removeClass("active_item");
                                     $("#voice_choose > div > form").trigger('reset');
                                 });
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                myAlert(textStatus,errorThrown);
                             }
                         });
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        myAlert(textStatus,errorThrown);
                     }
                 }); 
 
@@ -505,6 +546,9 @@ function createConnections() {
                 $("#header > div.col.s12.header_bottom").hide();
                 $("#header_top > div > h1").hide();
                 $("#done_button > a").text("Закрыть");
+                if (isInIframe){
+                    $("#done_button").hide();
+                }
                 $("#work_mode > .collection > .collection-item").removeClass("active_item");
                 $("#enter_login_password").hide();
                 $("#prev_button").hide();
@@ -532,10 +576,16 @@ function createConnections() {
                         '</a>'+
                     '</li>'
                 );
+                
                 $("#current_connections > .collection > .collection-item:last-child > .del_btn").on('click', function() {
                     var tmp_id = $(this).parent().attr("id").substr(5);
                     var del_index = tmp_id; 
                     $("#conn_"+del_index).remove();
+                    if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+                        $("#current_connections").css("overflow-y","hidden");
+                    }else{
+                        $("#current_connections").css("overflow-y","scroll");
+                    }
                     cur_acc_list.splice(del_index,1);
                     $.ajax({
                         url: '/resourceData/settings',
@@ -562,10 +612,17 @@ function createConnections() {
                                         }
                                         
                                     });
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    myAlert(textStatus,errorThrown);
                                 }
                             });
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            myAlert(textStatus,errorThrown);
                         }
-                    });   
+                    }); 
+                    
                 });
 
                 $('#current_connections > .collection > .collection-item:last-child input[type="checkbox"]').on("change", function() {
@@ -577,7 +634,6 @@ function createConnections() {
                         cur_acc_list[tmp_id].disable = 1;
                         $(this).parent().attr("title","Подключить аккаунт");
                     }
-                    console.log($(this));
                     $(this).prop('disabled', true);
                     var checkbox = $(this);
                     $.ajax({
@@ -593,8 +649,14 @@ function createConnections() {
                                 url: "/resourceData/update",
                                 method: 'put',
                                 data: response.data[0],
-                                success: function () {checkbox.prop('disabled', false);}
+                                success: function () {checkbox.prop('disabled', false);},
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    myAlert(textStatus,errorThrown);
+                                }
                             });
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            myAlert(textStatus,errorThrown);
                         }
                     });
                     $.ajax({
@@ -609,6 +671,9 @@ function createConnections() {
                                 else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                                 else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                             }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            myAlert(textStatus,errorThrown);
                         }
                     });
                 });
@@ -658,6 +723,7 @@ function createConnections() {
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
             $("#done_button > a").text("Закрыть");
+           
             $("#work_mode > .collection > .collection-item").removeClass("active_item");
             $("#current_connections").hide();
             $("footer > div.col.center-align.s6.pagination").removeClass("margin_right25");
@@ -665,6 +731,9 @@ function createConnections() {
             $("#prev_button").hide();
             $("#page_1").hide();
             $("#done_button").show();
+            if (isInIframe){
+                $("#done_button").hide();
+            }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
             // $("#header_decription").text("Выберите режим работы мастера настроек");
@@ -677,6 +746,11 @@ function createConnections() {
         var tmp_id = $(this).parent().attr("id").substr(5);
         var del_index = tmp_id;
         $("#conn_"+del_index).remove();
+        if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+            $("#current_connections").css("overflow-y","hidden");
+        }else{
+            $("#current_connections").css("overflow-y","scroll");
+        }
         cur_acc_list.splice(del_index,1);
         $.ajax({
             url: '/resourceData/settings',
@@ -702,10 +776,17 @@ function createConnections() {
                                 tmp_id++;
                             } 
                         });
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        myAlert(textStatus,errorThrown);
                     }
                 });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                myAlert(textStatus,errorThrown);
             }
         }); 
+    
     });
 
 
@@ -735,8 +816,14 @@ function createConnections() {
                     data: response.data[0],
                     success: function () {
                         checkbox.prop('disabled', false);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        myAlert(textStatus,errorThrown);
                     }
                 });
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                myAlert(textStatus,errorThrown);
             }
         });
         $.ajax({
@@ -751,6 +838,9 @@ function createConnections() {
                     else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                     else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                 }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                myAlert(textStatus,errorThrown);
             }
         });
     });
@@ -763,8 +853,12 @@ function createConnections() {
             $(this).addClass("active_item");
             if ($(this).parent().parent().attr("id") == "provider_choose"){
                 $("#next_button > a").show();
+                $("#next_button").click();
             }
         }
+    });
+    $(".close_icon").on('click',function() {
+        $("#prev_button").click();
     });
     $(".click_area").on('click',function() {
         $("#current_connections").hide();
@@ -826,9 +920,12 @@ function createConnections() {
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    myAlert(textStatus,errorThrown);
                 }
             });
-            $("#current_connections").show();
+           
         } else {
             myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
         }
@@ -857,7 +954,9 @@ function createConnections() {
     });
     $("#del_connection_btn").on('click', function() {
         from_elem.children('.del_btn').click();
+
         $("#prev_button").click();
+
     });
     // $("#page_4").on('click', function() {
     //     if ($("#voice_choose").is(":visible")){
@@ -906,6 +1005,9 @@ function newSipConnection(response) {
                 $("#provider_choose > ul > .active_item").removeClass("active_item");
                 $("#enter_login_password > div > form").trigger('reset');
             });
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            myAlert(textStatus,errorThrown);
         }
     });
 }
@@ -965,6 +1067,9 @@ function recordSipConnection(response) {
                 from_elem.removeClass("active_item");
                 $("#edit_connection > div >form").trigger( 'reset' );
             });
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            myAlert(textStatus,errorThrown);
         }
     });
 }

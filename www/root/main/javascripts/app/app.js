@@ -23,6 +23,7 @@ Ext.application({
         'dialogs.List',
         'reports.List',
         'scripts.Editor',
+        'master.List',
         'settings.Tree',
         'tasks.Editor',
         'settings.Editor',
