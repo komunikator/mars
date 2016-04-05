@@ -3,5 +3,5 @@ Ext.define('IVR.view.master.List', {
     xtype: 'settingsMaster',
     id: 'settingsMaster',
     title: lang['sett_master'],
-    html: '<iframe id="setMasterFrame" src="/wizard" width="100%" style="height: calc(100vh - 110px)"></iframe>'
+    html: '<iframe id="setMasterFrame" src="/wizard" width="100%" style="min-height: 100%"></iframe>'
 });

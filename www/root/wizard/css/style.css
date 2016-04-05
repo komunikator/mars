@@ -190,7 +190,7 @@ body {
 .logo_speech{
 	float: left;
 	height: 3rem;
-	width: 6.7rem;
+	width: 25%;
 }
 .sintez_logo{
 	margin-top: 3rem !important;
@@ -200,8 +200,8 @@ body {
 	float: right !important;
 }
 #current_connections {	
-	overflow-y: scroll;
-	height: 64vh;
+	overflow-y: auto;
+	height: 50vh;
 }
 #current_connections > .collection{
 	/*padding-right: 1vw !important; */
@@ -282,6 +282,10 @@ body {
 .switch label input[type=checkbox]:checked + .lever:after {
     background-color: green !important;
 }
+#voice_choose{
+	overflow-y: auto;
+	height: 60vh;
+}
 .indicator{
 	width: 33%;
     min-width: 140px;
@@ -345,6 +349,9 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 .dropdown-content li > a, .dropdown-content li > span {
 	color:  #5F9FCB !important;
 }
+#content{
+	margin-bottom: 1vh !important;
+}
 .speech_play_btn{
 	padding: 0 !important;
 	margin-top: 2vh !important;
@@ -357,6 +364,7 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 	margin: 0 !important;
 	color:#5F9FCB !important;
 	height: 10vh;
+	min-height: 4rem;
     padding: 0 15vw !important;
 }
 

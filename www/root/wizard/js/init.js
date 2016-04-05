@@ -23,8 +23,9 @@ function init_master() {
     $("#done_button").css("display","block");
     $("#page_1, #page_2, #page_3").hide();
     $("#header_title").text("Мастер настроек");
-   
-    // $("#header_decription").text("Выберите режим работы мастера настроек");
+    if (isInIframe){
+        $("#header_top").hide();
+    }
     $("#header > div.col.s12.header_bottom").hide();
     $("#header_top > div > h1").hide();
     $("#done_button > a").text("Закрыть");
@@ -35,7 +36,6 @@ function init_master() {
 }
 
 $(document).ready(function() {
-    //$("#page_4:before").hide();
     $('select').material_select();
     init_master();
     getProvidersList();
@@ -51,20 +51,6 @@ $(document).ready(function() {
                 else if (data_arr[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                 else if (data_arr[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
             }
-            // $.ajax({
-            //     url: '/statusUA',
-            //     method: 'get',
-            //     success: function (response) {
-            //         var size = 0;
-            //         for (var i = 10; i < response.data[0].length; i++){if (response.data[0][i] != null){size++}}
-            //         var data = response.data[0];
-            //         for (var i=0; i<size; i++){
-            //             if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
-            //             else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
-            //             else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
-            //         }
-            //     }
-            // }); 
         }
     }
 });
@@ -114,7 +100,6 @@ function getAccountsList() {
 }
 
 function createConnections() {
-    
     var img_src, img_alt;
     for (var i=0; i < cur_acc_list.length; i++) {
         img_src = getImgSipConnection(cur_acc_list[i].host);
@@ -210,7 +195,6 @@ function createConnections() {
         }
     }
     
-
     $("#sip_sett").on('click',function() {
         $("#header > div.col.s12.header_bottom").show();
         $("#header_top > div > h1").show();
@@ -219,11 +203,6 @@ function createConnections() {
         $("#done_button").show();
         $("#prev_button").hide();
         $("#current_connections").show();
-        if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
-            $("#current_connections").css("overflow-y","hidden");
-        }else{
-            $("#current_connections").css("overflow-y","scroll");
-        }
         $.ajax({
             url: '/statusUA',
             method: 'get',
@@ -238,8 +217,6 @@ function createConnections() {
                 }
             }
         }); 
-        //$("footer > div.col.center-align.s6.pagination").addClass("margin_right25");
-        // $("#prev_button").show();
         $("#header_title").text("Ваши текущие Sip подключения");
         $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
         $("#page_1").show();
@@ -259,7 +236,6 @@ function createConnections() {
         $("#prev_button").show();
         $("#header_title").html("Распознавание и синтез речи");
         $("#header_decription").text("Выберите предложенный сервис синтеза и распознавания речи");
-        //$("#page_4").show();
         if ($("#speech_recognize > ul li").size() == 1){
             $("#speech_recognize > ul li").addClass("active_item");
             $("#next_button").click();
@@ -289,45 +265,14 @@ function createConnections() {
 
 
     $("#next_button").on('click', function() {
-        if ($("#provider_choose").is(":visible")){
-            if ($("#provider_choose > .collection > .collection-item").hasClass("active_item")){
-                $("#provider_choose").hide();
-                $("#next_button").hide();
-                $("#done_button").show();
-                $("#header_title").html("Настройки Sip подключения");
-                $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
-                // if ($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Мегафон"){
-                //     $("#enter_login_password > div > form > span").hide();
-                // }else {
-                $("#enter_login_password > div > form > span").show();
-                $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
-                    // if($("#provider_choose > .collection > .collection-item.active_item > span.title").text() == "Youmagic.pro"){
-                    //     $("#enter_login_password > div > form > span > a").attr("href","https://youmagic.pro/ru/services/mnogokanalnyj-nomer?aid=3643");
-                    // } else {
-                    //     $("#enter_login_password > div > form > span > a").attr("href","http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034");
-                    // }
-                // }
-                $("#header_decription").html("Введите данные вашего Sip аккаунта");
-                $("#enter_login_password").show();
-                $("#page_3").show();
-            } else {
-                myAlert("Внимание","Вы не выбрали ни один из представленных провайдеров");
-            }
-        // } else if ($("#enter_login_password").is(":visible")){
-        //     $("#enter_login_password").hide();
-        //     $("#header_title").html("Распознавание и синтез речи");
-        //     $("#header_decription").text("Выберите предложенный сервис синтеза и распознавания речи");
-        //     $("#speech_recognize").show();
-        //     $("#page_4").show();
-        } else if ($("#speech_recognize").is(":visible")){
+        if ($("#speech_recognize").is(":visible")){
             if ($("#speech_recognize > .collection > .collection-item").hasClass("active_item")){
                 $("#speech_recognize").hide();
                 $("#next_button").hide();
                 $("#done_button").show();
-                $("#header_title").html("Настройки сервиса распознавания и синтез речи");
+                $("#header_title").html("Настройки сервиса распознавания и синтеза речи");
                 $("#header_decription").text("Введите ключ сервиса и выберите голос");
                 $("#voice_choose").show();
-                //$("#page_5").show();
             } else {
                 myAlert("Внимание","Вы не выбрали ни один из представленных сервисов");
             };
@@ -351,20 +296,13 @@ function createConnections() {
             }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
-            // $("#header_decription").text("Выберите режим работы мастера настроек");
         } else if ($("#provider_choose").is(":visible")){
             $("#provider_choose").hide();
             $("#next_button").hide();
             $("#done_button").show();
             $("#prev_button").hide();
             $("#provider_choose > ul > .active_item").removeClass("active_item");
-            //$("footer > div.col.center-align.s6.pagination").addClass("margin_right25");
             $("#current_connections").show();
-            if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) {
-                $("#current_connections").css("overflow-y","hidden");
-            }else{
-                $("#current_connections").css("overflow-y","scroll");
-            }
             $("#page_2").hide();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
@@ -388,6 +326,7 @@ function createConnections() {
         } else if ($("#enter_login_password").is(":visible")){
             $("#enter_login_password").hide();
             $("#next_button").show();
+            $("#next_button > a").hide();
             $("#done_button").hide();
             $("#enter_login_password > div > form").trigger('reset');
             $("#provider_choose").show();
@@ -398,12 +337,10 @@ function createConnections() {
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
             $("#done_button > a").text("Закрыть");
-            
             $("#work_mode > .collection > .collection-item").removeClass("active_item");
             $("#speech_recognize").hide();
             $("#next_button").hide();
             $("#prev_button").hide();
-            //$("#page_4").hide();
             $("#speech_recognize > ul > .active_item").removeClass("active_item");
             $("#done_button").show();
             if (isInIframe){
@@ -411,7 +348,6 @@ function createConnections() {
             }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
-            // $("#header_decription").text("Выберите режим работы мастера настроек");
         } else if ($("#voice_choose").is(":visible")){
             $("#voice_choose").hide();
             $("#next_button").show();
@@ -434,11 +370,6 @@ function createConnections() {
             from_elem.children(".right_cont").removeClass("active_item");
             $("#edit_connection > div >form").trigger( 'reset' );
             $("#current_connections").show();
-            if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
-                $("#current_connections").css("overflow-y","hidden");
-            }else{
-                $("#current_connections").css("overflow-y","scroll");
-            }
             $.ajax({
                 url: '/statusUA',
                 method: 'get',
@@ -486,13 +417,9 @@ function createConnections() {
                 $("#work_mode > .collection > .collection-item").removeClass("active_item");
                 $("#voice_choose").hide();
                 $("#prev_button").hide();
-                //$("#page_4").hide();
-                // $("#speech_recognize > ul > .active_item").removeClass("active_item");
-                // $("#voice_choose > div > form").trigger('reset');
                 $("#sintez_fields").hide();
                 $("#work_mode").show();
                 $("#header_title").text("Мастер настроек");
-
                 $.ajax({
                     url: '/resourceData/settings',
                     method: 'get',
@@ -533,13 +460,7 @@ function createConnections() {
                         myAlert(textStatus,errorThrown);
                     }
                 }); 
-
-            };
-                
-                // $("#header_decription").text("Выберите режим работы мастера настроек");
-            // } else {
-            //     myAlert("Внимание","Поле ключ должно быть заполнено и голос должен быть выбран");
-            // };   
+            };  
         } else
         if ($("#enter_login_password").is(":visible")) {
             if ($("#enter_login").val() && $("#enter_password").val()){
@@ -581,11 +502,6 @@ function createConnections() {
                     var tmp_id = $(this).parent().attr("id").substr(5);
                     var del_index = tmp_id; 
                     $("#conn_"+del_index).remove();
-                    if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
-                        $("#current_connections").css("overflow-y","hidden");
-                    }else{
-                        $("#current_connections").css("overflow-y","scroll");
-                    }
                     cur_acc_list.splice(del_index,1);
                     $.ajax({
                         url: '/resourceData/settings',
@@ -691,7 +607,6 @@ function createConnections() {
                     }
                     $("#current_connections").hide();
                     $("#page_1").hide();
-                    
                     var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
                     var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
                     $("#login + label").addClass("active");
@@ -710,11 +625,8 @@ function createConnections() {
                     method: 'get',
                     success: newSipConnection
                 });
-                
-                //$("#enter_login_password > div > form").trigger('reset');
                 $("#work_mode").show();
                 $("#header_title").text("Мастер настроек");
-                // $("#header_decription").text("Выберите режим работы мастера настроек");
                 $("#sip_sett").click();
             } else {
                 myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
@@ -723,7 +635,6 @@ function createConnections() {
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
             $("#done_button > a").text("Закрыть");
-           
             $("#work_mode > .collection > .collection-item").removeClass("active_item");
             $("#current_connections").hide();
             $("footer > div.col.center-align.s6.pagination").removeClass("margin_right25");
@@ -736,7 +647,7 @@ function createConnections() {
             }
             $("#work_mode").show();
             $("#header_title").text("Мастер настроек");
-            // $("#header_decription").text("Выберите режим работы мастера настроек");
+
         } else if ($("#work_mode").is(":visible")) {
             window.location = '../../';
         }
@@ -746,11 +657,11 @@ function createConnections() {
         var tmp_id = $(this).parent().attr("id").substr(5);
         var del_index = tmp_id;
         $("#conn_"+del_index).remove();
-        if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
-            $("#current_connections").css("overflow-y","hidden");
-        }else{
-            $("#current_connections").css("overflow-y","scroll");
-        }
+        // if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+        //     $("#current_connections").css("overflow-y","hidden");
+        // }else{
+        //     $("#current_connections").css("overflow-y","scroll");
+        // }
         cur_acc_list.splice(del_index,1);
         $.ajax({
             url: '/resourceData/settings',
@@ -853,7 +764,16 @@ function createConnections() {
             $(this).addClass("active_item");
             if ($(this).parent().parent().attr("id") == "provider_choose"){
                 $("#next_button > a").show();
-                $("#next_button").click();
+                $("#provider_choose").hide();
+                $("#next_button").hide();
+                $("#done_button").show();
+                $("#header_title").html("Настройки Sip подключения");
+                $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
+                $("#enter_login_password > div > form > span").show();
+                $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
+                $("#header_decription").html("Введите данные вашего Sip аккаунта");
+                $("#enter_login_password").show();
+                $("#page_3").show(); 
             }
         }
     });
@@ -953,10 +873,11 @@ function createConnections() {
         }
     });
     $("#del_connection_btn").on('click', function() {
-        from_elem.children('.del_btn').click();
-
-        $("#prev_button").click();
-
+        var result = confirm("Вы уверены что хотите удалить запись?")
+        if (result){
+            from_elem.children('.del_btn').click();
+            $("#prev_button").click();
+        }
     });
     // $("#page_4").on('click', function() {
     //     if ($("#voice_choose").is(":visible")){
