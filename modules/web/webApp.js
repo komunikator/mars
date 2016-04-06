@@ -42,17 +42,18 @@ app.set('webPath', bus.config.get("webPath") || '');
 app.set('trustedNet', bus.config.get("trustedNet"));
 
 //http server
-app.set('lang', require(process.cwd() + '/www/root/lang/ru.js').msg);
+var wwwPath = bus.config.get("wwwPath") || process.cwd();
+app.set('lang', require(wwwPath + '/www/root/lang/ru.js').msg);
 bus.onRequest('lang', function (param, cb) {
     cb(null, app.get('lang') || {});
 });
 app.use(require('body-parser')());
 app.engine('html', gaikan);
 app.set('view engine', '.html');
-app.set('views', process.cwd() + '/www/views');
+app.set('views', wwwPath + '/www/views');
 app.set('viewsList', require('../../lib/util').getFiles(app.get('views')));
 
-app.use(Express.static(bus.config.get("wwwPath") || (process.cwd() + '/www/root')));
+app.use(Express.static(wwwPath + '/www/root'));
 
 if (bus.config.get("webAuth") !== "disable")
     require('./auth/')(app);
@@ -86,7 +87,7 @@ var port = process.env.PORT || bus.config.get("webPort") || 8080;
 
 var server = Http.createServer(app).listen(port, function () {
     bus.emit('message', {category: 'server', type: 'info', msg: 'Web server start on port ' + this.address().port});
-    bus.emit('startWebServer', { port: this.address().port });
+    bus.emit('startWebServer', {port: this.address().port});
 });
 
 server.on('upgrade', function (req, socket, upgradeHead) {
