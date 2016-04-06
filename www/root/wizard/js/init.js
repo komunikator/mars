@@ -252,9 +252,9 @@ function createConnections() {
                     $("#secret_key_sintez + label").addClass("active");
                     $("#secret_key_sintez").val(ivona_sett.secretKey);
                 }
-                $("#voice_choose > div > form > div > div:nth-child(2) > div > select").val(cur_speech_sintez);
-                $("#voice_choose > div > form > div > div:nth-child(2) > div > input").val($('#voice_choose > div > form > div > div:nth-child(2) > div > select option[value="'+cur_speech_sintez+'"]').text());
-                if ($("#voice_choose > div > form > div > div.input-field.col.s12 > div > select").val() == "ivona"){
+                $("#def_tts").val(cur_speech_sintez);
+                $("#def_tts").parent().children("input").val($('#def_tts option[value="'+cur_speech_sintez+'"]').text());
+                if ($("#def_tts").val() == "ivona"){
                     $("#sintez_fields").show();
                 }else{
                     $("#sintez_fields").hide();
@@ -405,7 +405,7 @@ function createConnections() {
 
     $("#done_button").on('click', function() {
         if ($("#voice_choose").is(":visible")){
-            if ($("#voice_choose > div > form > div > div.input-field.col.s12 > div > select").val() == "ivona" && !$("#secret_key_sintez").val() && !$("#access_key_sintez").val()){
+            if ($("#def_tts").val() == "ivona" && !$("#secret_key_sintez").val() && !$("#access_key_sintez").val()){
                 myAlert("Внимание","Поля ключей синтеза Ivona должны быть заполнены");
             }else{
                 $("#header > div.col.s12.header_bottom").hide();
@@ -427,7 +427,7 @@ function createConnections() {
                         var data = jQuery.parseJSON(response.data[0].value);
                         data.recognize.options.developer_key = $("#key").val();
                         cur_speech_recognize.options.developer_key = $("#key").val();
-                        if ($("#voice_choose > div > form > div > div.input-field.col.s12 > div > select").val() == "ivona"){
+                        if ($("#def_tts").val() == "ivona"){
                             data.def_tts = "ivona";
                             cur_speech_sintez = "ivona";
                             data.ivona_speech.accessKey = $("#access_key_sintez").val();
@@ -851,8 +851,8 @@ function createConnections() {
         }
     });
 
-    $("#voice_choose > div > form > div > div.input-field.col.s12 > div > select").on('change',function() {
-        if ($("#voice_choose > div > form > div > div.input-field.col.s12 > div > select").val() == "ivona"){
+    $("#def_tts").on('change',function() {
+        if ($("#def_tts").val() == "ivona"){
             $("#sintez_fields").show();
         }else{
             $("#sintez_fields").hide();

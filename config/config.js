@@ -22,7 +22,7 @@
     "ringingTimeout": "30",
     "serviceName": "MARS",
     "activeAccount": 0,
-    "def_tts": "yandex",
+    "def_tts": "ivona",
     "ivona_speech": {
         "accessKey": "XXX",
         "secretKey": "XXXXXXXXX",
