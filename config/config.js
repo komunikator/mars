@@ -41,39 +41,10 @@
         {
             "host": "193.201.229.35",
             "expires": 60,
-            "user": "ghjghjg",
-            "password": "ghjghj",
-            "disable": 0,
-            "domain": "multifon.ru"
-        },
-        {
-            "host": "mangosip.ru",
-            "expires": 60,
-            "user": "ghj",
-            "password": "ghjg",
-            "disable": 0
-        },
-        {
-            "host": "193.201.229.35",
-            "expires": 60,
-            "user": "вап",
-            "password": "вап",
+            "user": "xxxxxxxx",
+            "password": "xxxxxxxx",
             "disable": 1,
             "domain": "multifon.ru"
-        },
-        {
-            "host": "mangosip.ru",
-            "expires": 60,
-            "user": "dfhdf",
-            "password": "dfgdfg",
-            "disable": 1
-        },
-        {
-            "host": "mangosip.ru",
-            "expires": 60,
-            "user": "dfgdfg",
-            "password": "dfgdfg",
-            "disable": 1
         }
     ],
     "levels": {
