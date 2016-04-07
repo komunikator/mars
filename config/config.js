@@ -22,10 +22,10 @@
     "ringingTimeout": "30",
     "serviceName": "MARS",
     "activeAccount": 0,
-    "def_tts": "ivona",
+    "def_tts": "yandex",
     "ivona_speech": {
-        "accessKey": "XXX",
-        "secretKey": "XXXXXXXXX",
+        "accessKey": "",
+        "secretKey": "",
         "language": "ru-RU",
         "name": "Tatyana",
         "gender": "Female"
@@ -33,7 +33,7 @@
     "recognize": {
         "type": "yandex",
         "options": {
-            "developer_key": "XXXXXXXXX",
+            "developer_key": "",
             "model": "general"
         }
     },

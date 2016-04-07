@@ -34,7 +34,7 @@ exports.getStoreData = function (data) {
                 var _data = [];
                 if (data[i].dtmfData)
                     data[i].dtmfData.forEach(function (el) {
-                        _data.push((el.name ? el.name + ':' : '') + el.keys);
+                        _data.push((el.name ? el.name + ': ' : '') + el.keys);
                     });
                 dialogData.push(
                         {_id: i,
