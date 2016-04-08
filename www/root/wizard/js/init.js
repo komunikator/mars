@@ -680,7 +680,6 @@ function createConnections() {
                         $.get("http://" + hostname + ":" + port + "/resourceData/settings", function() {
                             var next_ind = parseInt(del_index)+1;
                             var iterator = $("#conn_"+next_ind);
-                            console.log(iterator);
                             while (tmp_id != cur_acc_list.length){
                                 iterator.attr("id", "conn_"+tmp_id);
                                 iterator = iterator.next();
@@ -814,13 +813,14 @@ function createConnections() {
             $("#page_1").show();
             $("#prev_button").hide();
             $("#done_button").show();
+            $("#current_connections").show();
             $("#prev_button").hide();
             $("#header_title").text("Ваши текущие Sip подключения");
             $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
             from_elem.removeClass("active_item");
             from_elem.children(".right_cont").removeClass("active_item");
             var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
-
+            
             $.ajax({
                 url: '/resourceData/settings',
                 method: 'get',
@@ -833,6 +833,7 @@ function createConnections() {
                 method: 'get',
                 success: function (res) {
                     var size = 0;
+             
                     for (var i = 10; i < res.data[0].length; i++){if (res.data[0][i] != null){size++}}
                     var data = res.data[0];
                     for (var i=0; i<size; i++){
@@ -845,7 +846,6 @@ function createConnections() {
                     myAlert(textStatus,errorThrown);
                 }
             });
-           
         } else {
             myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
         }
@@ -946,7 +946,6 @@ function recordSipConnection(response) {
         user: login,
         password: pass,
     };
-
     if (!host) {
         if (data && data.sipAccounts &&
             data.sipAccounts[idSipRecord] &&
@@ -978,16 +977,13 @@ function recordSipConnection(response) {
     response.data[0].name = 'config/config';
     //save in the proper format
     response.data[0].value = JSON.stringify(data, null, 4);
-
     $.ajax({
         url: "/resourceData/update",
         method: 'put',
         data: response.data[0],
         success: function (response) {
-            $.get("http://" + hostname + ":" + port + "/resourceData/settings", function() {
-                from_elem.removeClass("active_item");
-                $("#edit_connection > div >form").trigger( 'reset' );
-            });
+            from_elem.removeClass("active_item");
+            $("#edit_connection > div >form").trigger( 'reset' );
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             myAlert(textStatus,errorThrown);
