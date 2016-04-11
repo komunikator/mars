@@ -165,6 +165,7 @@ lang = {
     duration: "Длительность",
     operator_contact: "Номер оператора",
     disabled: "отключен",
+    registration: "регистрируется",
     registered: "зарегистрирован",
     unregistered: "ошибка регистрации",
     showPg: 'Показывать',

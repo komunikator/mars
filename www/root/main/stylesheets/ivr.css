@@ -161,6 +161,11 @@
     background: url(../images/ivr/offline.gif)  no-repeat center center !important;
 }
 
+.ua-loading {
+/*    background: url(../images/ivr/anchor.png)  no-repeat center center !important;*/
+    background: url(../images/ivr/mini-loading.gif)  no-repeat center center !important;
+}
+
 .ua-disable {
 /*    background: url(../images/ivr/anchor.png)  no-repeat center center !important;*/
     background: url(../images/ivr/mini_circle.png)  no-repeat center center !important;

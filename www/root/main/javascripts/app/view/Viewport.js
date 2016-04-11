@@ -175,6 +175,10 @@ Ext.define('IVR.view.Viewport', {
                                 metadata.css = 'ua-offline';
                                 status = lang['unregistered'];
                                 break;
+                            case 3:
+                                metadata.css = 'ua-loading';
+                                status = lang['registration'];
+                                break;
                             case 0:
                                 metadata.css = 'ua-disable';
                                 status = lang['disabled'];
