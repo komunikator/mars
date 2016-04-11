@@ -1,4 +1,5 @@
 exports.src = {
+    dtmfDataFields: ['Номер счета','Показания прибора'],
     recOn: true,
         mark: 'Начало',
             play: { file: 'media/Добро_пожаловать_в демонстрацию_системы_MARS.wav',
@@ -29,7 +30,7 @@ exports.src = {
                                     + 'media/uchet/По_окончании_ввода_нажмите_клавишу_#.wav;'
                                     + 'media/uchet/Или_произнесите_последовательно_каждую_цифру.wav;'
                                     + 'media/uchet/Сигнал_записи.wav'},
-                                        on: {'opt': {seq: true, endSeq: '#', model:'numbers', textFilter:'[\\d ]+'},
+                                        on: {'opt': {seq: true, endSeq: '#', model:'numbers', textFilter:'(\\d+)'},
                                             '\\*': {goto: 'Главное меню'},
                                                 '^\\d+$': {
                                                     dtmfData: { next: {
@@ -39,7 +40,7 @@ exports.src = {
                                                             + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                             + 'media/uchet/Сигнал_записи.wav'}
                                                               },
-                                                        on: {    'opt': {model:'general', textFilter:'да|нет'},
+                                                        on: {    'opt': {model: 'questionnaire', textFilter:'да|нет'},
                                                              '^1$|да': {
                                                                  mark: 'Меню_2',
                                                                  sendMESSAGE: {text: 'правильность номера лицевого счёта подтверждена'},
@@ -49,7 +50,7 @@ exports.src = {
                                                                         + 'media/uchet/Или_произнесите_последовательно_каждую_цифру.wav;'
                                                                         + 'media/uchet/Сигнал_записи.wav'
                                                                        },
-                                                                 on: {'opt': {seq: true, endSeq: '#', model:'numbers', textFilter:'[\\d ]+'},
+                                                                 on: {'opt': {seq: true, endSeq: '#', model:'numbers', textFilter:'(\\d+)'},
                                                                       '^\\d+$': {
                                                                           dtmfData: { next: {
                                                                               mark: 'Меню_3',
@@ -58,7 +59,7 @@ exports.src = {
                                                                                   + 'media/uchet/Если_верно_1да_если_неверно_2нет.wav;'
                                                                                   + 'media/uchet/Сигнал_записи.wav'}
                                                                                     },
-                                                                              on: {    'opt': {model:'general',textFilter:'да|нет'},
+                                                                              on: {    'opt': {model: 'questionnaire',textFilter:'да|нет'},
                                                                                    '^1$|да': {
                                                                                               sendMESSAGE: {text: 'правильность показания прибора подтверждена'},
                                                                                               play: {file: 'media/uchet/Вход_в_меню.wav;'
