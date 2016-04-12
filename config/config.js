@@ -39,7 +39,7 @@
     },
     "sipAccounts": [
         {
-            "host": "193.201.229.35",
+            "host": "ya1.ru",
             "expires": 60,
             "user": "xxxxxxxx",
             "password": "xxxxxxxx",

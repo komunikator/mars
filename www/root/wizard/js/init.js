@@ -6,6 +6,7 @@ var cur_speech_sintez;
 var ivona_sett;
 var from_elem;
 var isInIframe = (window.location != window.parent.location) ? true : false;
+
 function init_master() {
     $("#header").css("display", "block");
     $("#content").css("display", "flex");
@@ -36,6 +37,7 @@ function init_master() {
 }
 
 $(document).ready(function() {
+
     $('select').material_select();
     init_master();
     getProvidersList();
@@ -48,6 +50,7 @@ $(document).ready(function() {
             for (var i = 10; i < data_arr.length; i++){if (data_arr[i] != null){size++}}
             for (var i=0; i<size; i++){
                 if (data_arr[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                else if (data_arr[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                 else if (data_arr[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                 else if (data_arr[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
             }
@@ -212,6 +215,7 @@ function createConnections() {
                 var data = response.data[0];
                 for (var i=0; i<size; i++){
                     if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                    else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                     else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                     else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                 }
@@ -315,6 +319,7 @@ function createConnections() {
                     var data = response.data[0];
                     for (var i=0; i<size; i++){
                         if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                        else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }
@@ -379,6 +384,7 @@ function createConnections() {
                     var data = response.data[0];
                     for (var i=0; i<size; i++){
                         if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                        else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }
@@ -584,6 +590,7 @@ function createConnections() {
                             var data = response.data[0];
                             for (var i=0; i<size; i++){
                                 if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                                else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                                 else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                                 else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                             }
@@ -745,6 +752,7 @@ function createConnections() {
                 var data = res.data[0];
                 for (var i=0; i<size; i++){
                     if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                    else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                     else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                     else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                 }
@@ -838,6 +846,7 @@ function createConnections() {
                     var data = res.data[0];
                     for (var i=0; i<size; i++){
                        if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                       else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
                         else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
                         else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
                     }

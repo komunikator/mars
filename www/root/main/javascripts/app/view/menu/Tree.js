@@ -65,6 +65,8 @@ Ext.define('IVR.view.menu.Tree', {
         }
         ;//else
         Ext.getCmp('content-panel').layout.setActiveItem(panelId);
+         if (document.getElementById('setMasterFrame'))
+            document.getElementById('setMasterFrame').src = document.getElementById('setMasterFrame').src;
         //if ('dialogsList')
         //    Ext.data.StoreManager.lookup('Dialogs').load();
         /*
@@ -83,7 +85,7 @@ Ext.define('IVR.view.menu.Tree', {
             if ((n.leaf || n._leaf) && n.id != sn.id) {  // ignore clicks on folders and currently selected node
                 /* show panel */
                 // if (n.id == 'settingsMaster'){
-                //     window.location = "wizard/";
+                //    
                 // }else 
                 if (n.id == 'logout')
                     window.location.href = '/logOut';
