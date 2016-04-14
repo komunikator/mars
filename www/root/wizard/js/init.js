@@ -107,6 +107,7 @@ function createConnections() {
     for (var i=0; i < cur_acc_list.length; i++) {
         img_src = getImgSipConnection(cur_acc_list[i].host);
         img_alt = getNameProvConnection(cur_acc_list[i].host);
+        if (!cur_acc_list[i].domain) cur_acc_list[i].domain = "";
         if (cur_acc_list[i].disable == 1){
             if (img_src && img_alt) {
                 $("#current_connections > .collection").append(
@@ -115,7 +116,7 @@ function createConnections() {
                             '<div class="povider_logo_cont">'+
                                 '<img src="'+img_src+'" alt="'+img_alt+'" class="provider_logo">'+
                             '</div>'+
-                            '<span class="title accaunt_uri valign" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
+                            '<span class="title accaunt_uri valign" domain="'+cur_acc_list[i].domain+'" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
                         '</div>'+ 
                         '<div class="right_cont valign-wrapper">'+
                             '<div class="switch">'+
@@ -136,7 +137,7 @@ function createConnections() {
                             '<div class="povider_logo_cont">'+
                                 '<img src="images/favicon.png" alt="provider" class="provider_logo">'+
                             '</div>'+
-                            '<span class="title accaunt_uri valign" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
+                            '<span class="title accaunt_uri valign" domain="'+cur_acc_list[i].domain+'" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
                         '</div>'+
                         '<div class="right_cont valign-wrapper">'+
                             '<div class="switch">'+
@@ -159,7 +160,7 @@ function createConnections() {
                             '<div class="povider_logo_cont">'+
                                 '<img src="'+img_src+'" alt="'+img_alt+'" class="provider_logo">'+
                             '</div>'+
-                            '<span class="title accaunt_uri valign" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
+                            '<span class="title accaunt_uri valign" domain="'+cur_acc_list[i].domain+'" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
                         '</div>'+
                         '<div class="right_cont valign-wrapper">'+
                             '<div class="switch">'+
@@ -180,7 +181,7 @@ function createConnections() {
                             '<div class="povider_logo_cont">'+
                                 '<img src="images/favicon.png" alt="provider" class="provider_logo">'+
                             '</div>'+
-                            '<span class="title accaunt_uri valign" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
+                            '<span class="title accaunt_uri valign" domain="'+cur_acc_list[i].domain+'" password="'+cur_acc_list[i].password+'">'+cur_acc_list[i].user+'</span>'+
                         '</div>'+ 
                         '<div class="right_cont valign-wrapper">'+
                             '<div class="switch">'+
@@ -470,171 +471,186 @@ function createConnections() {
         } else
         if ($("#enter_login_password").is(":visible")) {
             if ($("#enter_login").val() && $("#enter_password").val()){
-                $("#header > div.col.s12.header_bottom").hide();
-                $("#header_top > div > h1").hide();
-                $("#done_button > a").text("Закрыть");
-                if (isInIframe){
-                    $("#done_button").hide();
-                }
-                $("#work_mode > .collection > .collection-item").removeClass("active_item");
-                $("#enter_login_password").hide();
-                $("#prev_button").hide();
-                $("#page_1, #page_2, #page_3").hide();
-                var prov_name = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("alt");
-                var prov_img = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("src");
-                var prov_url = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("url");
-                $("#current_connections > .collection").append(
-                    '<li id="conn_'+cur_acc_list.length+'" class="collection-item with_del valign-wrapper">'+
-                        '<div class="click_area valign-wrapper">'+
-                            '<div class="povider_logo_cont">'+
-                                '<img src="'+prov_img+'" alt="'+prov_name+'" class="provider_logo">'+
+                if ($("#enter_domain").is(":visible") && $("#enter_domain").val() == ""){
+                    myAlert("Внимание!","Поле Домен должно быть заполнено!");
+                }else{
+                    $("#header > div.col.s12.header_bottom").hide();
+                    $("#header_top > div > h1").hide();
+                    $("#done_button > a").text("Закрыть");
+                    if (isInIframe){
+                        $("#done_button").hide();
+                    }
+                    $("#work_mode > .collection > .collection-item").removeClass("active_item");
+                    $("#enter_login_password").hide();
+                    $("#prev_button").hide();
+                    $("#page_1, #page_2, #page_3").hide();
+                    var prov_name = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("alt");
+                    var prov_img = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("src");
+                    var prov_url = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("url");
+                    $("#current_connections > .collection").append(
+                        '<li id="conn_'+cur_acc_list.length+'" class="collection-item with_del valign-wrapper">'+
+                            '<div class="click_area valign-wrapper">'+
+                                '<div class="povider_logo_cont">'+
+                                    '<img src="'+prov_img+'" alt="'+prov_name+'" class="provider_logo">'+
+                                '</div>'+
+                                '<span class="title accaunt_uri valign" domain="'+$("#enter_domain").val()+'" password="'+$("#enter_password").val()+'">'+$("#enter_login").val()+'</span>'+
                             '</div>'+
-                            '<span class="title accaunt_uri valign" password="'+$("#enter_password").val()+'">'+$("#enter_login").val()+'</span>'+
-                        '</div>'+
-                        '<div class="right_cont valign-wrapper">'+ 
-                            '<div class="switch">'+
-                                '<label title="Подключить аккаунт"><input type="checkbox"><span class="lever"></span></label>'+
-                            '</div>'+
-                            '<div class="indicator">Отключён</div>'+
-                            '<div class="edit_btn_cont click_area"><a href="javascript:void(0)" class="btn-flat grey-text">РЕДАКТИРОВАТЬ</a></div>'+
-                        '</div>'+ 
-                        '<a href="javascript:void(0)" class="del_btn">'+
-                            '<img src="images/delete.png" alt="del" class="currents_icon del_icon">'+
-                        '</a>'+
-                    '</li>'
-                );
-                
-                $("#current_connections > .collection > .collection-item:last-child > .del_btn").on('click', function() {
-                    var tmp_id = $(this).parent().attr("id").substr(5);
-                    var del_index = tmp_id; 
-                    $("#conn_"+del_index).remove();
-                    cur_acc_list.splice(del_index,1);
-                    $.ajax({
-                        url: '/resourceData/settings',
-                        method: 'get',
-                        success: function (response) {
-                            var data = jQuery.parseJSON(response.data[0].value);
-                            data.sipAccounts.splice(del_index, 1);
-                            response.data[0].create = false;
-                            response.data[0].name = 'config/config';
-                            response.data[0].value = JSON.stringify(data, null, 4);
-                            $.ajax({
-                                url: "/resourceData/update",
-                                method: 'put',
-                                data: response.data[0],
-                                success: function (response) {
-                                    $.get("http://" + hostname + ":" + port + "/resourceData/settings", function() {
-                                        var next_ind = parseInt(del_index)+1;
-                                        var iterator = $("#conn_"+next_ind);
-                                        while (tmp_id != cur_acc_list.length){
-                                            console.log(iterator.next().attr("id"));
-                                            iterator.attr("id", "conn_"+tmp_id);
-                                            iterator = iterator.next();
-                                            tmp_id++;
-                                        }
-                                        
-                                    });
-                                },
-                                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                    myAlert(textStatus,errorThrown);
-                                }
-                            });
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            myAlert(textStatus,errorThrown);
-                        }
-                    }); 
+                            '<div class="right_cont valign-wrapper">'+ 
+                                '<div class="switch">'+
+                                    '<label title="Подключить аккаунт"><input type="checkbox"><span class="lever"></span></label>'+
+                                '</div>'+
+                                '<div class="indicator">Отключён</div>'+
+                                '<div class="edit_btn_cont click_area"><a href="javascript:void(0)" class="btn-flat grey-text">РЕДАКТИРОВАТЬ</a></div>'+
+                            '</div>'+ 
+                            '<a href="javascript:void(0)" class="del_btn">'+
+                                '<img src="images/delete.png" alt="del" class="currents_icon del_icon">'+
+                            '</a>'+
+                        '</li>'
+                    );
                     
-                });
+                    $("#current_connections > .collection > .collection-item:last-child > .del_btn").on('click', function() {
+                        var tmp_id = $(this).parent().attr("id").substr(5);
+                        var del_index = tmp_id; 
+                        $("#conn_"+del_index).remove();
+                        cur_acc_list.splice(del_index,1);
+                        $.ajax({
+                            url: '/resourceData/settings',
+                            method: 'get',
+                            success: function (response) {
+                                var data = jQuery.parseJSON(response.data[0].value);
+                                data.sipAccounts.splice(del_index, 1);
+                                response.data[0].create = false;
+                                response.data[0].name = 'config/config';
+                                response.data[0].value = JSON.stringify(data, null, 4);
+                                $.ajax({
+                                    url: "/resourceData/update",
+                                    method: 'put',
+                                    data: response.data[0],
+                                    success: function (response) {
+                                        $.get("http://" + hostname + ":" + port + "/resourceData/settings", function() {
+                                            var next_ind = parseInt(del_index)+1;
+                                            var iterator = $("#conn_"+next_ind);
+                                            while (tmp_id != cur_acc_list.length){
+                                                console.log(iterator.next().attr("id"));
+                                                iterator.attr("id", "conn_"+tmp_id);
+                                                iterator = iterator.next();
+                                                tmp_id++;
+                                            }
+                                            
+                                        });
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        myAlert(textStatus,errorThrown);
+                                    }
+                                });
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                myAlert(textStatus,errorThrown);
+                            }
+                        }); 
+                        
+                    });
 
-                $('#current_connections > .collection > .collection-item:last-child input[type="checkbox"]').on("change", function() {
-                    var tmp_id = $(this).parent().parent().parent().parent().attr("id").substr(5);
-                    if ($(this).prop('checked')){
-                        cur_acc_list[tmp_id].disable = 0;
-                        $(this).parent().attr("title","Отключить аккаунт");
-                    }else{
-                        cur_acc_list[tmp_id].disable = 1;
-                        $(this).parent().attr("title","Подключить аккаунт");
-                    }
-                    $(this).prop('disabled', true);
-                    var checkbox = $(this);
+                    $('#current_connections > .collection > .collection-item:last-child input[type="checkbox"]').on("change", function() {
+                        var tmp_id = $(this).parent().parent().parent().parent().attr("id").substr(5);
+                        if ($(this).prop('checked')){
+                            cur_acc_list[tmp_id].disable = 0;
+                            $(this).parent().attr("title","Отключить аккаунт");
+                        }else{
+                            cur_acc_list[tmp_id].disable = 1;
+                            $(this).parent().attr("title","Подключить аккаунт");
+                        }
+                        $(this).prop('disabled', true);
+                        var checkbox = $(this);
+                        $.ajax({
+                            url: '/resourceData/settings',
+                            method: 'get',
+                            success: function (response) {
+                                var data = jQuery.parseJSON(response.data[0].value);
+                                data.sipAccounts[tmp_id].disable = cur_acc_list[tmp_id].disable;
+                                response.data[0].create = false;
+                                response.data[0].name = 'config/config';
+                                response.data[0].value = JSON.stringify(data, null, 4);
+                                $.ajax({
+                                    url: "/resourceData/update",
+                                    method: 'put',
+                                    data: response.data[0],
+                                    success: function () {checkbox.prop('disabled', false);},
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        myAlert(textStatus,errorThrown);
+                                    }
+                                });
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                myAlert(textStatus,errorThrown);
+                            }
+                        });
+                        $.ajax({
+                            url: '/statusUA',
+                            method: 'get',
+                            success: function (response) {
+                                var size = 0;
+                                for (var i = 10; i < response.data[0].length; i++){if (response.data[0][i] != null){size++}}
+                                var data = response.data[0];
+                                for (var i=0; i<size; i++){
+                                    if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                                    else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
+                                    else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
+                                    else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
+                                }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                myAlert(textStatus,errorThrown);
+                            }
+                        });
+                    });
+                    $("#current_connections > .collection > .collection-item:last-child .click_area").on('click',function() {
+                        from_elem = $(this).parent();
+                        if (from_elem.hasClass('right_cont')){
+                            from_elem = from_elem.parent();
+                            $(this).parent().removeClass("active_item");
+                        }
+                        $(this).parent().parent().children(".active_item").removeClass("active_item");
+                        if ($(this).parent().hasClass("active_item")){
+                            $(this).parent().removeClass("active_item");
+                        }else{
+                            $(this).parent().addClass("active_item");
+                        }
+                        $("#current_connections").hide();
+                        $("#page_1").hide();
+                        $("#domain").val("");
+                        var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
+                        var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
+                        var from_domain = from_elem.children(".click_area").children(".accaunt_uri").attr("domain");
+                        $("#login + label").addClass("active");
+                        $("#login").val(from_uri);
+                        $("#password + label").addClass("active");
+                        $("#password").val(from_pass);
+                        $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
+                        $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
+                        $("#header_decription").text("Измените данные и нажмите сохранить");
+                        $("#prev_button").show();
+                        $("#done_button").hide();
+                        $("#edit_connection").show();
+                        if (from_elem.children(".click_area").children(".povider_logo_cont").children().attr('alt') == "Манго Телеком") {
+                            $("#domain + label").addClass("active");
+                            $("#domain").val(from_domain);
+                            $("#domain").parent().show();
+                        } else {
+                            $("#domain + label").removeClass("active");
+                            $("#domain").val("");
+                            $("#domain").parent().hide();
+                        }
+                    });
                     $.ajax({
                         url: '/resourceData/settings',
                         method: 'get',
-                        success: function (response) {
-                            var data = jQuery.parseJSON(response.data[0].value);
-                            data.sipAccounts[tmp_id].disable = cur_acc_list[tmp_id].disable;
-                            response.data[0].create = false;
-                            response.data[0].name = 'config/config';
-                            response.data[0].value = JSON.stringify(data, null, 4);
-                            $.ajax({
-                                url: "/resourceData/update",
-                                method: 'put',
-                                data: response.data[0],
-                                success: function () {checkbox.prop('disabled', false);},
-                                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                    myAlert(textStatus,errorThrown);
-                                }
-                            });
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            myAlert(textStatus,errorThrown);
-                        }
+                        success: newSipConnection
                     });
-                    $.ajax({
-                        url: '/statusUA',
-                        method: 'get',
-                        success: function (response) {
-                            var size = 0;
-                            for (var i = 10; i < response.data[0].length; i++){if (response.data[0][i] != null){size++}}
-                            var data = response.data[0];
-                            for (var i=0; i<size; i++){
-                                if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
-                                else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
-                                else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
-                                else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
-                            }
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            myAlert(textStatus,errorThrown);
-                        }
-                    });
-                });
-                $("#current_connections > .collection > .collection-item:last-child .click_area").on('click',function() {
-                    from_elem = $(this).parent();
-                    if (from_elem.hasClass('right_cont')){
-                        from_elem = from_elem.parent();
-                        $(this).parent().removeClass("active_item");
-                    }
-                    $(this).parent().parent().children(".active_item").removeClass("active_item");
-                    if ($(this).parent().hasClass("active_item")){
-                        $(this).parent().removeClass("active_item");
-                    }else{
-                        $(this).parent().addClass("active_item");
-                    }
-                    $("#current_connections").hide();
-                    $("#page_1").hide();
-                    var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
-                    var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
-                    $("#login + label").addClass("active");
-                    $("#login").val(from_uri);
-                    $("#password + label").addClass("active");
-                    $("#password").val(from_pass);
-                    $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
-                    $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
-                    $("#header_decription").text("Измените данные и нажмите сохранить");
-                    $("#prev_button").show();
-                    $("#done_button").hide();
-                    $("#edit_connection").show();
-                });
-                $.ajax({
-                    url: '/resourceData/settings',
-                    method: 'get',
-                    success: newSipConnection
-                });
-                $("#work_mode").show();
-                $("#header_title").text("Мастер настроек");
-                $("#sip_sett").click();
+                    $("#work_mode").show();
+                    $("#header_title").text("Мастер настроек");
+                    $("#sip_sett").click();
+                } 
             } else {
                 myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
             }
@@ -773,6 +789,7 @@ function createConnections() {
                 $("#next_button > a").show();
                 $("#provider_choose").hide();
                 $("#next_button").hide();
+                $("#enter_domain").val("");
                 $("#done_button").show();
                 $("#header_title").html("Настройки Sip подключения");
                 $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
@@ -780,7 +797,16 @@ function createConnections() {
                 $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
                 $("#header_decription").html("Введите данные вашего Sip аккаунта");
                 $("#enter_login_password").show();
-                $("#page_3").show(); 
+                $("#page_3").show();
+                if ($("#provider_choose .collection-item.active_item .provider_logo").attr('alt') == "Манго Телеком") {
+                    $("#enter_domain").parent().show();
+                    $("#enter_domain + label").addClass("active");
+                    $("#enter_domain").val(getDomainSipConnection("Манго Телеком"));
+                } else {
+                    $("#enter_domain + label").removeClass("active");
+                    $("#enter_domain").parent().hide();
+
+                }
             }
         }
     });
@@ -801,8 +827,10 @@ function createConnections() {
         }else{
             $(this).parent().addClass("active_item");
         }
+        $("#domain").val("");
         var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
         var from_pass = from_elem.children(".click_area").children(".accaunt_uri").attr("password");
+        var from_domain = from_elem.children(".click_area").children(".accaunt_uri").attr("domain");
         $("#login + label").addClass("active");
         $("#login").val(from_uri);
         $("#password + label").addClass("active");
@@ -813,48 +841,62 @@ function createConnections() {
         $("#prev_button").show();
         $("#done_button").hide();
         $("#edit_connection").show();
+        if (from_elem.children(".click_area").children(".povider_logo_cont").children().attr('alt') == "Манго Телеком") {
+            $("#domain + label").addClass("active");
+            $("#domain").val(from_domain);
+            $("#domain").parent().show();
+        } else {
+            $("#domain + label").removeClass("active");
+            $("#domain").val("");
+            $("#domain").parent().hide();
+        }
     });
 
     $("#save_conn_btn").on('click', function() {
         if ($("#login").val() && $("#password").val()){
-            $("#edit_connection").hide();
-            $("#page_1").show();
-            $("#prev_button").hide();
-            $("#done_button").show();
-            $("#current_connections").show();
-            $("#prev_button").hide();
-            $("#header_title").text("Ваши текущие Sip подключения");
-            $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
-            from_elem.removeClass("active_item");
-            from_elem.children(".right_cont").removeClass("active_item");
-            var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
-            
-            $.ajax({
-                url: '/resourceData/settings',
-                method: 'get',
-                success: recordSipConnection
-            });
-            from_elem.children(".click_area").children(".accaunt_uri").text($("#login").val());
-            from_elem.children(".click_area").children(".accaunt_uri").attr("password",$("#password").val());
-            $.ajax({
-                url: '/statusUA',
-                method: 'get',
-                success: function (res) {
-                    var size = 0;
-             
-                    for (var i = 10; i < res.data[0].length; i++){if (res.data[0][i] != null){size++}}
-                    var data = res.data[0];
-                    for (var i=0; i<size; i++){
-                       if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
-                       else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
-                        else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
-                        else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
+            if ($("#domain").is(":visible") && $("#domain").val() == ""){
+                myAlert("Внимание!","Поле домен должно быть заполнено!");
+            }else{
+                $("#edit_connection").hide();
+                $("#page_1").show();
+                $("#prev_button").hide();
+                $("#done_button").show();
+                $("#current_connections").show();
+                $("#prev_button").hide();
+                $("#header_title").text("Ваши текущие Sip подключения");
+                $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+                from_elem.removeClass("active_item");
+                from_elem.children(".right_cont").removeClass("active_item");
+                var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
+                
+                $.ajax({
+                    url: '/resourceData/settings',
+                    method: 'get',
+                    success: recordSipConnection
+                });
+                from_elem.children(".click_area").children(".accaunt_uri").text($("#login").val());
+                from_elem.children(".click_area").children(".accaunt_uri").attr("password",$("#password").val());
+                from_elem.children(".click_area").children(".accaunt_uri").attr("domain",$("#domain").val());
+                $.ajax({
+                    url: '/statusUA',
+                    method: 'get',
+                    success: function (res) {
+                        var size = 0;
+                 
+                        for (var i = 10; i < res.data[0].length; i++){if (res.data[0][i] != null){size++}}
+                        var data = res.data[0];
+                        for (var i=0; i<size; i++){
+                           if (data[i] == 0){$("#conn_"+i+" > div > .indicator").css("color", "gray").text("Отключён");}
+                           else if (data[i] == 3){$("#conn_"+i+" > div > .indicator").css("color", "#489FD1").text("Подключается...");}
+                            else if (data[i] == 2){$("#conn_"+i+" > div > .indicator").css("color", "red").text("Ошибка регистрации");}
+                            else if (data[i] == 1){$("#conn_"+i+" > div > .indicator").css("color", "green").text("Подключён");}
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        myAlert(textStatus,errorThrown);
                     }
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    myAlert(textStatus,errorThrown);
-                }
-            });
+                });
+            }   
         } else {
             myAlert("Внимание","Поля логин и пароль должны быть заполнены!");
         }
@@ -908,6 +950,9 @@ function newSipConnection(response) {
     var pass = $("#enter_password").val();
     var host = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("url");
     var domain = getDomainSipConnection($("#provider_choose > ul > li.collection-item.active_item > div > img").attr("alt"));
+    if ($("#enter_domain").val() != ""){
+        domain = $("#enter_domain").val();
+    }
     var sipAccount = {
         host: host,
         expires: 60,
@@ -948,6 +993,9 @@ function recordSipConnection(response) {
     var pass = $("#password").val();
     var host = getHostSipConnection(from_elem.children(".click_area").children().children().attr("alt"));
     var domain = getDomainSipConnection(from_elem.children(".click_area").children().children().attr("alt"));
+    if ($("#domain").val() != ""){
+        domain = $("#domain").val();
+    }
     var idSipRecord = from_elem.attr('id').substr(5);
     var sipAccount = {
         host: host,

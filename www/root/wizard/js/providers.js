@@ -14,6 +14,7 @@ var providersList =
                     name_ru: 'Манго Телеком',
                     img: 'images/providers/MangoTel.png',
                     host: 'mangosip.ru',
+                    domain: '***.mangosip.ru',
                     ref_link: 'http://www.mango-office.ru/shop/tariffs/vpbx?p=400000034'
                 },
                 {
