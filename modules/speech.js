@@ -37,7 +37,12 @@ bus.on('tts', function (data) {
         data.cb(file_name);
         return;
     }
-    var file_name = 'media/temp/' + data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_') + '.wav';
+    var tmp = data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+    if (tmp.length > 120)
+    {
+        tmp = tmp.substring(0, 121);
+    }
+    var file_name = 'media/temp/' + tmp + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
     if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
     {
