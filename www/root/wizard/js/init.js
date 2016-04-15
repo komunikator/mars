@@ -37,7 +37,16 @@ function init_master() {
 }
 
 $(document).ready(function() {
-
+    $(document).keypress(function( event ) {
+      if ( event.which == 13 ) {
+        if ($("#current_connections").is(":visible") || $("#voice_choose").is(":visible") || $("#enter_login_password").is(":visible")){
+            $("#done_button").click();
+        }
+         if ($("#edit_connection").is(":visible")){
+            $("#save_conn_btn").click();
+        }
+      }
+    });
     $('select').material_select();
     init_master();
     getProvidersList();
@@ -91,10 +100,27 @@ function myAlert(header,text) {
 function getAccountsList() {
     $.get("http://" + hostname + ":" + port + "/resourceData/settings", function(returnedData) {
         if (returnedData && returnedData.data && returnedData.data[0] && returnedData.data[0].value) {
-            cur_acc_list = jQuery.parseJSON(returnedData.data[0].value).sipAccounts;
-            cur_speech_recognize = jQuery.parseJSON(returnedData.data[0].value).recognize;
-            cur_speech_sintez = jQuery.parseJSON(returnedData.data[0].value).def_tts;
-            ivona_sett = jQuery.parseJSON(returnedData.data[0].value).ivona_speech;
+            if (jQuery.parseJSON(returnedData.data[0].value).sipAccounts) {
+                cur_acc_list = jQuery.parseJSON(returnedData.data[0].value).sipAccounts;
+            } else {
+                myAlert("Ошибка!", "В файле конфигурации отутствует поле sipAccounts!");
+            }
+            if (jQuery.parseJSON(returnedData.data[0].value).recognize) {
+                cur_speech_recognize = jQuery.parseJSON(returnedData.data[0].value).recognize;
+            } else {
+                myAlert("Ошибка!", "В файле конфигурации отутствует поле recognize!");
+            }
+            if (jQuery.parseJSON(returnedData.data[0].value).def_tts) {
+                cur_speech_sintez = jQuery.parseJSON(returnedData.data[0].value).def_tts;
+            } else {
+                myAlert("Ошибка!", "В файле конфигурации отутствует поле def_tts!");
+            }
+            if (jQuery.parseJSON(returnedData.data[0].value).ivona_speech) {
+                ivona_sett = jQuery.parseJSON(returnedData.data[0].value).ivona_speech;
+            } else {
+                myAlert("Ошибка!", "В файле конфигурации отутствует поле ivona_speech!");
+            }
+            
             createConnections();
         }
     }).fail(function() {
