@@ -34,7 +34,7 @@ function wavEncode(data, file_name, cb) {
 bus.on('tts', function (data) {
     if (!data.text) {
         bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: 'tts text is empty!'});
-        data.cb(file_name);
+        data.cb();
         return;
     }
     var tmp = data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
