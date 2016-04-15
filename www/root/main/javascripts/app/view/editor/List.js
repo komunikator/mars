@@ -2,6 +2,7 @@ Ext.define('IVR.view.editor.List', {
     extend: 'Ext.grid.Panel',
     tools: [{
             //type: 'refresh',
+	    hidden: true,
             xtype: 'button',
             iconCls: 'button-refresh',
             tooltip: lang['refresh'],

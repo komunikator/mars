@@ -256,14 +256,14 @@ Ext.define('IVR.view.reports.List', {
                     store: [[null, '*'], ['incoming', lang['incoming']], ['outgoing', lang['outgoing']]]
                 }
             },
-            {flex: 1, text: lang['idgroup'], dataIndex: 'parent_id', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
+            {hidden: true, flex: 1, text: lang['idgroup'], dataIndex: 'parent_id', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['msisdn'], dataIndex: 'msisdn', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['service_contact'], dataIndex: 'service_contact', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {hidden: true, flex: 1, text: lang['operator_contact'], dataIndex: 'refer', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['script'], dataIndex: 'script', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             //{flex: 1, text: lang['step'], dataIndex: 'step', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['findings'], dataIndex: 'data', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
-            {flex: 1, text: lang['duration'], dataIndex: 'duration', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
+            {flex: 1, text: lang['duration'], dataIndex: 'duration', xfilter: {xtype: 'searchfield', store: self.emptyStore()}, align: 'right', style: 'text-align:left', renderer: IVR.getApplication().timeRender},
             {flex: 1, text: lang['status'], dataIndex: 'status', xfilter: {
                     xtype: 'combo',
                     editable: false,
@@ -283,7 +283,10 @@ Ext.define('IVR.view.reports.List', {
                     return value
                 }
             },
-            {hidden: true, flex: 1, text: lang['reason'], dataIndex: 'reason', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
+            {hidden: true, flex: 1, text: lang['reason'], dataIndex: 'reason', xfilter: {xtype: 'searchfield', store: self.emptyStore()},
+                renderer: function (value) {
+                    return value.replace(/\s/g, '_');
+                }},
             {width: 130, text: lang['record'], dataIndex: 'record', xfilter: {}, renderer: function (value) {
                     if (value)
                         value = '<audio class="rec" type="audio/wav" src="/' + value + '?dc_=' + new Date().getTime() + '" controls autobuffer></audio>';

@@ -116,6 +116,7 @@ Ext.define('IVR.view.tasks.Editor', {
                     frame: true,
                     tools: [{
                             xtype: 'button',
+                            hidden: true,
                             iconCls: 'button-refresh',
                             tooltip: lang['refresh'],
                             handler: function () {
@@ -231,9 +232,9 @@ Ext.define('IVR.view.tasks.Editor', {
                                             editable: false,
                                             valueField: 'id',
                                             displayField: 'text',
-					    listConfig: {
-					      itemTpl: Ext.create('Ext.XTemplate','{text}')
-					    },
+                                            listConfig: {
+                                                itemTpl: Ext.create('Ext.XTemplate', '{text}')
+                                            },
                                             store: Ext.data.StoreManager.lookup('EventsList') ? Ext.data.StoreManager.lookup('EventsList') : Ext.create('IVR.store.EventsList'),
                                             listeners: {
                                                 beforequery: function (qe) {
@@ -506,7 +507,6 @@ Ext.define('IVR.view.tasks.Editor', {
                                             name: 'sipAccountID',
                                             itemId: 'sipAccountID',
                                             editable: false,
-                                           
                                             valueField: 'id',
                                             displayField: 'name',
                                             store: Ext.data.StoreManager.lookup('SipConnection') ? Ext.data.StoreManager.lookup('SipConnection') : Ext.create('IVR.store.SipConnection'),
@@ -544,6 +544,7 @@ Ext.define('IVR.view.tasks.Editor', {
         this.callParent([config]);
         var editor = this;
         var list = this.getComponent('list');
+        this.store = list.store;
         //var form = this.getComponent('form');
         var settingsForm = this.getComponent('settings').getComponent('settingsForm');
         var scriptTree = this.getComponent('settings').getComponent('scriptTree');
@@ -562,7 +563,7 @@ Ext.define('IVR.view.tasks.Editor', {
             var obj;
             try {
                 eval('obj = (' + selections[0].data.value + ')');
-                if (obj.script )
+                if (obj.script)
                     obj.script = obj.script.replace(/(\.js)$/, '');
                 if (obj.target)
                     obj.target = obj.target.replace(/(\.js)$/, '');

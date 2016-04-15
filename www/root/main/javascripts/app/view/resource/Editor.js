@@ -56,6 +56,7 @@ Ext.define('IVR.view.resource.Editor', {
                     xtype: 'button',
                     tooltip: lang.refresh,
                     itemId: 'refresh',
+		    hidden: true,
                     iconCls: 'button-refresh',
                     stretch: false,
                     align: 'left',

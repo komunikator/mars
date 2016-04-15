@@ -181,7 +181,10 @@ lang = {
     total_records: 'всего записей',
     stt: 'Распознавание речи',
     tts: 'Электродиктор',
-    findings: 'Данные'
+    findings: 'Данные',
+    hour:'час',
+    minute:'мин',
+    second:'сек'
 };
 
 if (typeof exports !== 'undefined')

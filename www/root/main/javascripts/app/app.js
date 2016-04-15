@@ -41,16 +41,16 @@ Ext.application({
         'Settings',
         'Media',
         'Reports',
-        //'EventsList',
-        //'ScriptsList',
-        //'TasksList',
-        //'SettingsList'
+                //'EventsList',
+                //'ScriptsList',
+                //'TasksList',
+                //'SettingsList'
     ],
     wsConnect: 'disable',
     timerClock: null,
     serverTime: 0,
     deltaTime: 0,
-    wsLaunch: function() {
+    wsLaunch: function () {
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
         }
@@ -58,9 +58,9 @@ Ext.application({
         if (IVR.getApplication().wsConnect === 'disable') {
             IVR.getApplication().wsConnect = 'expect';
 
-            var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" :"") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
 
-            socket.onmessage = function(event) {
+            socket.onmessage = function (event) {
                 //var incomingMessage = event.data;
                 //console.log(incomingMessage);
                 var obj = Ext.JSON.decode(event.data).data;
@@ -92,33 +92,39 @@ Ext.application({
 
                             function formatDate(date) {
                                 var dd = date.getUTCDate()
-                                if (dd < 10) dd = '0' + dd;
+                                if (dd < 10)
+                                    dd = '0' + dd;
 
                                 var mm = date.getUTCMonth() + 1
-                                if (mm < 10) mm = '0' + mm;
+                                if (mm < 10)
+                                    mm = '0' + mm;
 
                                 var yy = date.getUTCFullYear();
 
                                 var hh = date.getUTCHours();
-                                if (hh < 10) hh = '0' + hh;
+                                if (hh < 10)
+                                    hh = '0' + hh;
 
                                 var min = date.getUTCMinutes();
-                                if (min < 10) min = '0' + min;
+                                if (min < 10)
+                                    min = '0' + min;
 
                                 var sec = date.getUTCSeconds();
-                                if (sec < 10) sec = '0' + sec;
+                                if (sec < 10)
+                                    sec = '0' + sec;
 
                                 var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
 
                                 return strData;
-                            };
+                            }
+                            ;
 
                             IVR.getApplication().serverTime = msg.data;
                             IVR.getApplication().deltaTime = IVR.getApplication().serverTime - new Date().getTime();
 
                             function updateTime() {
                                 IVR.getApplication().serverTime = new Date().getTime() + IVR.getApplication().deltaTime;
-                                var curTime = formatDate( new Date(IVR.getApplication().serverTime) );
+                                var curTime = formatDate(new Date(IVR.getApplication().serverTime));
                                 var componentTime = ivr.items.items[0].items.items[0].items.items[2];
                                 componentTime.setValue('<b>' + curTime + '</b>');
                             }
@@ -132,13 +138,13 @@ Ext.application({
                 }
             };
 
-            socket.onopen = function() {
+            socket.onopen = function () {
                 console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
             };
 
-            socket.onclose = function(event) {
+            socket.onclose = function (event) {
                 if (event.wasClean) {
                     console.log('WebSocket: Соединение закрыто чисто');
                 } else {
@@ -150,14 +156,14 @@ Ext.application({
                 clearInterval(IVR.getApplication().timerClock);
             };
 
-            socket.onerror = function(error) {
+            socket.onerror = function (error) {
                 console.log("WebSocket: Error " + error.message);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
                 clearInterval(IVR.getApplication().timerClock);
             };
 
-            var onsubmit = function() {
+            var onsubmit = function () {
                 var outgoingMessage = this.message.value;
                 socket.send(outgoingMessage);
                 return false;
@@ -205,15 +211,37 @@ Ext.application({
 
         }
     },
-    launch: function() {
+    launch: function () {
         var app = IVR.getApplication();
         app.wsLaunch();
+        app.timeRender = function (input) {
+            var
+                    hoursString = '00',
+                    minutesString = '00',
+                    secondsString = '00',
+                    hours = 0,
+                    minutes = 0,
+                    seconds = 0;
+
+            hours = Math.floor(input / (60 * 60));
+            input = input % (60 * 60);
+
+            minutes = Math.floor(input / 60);
+            input = input % 60;
+
+            seconds = input;
+
+            hoursString = hours.toString();
+            minutesString = (minutes >= 10) ? minutes.toString() : (hours ? '0' + minutes.toString() : minutes.toString());
+            secondsString = (seconds >= 10) ? seconds.toString() : ((minutes || hours) ? '0' + seconds.toString() : seconds.toString());
+            return ((hours) ? hoursString + ' ' + lang['hour'] + ' ' : '') + (hours || minutes ? minutesString + ' ' + lang['minute'] + ' ' : '') + secondsString + ' ' + lang['second'];
+        };
 
         Ext.define('overrides.AbstractView', {
             override: 'Ext.view.AbstractView',
             // Force load mask target to be an inner DOM Element of a owner panel instead of current view
             // in order to fix load mask positioning when scrolling
-            onRender: function() {
+            onRender: function () {
                 var me = this, targetEl, cfg, mask = me.loadMask, owner = me.ownerCt;
 
                 if ((mask) && (owner)) {
@@ -234,7 +262,7 @@ Ext.application({
         Ext.create('IVR.lib.form.field.VTypes').init();
         Ext.override(Ext.form.field.Base, {
             showClear: false,
-            afterRender: function() {
+            afterRender: function () {
                 if (this.showClear && this.xtype != 'checkbox1' && this.xtype != 'radio') {
                     if (Ext.isEmpty(this.inputCell))
                         this.__clearDiv = this.bodyEl.insertHtml('beforeEnd', '<div class="x-clear"></div>', true);
@@ -245,12 +273,12 @@ Ext.application({
                     this.__clearDiv.on('click', this.clearField, this);
                 }
             },
-            onChange: function() {
+            onChange: function () {
                 this.callParent(arguments);
                 if (!Ext.isEmpty(this.__clearDiv))
                     this.__clearDiv.setVisible(!Ext.isEmpty(this.getValue()));
             },
-            clearField: function() {
+            clearField: function () {
                 this.setValue(null);
                 this.clearInvalid();
                 this.focus();

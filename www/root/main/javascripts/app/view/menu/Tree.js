@@ -1,6 +1,7 @@
 Ext.define('IVR.view.menu.Tree', {
     extend: 'Ext.tree.Panel',
     xtype: 'menuTree',
+    id: 'menuTree',
     title: lang['menu'],
     autoScroll: true,
     rootVisible: false,
@@ -11,9 +12,10 @@ Ext.define('IVR.view.menu.Tree', {
     tools: [{
             //type: 'refresh',
             xtype: 'button',
+            hidden: true,
             iconCls: 'button-refresh',
             tooltip: lang['refresh'],
-            handler: function() {
+            handler: function () {
                 this.ownerCt.ownerCt.store.reload();
             }
         }],
@@ -23,7 +25,7 @@ Ext.define('IVR.view.menu.Tree', {
             //hidden: true,
             hideable: false,
             sortable: false,
-            renderer: function(value) {
+            renderer: function (value) {
                 if (lang[value])
                     return lang[value];
                 return value;
@@ -33,7 +35,7 @@ Ext.define('IVR.view.menu.Tree', {
     hideHeaders: true,
     viewConfig: {
         listeners: {
-            itemclick: function(view, record) {
+            itemclick: function (view, record) {
                 if (record.data.children) {
                     // view.toggle(record);
                 }
@@ -47,17 +49,17 @@ Ext.define('IVR.view.menu.Tree', {
     store: 'Menu',
     panels: [],
     listeners: {
-        afterrender: function() {
-            this.showPanel('dialogsList');
+        afterrender: function () {
+            //this.showPanel('settingsMaster');
         }
     },
-    showPanel: function(panelId, parentId, n, shiftKey, ctrlKey) {
+    showPanel: function (panelId, parentId, n, shiftKey, ctrlKey) {
         //console.log(panelId, parentId, n, shiftKey, ctrlKey);
-        if (!checkXtypeExist(panelId)){
-           // console.log("xtype not exist!");
+        if (!checkXtypeExist(panelId)) {
+            // console.log("xtype not exist!");
             return;
         }
-        if (typeof(this.panels[panelId]) === 'undefined') {
+        if (typeof (this.panels[panelId]) === 'undefined') {
             //console.log("id undefined!");
             Ext.getCmp('content-panel').add({xtype: panelId, itemId: panelId});
             Ext.getCmp('content-panel').doLayout();
@@ -65,8 +67,12 @@ Ext.define('IVR.view.menu.Tree', {
         }
         ;//else
         Ext.getCmp('content-panel').layout.setActiveItem(panelId);
-         if (document.getElementById('setMasterFrame'))
+        if (document.getElementById('setMasterFrame'))
             document.getElementById('setMasterFrame').src = document.getElementById('setMasterFrame').src;
+
+        var panel = Ext.getCmp('content-panel').getComponent(panelId);
+        if (panel && panel.store)
+            panel.store.load();
         //if ('dialogsList')
         //    Ext.data.StoreManager.lookup('Dialogs').load();
         /*
@@ -77,8 +83,8 @@ Ext.define('IVR.view.menu.Tree', {
          }
          */
     },
-    initComponent: function() {
-        this.on('itemclick', function(treePanel, record, item, index, e) {
+    initComponent: function () {
+        this.on('itemclick', function (treePanel, record, item, index, e) {
             var n = record.data;
             var sn = this.selModel.selNode || {};
             //console.log(n);

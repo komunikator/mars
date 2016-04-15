@@ -88,6 +88,7 @@ Ext.define('IVR.view.media.Tree', {
                                     xtype: 'button',
                                     text: lang.refresh,
                                     itemId: 'refresh',
+			    	    hidden: true,
                                     iconCls: 'button-refresh',
                                     stretch: false,
                                     align: 'left',
