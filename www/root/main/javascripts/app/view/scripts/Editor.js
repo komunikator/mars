@@ -4,18 +4,27 @@ Ext.define('IVR.view.scripts.Editor', {
     layout: 'border',
     listTitle: lang['script'],
     listStore: Ext.data.StoreManager.lookup('ScriptsList') ? Ext.data.StoreManager.lookup('ScriptsList') : Ext.create('IVR.store.ScriptsList'),
-    constructor: function(config) {
+    constructor: function (config) {
         this.items[0].iconCls = 'script';
         this.callParent([config]);
         var list = this.getComponent('list');
         list.basePath = 'scripts/';
         list.elementName = lang.script_;
         var c = this.getComponent('form').getForm().findField('f');
-        var insertTextFn = function(me) {
+        var insertTextFn = function (me) {
             me.ownerCt.ownerItem.ownerCt.getComponent('media').menu.getComponent('mediaTree').insertText(this.text + ((this.text == 'true' || this.text == 'false') ? '' : ':'));
         };
+        var clipboardData;
         c.menu = Ext.create('Ext.ux.protoMenu', {
-            items: [{
+            items: [
+                {text: lang['copy'], iconCls: 'button-copy', handler: function () {
+                        clipboardData = c.editor.getSelection();
+                    }
+                },
+                {text: lang['paste'], iconCls: 'button-paste', handler: function () {
+                        this.ownerCt.getComponent('media').menu.getComponent('mediaTree').insertText(clipboardData);
+                    }},
+                {
                     text: lang['command'],
                     iconCls: 'terminal',
                     menu: {
@@ -103,7 +112,7 @@ Ext.define('IVR.view.scripts.Editor', {
                             itemId: 'mediaTree',
                             height: 300,
                             width: 500,
-                            insertText: function(text) {
+                            insertText: function (text) {
                                 //console.log(text);
                                 if (c.editor.getSelection())
                                     c.editor.replaceSelection(text);
@@ -113,11 +122,11 @@ Ext.define('IVR.view.scripts.Editor', {
                             resizable: true,
                             listeners: {
                                 itemclick: {
-                                    fn: function(view, record, item, index, event) {
+                                    fn: function (view, record, item, index, event) {
                                         view.panel.setDisabledBtn();
                                     }
                                 },
-                                afterrender: function(self) {
+                                afterrender: function (self) {
                                     self.getDockedComponent('toptoolbar').removeAll(true);
                                     self.getDockedComponent('toptoolbar').add(
                                             {
@@ -127,7 +136,7 @@ Ext.define('IVR.view.scripts.Editor', {
                                                 iconCls: 'insert_text',
                                                 stretch: false,
                                                 align: 'left',
-                                                handler: function(btn, e, node) {
+                                                handler: function (btn, e, node) {
                                                     if (self.getSelectionModel().hasSelection()) {
                                                         var selectedNode = self.getSelectionModel().getSelection();
                                                         self.insertText("'" + selectedNode[0].data.src + "'");

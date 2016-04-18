@@ -139,6 +139,11 @@
     background-size: 95% 95%;
 }
 
+.button-paste{
+    background: url(../images/ivr/stock_paste_6558.png) no-repeat;
+    background-size: 95% 95%;
+}
+
 .folder-value{
     background: url(../images/ivr/folder_go.png) no-repeat;
     background-size: 95% 95%;
