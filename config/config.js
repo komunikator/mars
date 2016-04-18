@@ -43,8 +43,8 @@
             "expires": 60,
             "user": "xxxxxxxx",
             "password": "xxxxxxxx",
-            "disable": 1,
-            "domain": "multifon.ru"
+            "domain": "multifon.ru",
+            "disable": 1
         }
     ],
     "levels": {

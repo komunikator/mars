@@ -39,12 +39,16 @@ function init_master() {
 $(document).ready(function() {
     $(document).keypress(function( event ) {
       if ( event.which == 13 ) {
-        if ($("#current_connections").is(":visible") || $("#voice_choose").is(":visible") || $("#enter_login_password").is(":visible")){
-            $("#done_button").click();
-        }
-         if ($("#edit_connection").is(":visible")){
-            $("#save_conn_btn").click();
-        }
+        if ($('#my_alert').is(":visible")){
+            $("#myAlertOkBtn").click();
+        }else {
+            if ($("#current_connections").is(":visible") || $("#voice_choose").is(":visible") || $("#enter_login_password").is(":visible")){
+                $("#done_button").click();
+            }
+             if ($("#edit_connection").is(":visible")){
+                $("#save_conn_btn").click();
+            }
+        } 
       }
     });
     $('select').material_select();
@@ -94,7 +98,9 @@ function docss(name)
 function myAlert(header,text) {
     $("#my_alert > div.modal-content > h4").text(header);
     $("#my_alert > div.modal-content > p").text(text);
-    $('#my_alert').openModal();
+    if (!$('#my_alert').is(":visible")){
+        $('#my_alert').openModal();
+    }  
 }
 
 function getAccountsList() {
@@ -248,8 +254,8 @@ function createConnections() {
                 }
             }
         }); 
-        $("#header_title").text("Ваши текущие Sip подключения");
-        $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+        $("#header_title").text("Ваши текущие SIP подключения");
+        $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
         $("#page_1").show();
         if ($("#current_connections > ul li").size() == 0){
             $("#add_conn_btn").click();
@@ -292,6 +298,57 @@ function createConnections() {
                 };
             }
         }
+        $.ajax({
+            url: "/keyCheck",
+            data: { 
+                "type": "yandex",
+                "key": $(this).val() 
+            },
+            success: function (res) {
+                if (!res.checked){
+                    $("#key").removeClass("valid");
+                    $("#key").addClass("invalid");
+                }else{
+                    $("#key").removeClass("invalid");
+                    $("#key").addClass("valid");
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 console.log("error");
+            }
+        });
+        if ($("#access_key_sintez").val() != "" && $("#secret_key_sintez").val() != ""){
+            $.ajax({
+                url: "/keyCheck",
+                data: { 
+                    "type": "ivona",
+                    "accessKey": $("#access_key_sintez").val(),
+                    "secretKey": $("#secret_key_sintez").val() 
+                },
+                success: function (res) {
+                    // console.log(res.data);
+                    if (!res.checked){
+                        $("#access_key_sintez").removeClass("valid");
+                        $("#access_key_sintez").addClass("invalid");
+                        $("#secret_key_sintez").removeClass("valid");
+                        $("#secret_key_sintez").addClass("invalid");
+                    }else{
+                        $("#access_key_sintez").removeClass("invalid");
+                        $("#access_key_sintez").addClass("valid");
+                        $("#secret_key_sintez").removeClass("invalid");
+                        $("#secret_key_sintez").addClass("valid");
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                     console.log("error");
+                }
+            }); 
+        } else {
+            $("#access_key_sintez").removeClass("invalid");
+            $("#access_key_sintez").removeClass("valid");
+            $("#secret_key_sintez").removeClass("invalid");
+            $("#secret_key_sintez").removeClass("valid");
+        }   
     });
 
 
@@ -335,8 +392,8 @@ function createConnections() {
             $("#provider_choose > ul > .active_item").removeClass("active_item");
             $("#current_connections").show();
             $("#page_2").hide();
-            $("#header_title").text("Ваши текущие Sip подключения");
-            $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+            $("#header_title").text("Ваши текущие SIP подключения");
+            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
             $.ajax({
                 url: '/statusUA',
                 method: 'get',
@@ -363,8 +420,8 @@ function createConnections() {
             $("#enter_login_password > div > form").trigger('reset');
             $("#provider_choose").show();
             $("#page_3").hide();
-            $("#header_title").text("Выбор Sip провайдера");
-            $("#header_decription").text("Выберите вашего Sip провайдера");
+            $("#header_title").text("Выбор SIP провайдера");
+            $("#header_decription").text("Выберите вашего SIP провайдера");
         } else if ($("#speech_recognize").is(":visible")){
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
@@ -396,8 +453,8 @@ function createConnections() {
             $("#prev_button").hide();
             $("#done_button").show();
             $("#page_1").show();
-            $("#header_title").text("Ваши текущие Sip подключения");
-            $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+            $("#header_title").text("Ваши текущие SIP подключения");
+            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
             from_elem.removeClass("active_item");
             from_elem.children(".right_cont").removeClass("active_item");
             $("#edit_connection > div >form").trigger( 'reset' );
@@ -426,8 +483,8 @@ function createConnections() {
     $("#add_conn_btn").on('click', function() {
         $("#current_connections").hide();
         $("footer > div.col.center-align.s6.pagination").removeClass("margin_right25");
-        $("#header_title").text("Выбор Sip провайдера");
-        $("#header_decription").text("Выберите вашего Sip провайдера");
+        $("#header_title").text("Выбор SIP провайдера");
+        $("#header_decription").text("Выберите вашего SIP провайдера");
         $("#done_button").hide();
         $("#prev_button").show();
         $("#next_button").show();
@@ -441,6 +498,9 @@ function createConnections() {
             if ($("#def_tts").val() == "ivona" && !$("#secret_key_sintez").val() && !$("#access_key_sintez").val()){
                 myAlert("Внимание","Поля ключей синтеза Ivona должны быть заполнены");
             }else{
+                if ($("#key, #access_key_sintez, #secret_key_sintez").hasClass("invalid")){
+                    myAlert("Внимание!", "Вы сохранили не валидный ключ!");
+                }
                 $("#header > div.col.s12.header_bottom").hide();
                 $("#header_top > div > h1").hide();
                 $("#done_button > a").text("Закрыть");
@@ -653,7 +713,7 @@ function createConnections() {
                         $("#password + label").addClass("active");
                         $("#password").val(from_pass);
                         $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
-                        $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
+                        $("#header_title").html("Редактирование SIP подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
                         $("#header_decription").text("Измените данные и нажмите сохранить");
                         $("#prev_button").show();
                         $("#done_button").hide();
@@ -701,7 +761,7 @@ function createConnections() {
             window.location = '../../';
         }
     });
-
+    
     $(".del_btn").on('click',function() {
         var tmp_id = $(this).parent().attr("id").substr(5);
         var del_index = tmp_id;
@@ -748,6 +808,63 @@ function createConnections() {
     
     });
 
+    $("#key").on("change", function() {
+        $.ajax({
+            url: "/keyCheck",
+            data: { 
+                "type": "yandex",
+                "key": $(this).val() 
+            },
+            success: function (res) {
+               if (!res.checked){
+                    $("#key").removeClass("valid");
+                    $("#key").addClass("invalid");
+               }else{
+                    $("#key").removeClass("invalid");
+                    $("#key").addClass("valid");
+               }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 console.log("error");
+            }
+        }); 
+        // https://tts.voicetech.yandex.net/generate?text=test&key=83669aea-cb9b-40c8-8fd9-ed4cbf4cffa2
+    });
+
+    $("#access_key_sintez, #secret_key_sintez").on("change", function() {
+        if ($("#access_key_sintez").val() != "" && $("#secret_key_sintez").val() != ""){
+            $.ajax({
+                url: "/keyCheck",
+                data: { 
+                    "type": "ivona",
+                    "accessKey": $("#access_key_sintez").val(),
+                    "secretKey": $("#secret_key_sintez").val() 
+                },
+                success: function (res) {
+                    // console.log(res.data);
+                   if (!res.checked){
+                        $("#access_key_sintez").removeClass("valid");
+                        $("#access_key_sintez").addClass("invalid");
+                        $("#secret_key_sintez").removeClass("valid");
+                        $("#secret_key_sintez").addClass("invalid");
+                   }else{
+                        $("#access_key_sintez").removeClass("invalid");
+                        $("#access_key_sintez").addClass("valid");
+                        $("#secret_key_sintez").removeClass("invalid");
+                        $("#secret_key_sintez").addClass("valid");
+                   }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                     console.log("error");
+                }
+            }); 
+        } else {
+            $("#access_key_sintez").removeClass("invalid");
+            $("#access_key_sintez").removeClass("valid");
+            $("#secret_key_sintez").removeClass("invalid");
+            $("#secret_key_sintez").removeClass("valid");
+        }     
+    });
 
     $('input[type="checkbox"]').on("change", function() {
         var tmp_id = $(this).parent().parent().parent().parent().attr("id").substr(5);
@@ -817,11 +934,11 @@ function createConnections() {
                 $("#next_button").hide();
                 $("#enter_domain").val("");
                 $("#done_button").show();
-                $("#header_title").html("Настройки Sip подключения");
+                $("#header_title").html("Настройки SIP подключения");
                 $(".img_provider > img").attr("src",$("#provider_choose .collection-item.active_item .provider_logo").attr('src'));
                 $("#enter_login_password > div > form > span").show();
                 $("#enter_login_password > div > form > span > a").attr("href",$("#provider_choose > .collection > .collection-item.active_item > div > img").attr("ref"));
-                $("#header_decription").html("Введите данные вашего Sip аккаунта");
+                $("#header_decription").html("Введите данные вашего SIP аккаунта");
                 $("#enter_login_password").show();
                 $("#page_3").show();
                 if ($("#provider_choose .collection-item.active_item .provider_logo").attr('alt') == "Манго Телеком") {
@@ -862,7 +979,7 @@ function createConnections() {
         $("#password + label").addClass("active");
         $("#password").val(from_pass);
         $(".img_provider > img").attr("src",from_elem.children(".click_area").children(".povider_logo_cont").children().attr('src'));
-        $("#header_title").html("Редактирование Sip подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
+        $("#header_title").html("Редактирование SIP подключения<br/>"+from_elem.children(".click_area").children(".accaunt_uri").text());
         $("#header_decription").text("Измените данные и нажмите сохранить");
         $("#prev_button").show();
         $("#done_button").hide();
@@ -889,8 +1006,8 @@ function createConnections() {
                 $("#done_button").show();
                 $("#current_connections").show();
                 $("#prev_button").hide();
-                $("#header_title").text("Ваши текущие Sip подключения");
-                $("#header_decription").text("Вы можете отредактировать ваши Sip подключения, или добавить новые");
+                $("#header_title").text("Ваши текущие SIP подключения");
+                $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
                 from_elem.removeClass("active_item");
                 from_elem.children(".right_cont").removeClass("active_item");
                 var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
@@ -1073,168 +1190,3 @@ function recordSipConnection(response) {
         }
     });
 }
-
-// getProvidersList();
-//             $("#accordion").accordion();
-//             var availableTags = [
-//                 "ActionScript",
-//                 "AppleScript",
-//                 "Asp",
-//                 "BASIC",
-//                 "C",
-//                 "C++",
-//                 "Clojure",
-//                 "COBOL",
-//                 "ColdFusion",
-//                 "Erlang",
-//                 "Fortran",
-//                 "Groovy",
-//                 "Haskell",
-//                 "Java",
-//                 "JavaScript",
-//                 "Lisp",
-//                 "Perl",
-//                 "PHP",
-//                 "Python",
-//                 "Ruby",
-//                 "Scala",
-//                 "Scheme"
-//             ];
-//             $("#autocomplete").autocomplete({
-//                 source: availableTags
-//             });
-//             $("#button").button();
-//             $("#button-login-ok").button();
-//             $("#radioset").buttonset();
-//             $("#tabs").tabs();
-//             $("#user-master-form").dialog({
-//                 autoOpen: false,
-//                 width: 450,
-//                 modal: true, //inactive background
-//                 buttons: [
-//                     {
-//                         id: "next_button",
-//                         class: "next_text",
-//                         click: function () {
-//                             if ($('#choice-page').is(":visible")) {
-//                                 var elements = document.getElementsByName("provider");
-//                                 var check = false;
-//                                 for (var i = 0; i < elements.length; i++) {
-//                                     if (elements[i].checked) {
-//                                         check = true;
-//                                         idProvider = elements[i].id;
-//                                         break;
-//                                     }
-//                                 }
-//                                 if (check) {
-//                                     $("#choice-page").hide();
-//                                     $("#next_button").removeClass("next_text");
-//                                     $("#next_button").addClass("ready_text");
-//                                     $("#enterData-page").show();
-//                                 } else
-//                                 {
-//                                     alert("Choice something");
-//                                 }
-//                             }
-//                             else if ($('#enterData-page').is(":visible")) {
-//                                 var sipLogin = $("#userSipName").val();
-//                                 var sipPass = $("#userSipPassword").val();
-//                                 if (sipLogin == "" || sipPass == "") {
-//                                     alert("Check whether all the fields are filled");
-//                                 }
-//                                 else {
-//                                     actionSipConnection();
-//                                     $(this).dialog("close");
-//                                     $("#choice-page").show();
-//                                     $("#enterData-page").hide();
-//                                     $("#next_button").removeClass("ready_text");
-//                                     $("#next_button").addClass("next_text");
-//                                 }
-//                             }
-//                         }
-//                     },
-//                     {
-//                         class: "cancel_text",
-//                         click: function () {
-//                             idSipRecord = null;
-//                             idProvider = null;
-//                             $("#userSipName").val('');
-//                             $("#userSipPassword").val('');
-//                             $(this).dialog("close");
-//                             $("#choice-page").show();
-//                             $("#enterData-page").hide();
-//                         }
-//                     }
-//                 ]
-//             });
-//             $("#question-shour-form").dialog({
-//                 autoOpen: false,
-//                 width: 350,
-//                 modal: true, //inactive background
-//                 buttons: [
-//                     {
-//                         id: "yes_button",
-//                         class: "yes_text",
-//                         click: function () {
-//                             $.ajax({
-//                                 url: '/resourceData/settings',
-//                                 method: 'get',
-//                                 success: function (response) {
-//                                     var data = jQuery.parseJSON(response.data[0].value);
-//                                     data.sipAccounts.splice(idSipRecord, 1);
-//                                     response.data[0].create = false;
-//                                     response.data[0].name = 'config/config';
-//                                     response.data[0].value = JSON.stringify(data, null, 4);
-//                                     $.ajax({
-//                                         url: "/resourceData/update",
-//                                         method: 'put',
-//                                         data: response.data[0],
-//                                         success: function (response) {
-//                                             $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
-//                                         }
-//                                     });
-//                                     idSipRecord = null;
-//                                     idProvider = null;
-//                                 }
-//                             });
-//                             $(this).dialog("close");
-//                         }
-//                     },
-//                     {
-//                         class: "no_text",
-//                         click: function () {
-//                             idSipRecord = null;
-//                             idProvider = null;
-//                             $(this).dialog("close");
-//                         }
-//                     }
-//                 ]
-//             });
-// // Link to open the dialog
-//             $("#add-sipconnect").click(function (event) {
-//                 idSipRecord = null;
-//                 $("#user-master-form").dialog("open");
-//                 event.preventDefault();
-//             });
-//             $("#datepicker").datepicker({
-//                 inline: true
-//             });
-//             $("#slider").slider({
-//                 range: true,
-//                 values: [17, 67]
-//             });
-//             $("#progressbar").progressbar({
-//                 value: 20
-//             });
-//             $("#spinner").spinner();
-//             $("#menu").menu();
-//             $("#tooltip").tooltip();
-//             $("#selectmenu").selectmenu();
-//             $("#add-sipconnect, #icons li").hover(
-//                     function () {
-//                         $(this).addClass("ui-state-hover");
-//                     },
-//                     function () {
-//                         $(this).removeClass("ui-state-hover");
-//                     }
-//             );
