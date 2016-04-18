@@ -16,6 +16,7 @@ exports.init = function (app)
             resource = require('./controller/resource'),
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
+            keyCheck = require('./controller/keyCheck'),
             listSIP = require('./controller/listSIP');
 
     makeCall.init(app.bus);
@@ -28,10 +29,12 @@ exports.init = function (app)
     resource.init(app.bus);
     media.init(app.bus);
     statusUA.init(app.bus);
+    keyCheck.init(app.bus);
     listSIP.init(app.bus);
 
 
     /* set controllers */
+
 
     app.get('/dialogData', dialog.read);
     app.get('/makeCall/:msisdn', makeCall.post);
@@ -113,6 +116,8 @@ exports.init = function (app)
 
     app.get('/statusUA', statusUA.read);
     app.get('/listSIP', listSIP.read);
+
+    app.get('/keyCheck', keyCheck.check);
 
     app.post('/upload/:path/:name', function (req, res) {
         //var fs = require('fs');

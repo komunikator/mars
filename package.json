@@ -27,7 +27,6 @@
     "formidable": ">= 1.0.15",
     "gaikan": "^2.0.2",
     "google-speech": ">= 0.0.4",
-    "yandex-speech": "0.0.12",
     "ip": "^1.1.0",
     "ivona-node": "0.2.0",
     "json-stringify-safe": "^5.0.1",
@@ -50,6 +49,7 @@
     "vs-stun": "0.0.7",
     "wav": "latest",
     "ws": "latest",
-    "xml2js": "~0.4.9"
+    "xml2js": "~0.4.9",
+    "yandex-speech": "0.0.12"
   }
 }
