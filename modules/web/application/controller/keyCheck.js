@@ -17,8 +17,8 @@ exports.check = function (req, res) {
     //res.send(req.query.type);
     var checked = false;
     if (req.query.type == "ivona"){
-        if (req.query.accessKey == "" || req.query.secretKey == ""){
-            res.send({success: false, msg: "Key empty"});
+        if (!req.query.accessKey || !req.query.secretKey){
+            return res.send({success: false, msg: "Key empty"});
         }
         var Ivona = require('ivona-node');
         //bus.emit('message',req.query);
@@ -37,11 +37,11 @@ exports.check = function (req, res) {
         });
     } else
     if (req.query.type == "yandex"){
-        if (req.query.key == ""){
-            res.send({success: false, msg: "Key empty"});
+        if (!req.query.key){
+            return res.send({success: false, msg: "Key empty"});
         }
         var yandex_speech = require('yandex-speech');
-        yandex_speech.ASR({developer_key: req.query.key}, 
+        yandex_speech.ASR({developer_key: req.query.key},
         function (err, httpResponse, xml) {
             if (xml.substr(0,xml.indexOf(" ")) == "Invalid"){
                 checked = false;
@@ -50,7 +50,7 @@ exports.check = function (req, res) {
             }
             res.send({success: true, checked: checked});
         });
-    } 
+    }
     else {
         res.send({success: false, msg: "Unknown type"});
     }
