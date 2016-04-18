@@ -51,7 +51,7 @@
         "[all]": "trace",
         "http": "error"
     },
-    "replaceConsole": "true",
+    "replaceConsole": "false",
     "appenders": [
         {
             "type": "console",
