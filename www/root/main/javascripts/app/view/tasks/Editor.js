@@ -552,6 +552,10 @@ Ext.define('IVR.view.tasks.Editor', {
             scriptTree.loadScript(this.getValue());
         });
 
+        list.on('itemclick', function () {
+            list.store.load();
+        });
+
         list.on('selectionchange', function (view, selections, options) {
             if (!selections || !selections[0])
                 return;
@@ -571,7 +575,7 @@ Ext.define('IVR.view.tasks.Editor', {
                     settingsForm.getComponent('tabpanel').setActiveTab(0);
                 else
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
-                settingsForm.getForm().reset();
+                //settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
             }
             catch (e) {
