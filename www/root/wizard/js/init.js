@@ -255,7 +255,7 @@ function createConnections() {
             }
         }); 
         $("#header_title").text("Ваши текущие SIP подключения");
-        $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
+        $("#header_decription").text("Вы можете отредактировать ваши SIP подключения или добавить новые");
         $("#page_1").show();
         if ($("#current_connections > ul li").size() == 0){
             $("#add_conn_btn").click();
@@ -393,7 +393,7 @@ function createConnections() {
             $("#current_connections").show();
             $("#page_2").hide();
             $("#header_title").text("Ваши текущие SIP подключения");
-            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
+            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения или добавить новые");
             $.ajax({
                 url: '/statusUA',
                 method: 'get',
@@ -454,7 +454,7 @@ function createConnections() {
             $("#done_button").show();
             $("#page_1").show();
             $("#header_title").text("Ваши текущие SIP подключения");
-            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
+            $("#header_decription").text("Вы можете отредактировать ваши SIP подключения или добавить новые");
             from_elem.removeClass("active_item");
             from_elem.children(".right_cont").removeClass("active_item");
             $("#edit_connection > div >form").trigger( 'reset' );
@@ -1007,7 +1007,7 @@ function createConnections() {
                 $("#current_connections").show();
                 $("#prev_button").hide();
                 $("#header_title").text("Ваши текущие SIP подключения");
-                $("#header_decription").text("Вы можете отредактировать ваши SIP подключения, или добавить новые");
+                $("#header_decription").text("Вы можете отредактировать ваши SIP подключения или добавить новые");
                 from_elem.removeClass("active_item");
                 from_elem.children(".right_cont").removeClass("active_item");
                 var from_uri = from_elem.children(".click_area").children(".accaunt_uri").text();
