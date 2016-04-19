@@ -14,8 +14,11 @@ Ext.define('IVR.view.media.Tree', {
      }
      }],
      */
+    selModel: Ext.create('Ext.selection.TreeModel', {
+        mode: 'MULTI'
+    }),
     actions: ['refresh', 'createFolder', 'add', 'edit', 'remove'],
-    constructor: function(config) {
+    constructor: function (config) {
         config = Ext.applyIf(config || {}, {
             //id: 'media-tree',
             iconCls: 'sound'
@@ -23,15 +26,19 @@ Ext.define('IVR.view.media.Tree', {
 
         this.callParent([config]);
         var self = this;
-        this.getPath = function() {
+        this.getPath = function (i) {
+            if (!i)
+                i = 0;
             var path = '/media/';
             var sr = self.selModel.getSelection();
-            if (sr.length > 0)
-                path = decodeURIComponent(sr[0].data.id).replace(/^(.+)\/(.+\.wav)$/, "$1");
+            if (sr.length > 0 && sr[i])
+                path = decodeURIComponent(sr[i].data.id).replace(/^(.+)\/(.+\.wav)$/, "$1");
+            else
+                return null;
             return path;
         };
 
-        this.onAdd = function() {
+        this.onAdd = function () {
             var path = self.getPath();
             var uploadDialog = Ext.create('Ext.ux.upload.Dialog', {
                 modal: true,
@@ -62,7 +69,7 @@ Ext.define('IVR.view.media.Tree', {
                     listeners: {
                         'uploadcomplete': {
                             scope: this,
-                            fn: function(upDialog, manager, items, errorCount) {
+                            fn: function (upDialog, manager, items, errorCount) {
                                 if (!errorCount) {
                                     self.getDockedComponent('toptoolbar').getComponent('refresh').handler();
                                     //upDialog.close();
@@ -88,11 +95,11 @@ Ext.define('IVR.view.media.Tree', {
                                     xtype: 'button',
                                     text: lang.refresh,
                                     itemId: 'refresh',
-			    	    hidden: true,
+                                    hidden: true,
                                     iconCls: 'button-refresh',
                                     stretch: false,
                                     align: 'left',
-                                    handler: function(btn, e, node) {
+                                    handler: function (btn, e, node) {
                                         if (node)
                                         {
                                             self.refreshNode(node);
@@ -108,7 +115,7 @@ Ext.define('IVR.view.media.Tree', {
                                     iconCls: 'x-tree-icon-parent',
                                     stretch: false,
                                     align: 'right',
-                                    handler: function() {
+                                    handler: function () {
                                         var node;
                                         if (self.getSelectionModel().hasSelection()) {
                                             node = self.getSelectionModel().getSelection()[0];
@@ -116,7 +123,7 @@ Ext.define('IVR.view.media.Tree', {
                                         else
                                             node = self.getRootNode();
                                         var path = self.getPath();
-                                        Ext.MessageBox.prompt(lang.createForder + ' "' + path + '"', lang.enterFolderName + ':', function(btn, text) {
+                                        Ext.MessageBox.prompt(lang.createForder + ' "' + path + '"', lang.enterFolderName + ':', function (btn, text) {
                                             if (btn == 'ok') {
                                                 // send node text and parent id to server using ajax
                                                 Ext.Ajax.request({
@@ -125,7 +132,7 @@ Ext.define('IVR.view.media.Tree', {
                                                         name: text,
                                                         path: path//selectedNode[0].data.id
                                                     },
-                                                    success: function(response, o) {
+                                                    success: function (response, o) {
                                                         var resObj = Ext.decode(response.responseText);
                                                         if (resObj && resObj.success)
                                                             self.getDockedComponent('toptoolbar').getComponent('refresh').handler();
@@ -133,7 +140,7 @@ Ext.define('IVR.view.media.Tree', {
                                                             Ext.showError(resObj.message || lang.error);
 
                                                     },
-                                                    failure: function(response, o) {
+                                                    failure: function (response, o) {
                                                         Ext.showError(response.responseText);
                                                     }
                                                 });
@@ -155,20 +162,20 @@ Ext.define('IVR.view.media.Tree', {
                                     disabled: true,
                                     itemId: 'edit',
                                     text: lang.edit,
-                                    handler: function() {
+                                    handler: function () {
                                         var path = self.getPath();
                                         if (self.getSelectionModel().hasSelection()) {
                                             var selectedNode = self.getSelectionModel().getSelection();
                                             if (selectedNode[0].isLeaf())
                                                 path += '/' + selectedNode[0].data.text;
-                                            Ext.MessageBox.prompt(lang.renamePath + ' "' + path + '"', lang.enterNewName + ':', function(btn, text, cfg) {
+                                            Ext.MessageBox.prompt(lang.renamePath + ' "' + path + '"', lang.enterNewName + ':', function (btn, text, cfg) {
 
                                                 if (btn == 'ok') {
                                                     if (text == selectedNode[0].data.text ||
                                                             !(selectedNode[0].isLeaf() ?
-                                                            /^[ a-яА-Яa-zA-Z0-9_/-]+\.wav$/.test(text) :
-                                                            /^[ a-яА-Яa-zA-Z0-9_/-]+$/.test(text)
-                                                            )) {
+                                                                    /^[ a-яА-Яa-zA-Z0-9_/-]+\.wav$/.test(text) :
+                                                                    /^[ a-яА-Яa-zA-Z0-9_/-]+$/.test(text)
+                                                                    )) {
                                                         var newMsg = '<span style="color:red">' + lang.enterNewName + ':</span>';
                                                         Ext.Msg.show(Ext.apply({}, {msg: newMsg}, cfg));
                                                         return;
@@ -180,7 +187,7 @@ Ext.define('IVR.view.media.Tree', {
                                                             newPath: path.replace(/^(.+\/)[^\/]+$/, "$1") + text,
                                                             oldPath: path
                                                         },
-                                                        success: function(response, o) {
+                                                        success: function (response, o) {
                                                             var resObj = Ext.decode(response.responseText);
                                                             if (resObj && resObj.success) {
                                                                 var refreshNode = self.getSelNode();
@@ -194,7 +201,7 @@ Ext.define('IVR.view.media.Tree', {
                                                                 Ext.showError(resObj.message || lang.error);
 
                                                         },
-                                                        failure: function(response, o) {
+                                                        failure: function (response, o) {
                                                             Ext.showError(response.responseText);
                                                         }
                                                     });
@@ -211,35 +218,41 @@ Ext.define('IVR.view.media.Tree', {
                                     disabled: true,
                                     itemId: 'remove',
                                     text: lang.remove,
-                                    handler: function() {
-                                        var path = self.getPath();
+                                    handler: function () {
                                         if (self.getSelectionModel().hasSelection()) {
-                                            var selectedNode = self.getSelectionModel().getSelection();
-                                            if (selectedNode[0].isLeaf())
-                                                path += '/' + selectedNode[0].data.text;
-                                            Ext.MessageBox.confirm(lang.removing, lang.removePath + ' "' + path + '"?', function(btn, text) {
+                                            var selectedNode = self.getSelectionModel().getSelection(),
+                                                    paths = [],
+                                                    path,
+                                                    i = 0;
+                                            while (selectedNode[i]) {
+                                                path = self.getPath(i);
+                                                if (selectedNode[i].isLeaf())
+                                                    path += '/' + selectedNode[i].data.text;
+                                                paths.push(path);
+                                                i++;
+                                            }
+                                            Ext.MessageBox.confirm(lang.removing, lang.removePath + (i > 1 ? '<br>' : '') + ' "' + paths.join('"<br>"') + '"?', function (btn, text) {
                                                 if (btn == 'yes') {
                                                     Ext.Ajax.request({
                                                         url: _webPath + '/mediaData/removePath',
                                                         method: 'DELETE',
                                                         params: {
-                                                            path: path
+                                                            path: path,
+                                                            paths: JSON.stringify(paths)
                                                         },
-                                                        success: function(response, o) {
+                                                        success: function (response, o) {
                                                             var resObj = Ext.decode(response.responseText);
                                                             if (resObj && resObj.success) {
-                                                                var refreshNode = self.getSelNode();
-                                                                if (refreshNode)
-                                                                    refreshNode = refreshNode.parentNode;
-                                                                else
-                                                                    refreshNode = self.getRootNode();
+                                                                var refreshNode = self.getSelectionModel().getSelection();
+                                                                if (refreshNode[0])
+                                                                    refreshNode = refreshNode[0].parentNode;
                                                                 self.getDockedComponent('toptoolbar').getComponent('refresh').handler(null, null, refreshNode);
                                                             }
                                                             else
                                                                 Ext.showError(resObj.message || lang.error);
 
                                                         },
-                                                        failure: function(response, o) {
+                                                        failure: function (response, o) {
                                                             Ext.showError(response.responseText);
                                                         }
                                                     });

@@ -88,28 +88,59 @@ exports.create = function (req, res) {
 };
 
 exports.delete = function (req, res) {
-    var path = '.' + req.body['path'];
 
-    //console.log(path);
+    var paths = [];
 
-    if (!fs.existsSync(path)) {
-        res.end(JSON.stringify({success: false, message: lang.pathNotExist}));
-        return;
+    try {
+        if (req.body['paths'])
+            paths = JSON.parse(req.body['paths']);
+    } catch (e) {
+        console.log(e);
     }
-    if (fs.statSync(path).isDirectory())
-        fs.rmdir(path, function (err) {
-            var result = {success: !err};
-            if (err)
-                result.message = lang[err.code] ? lang[err.code] : err.code;
-            res.end(JSON.stringify(result));
+
+    var len = paths.length,
+            errCode,
+            errMessage = '';
+
+    function sendResult() {
+        var result = {success: !errCode};
+        if (errCode && errMessage)
+            result.message = errMessage;
+        res.end(JSON.stringify(result));
+    }
+    if (len)
+        paths.forEach(function (path) {
+            path = '.' + path;
+
+            if (!fs.existsSync(path)) {
+                errCode = true;
+                errMessage += '"' + path + '" ' + lang.pathNotExist + '<br>';
+                if (!--len)
+                    sendResult();
+                return;
+            }
+            if (fs.statSync(path).isDirectory())
+                fs.rmdir(path, function (err) {
+                    if (err)
+                        errCode = err;
+                    if (err)
+                        errMessage += '"' + path + '" ' + lang[err.code] ? lang[err.code] : err.code + '<br>';
+                    if (!--len)
+                        sendResult();
+                });
+            else
+                fs.unlink(path, function (err) {
+                    if (err)
+                        errCode = err;
+                    if (err)
+                        errMessage += '"' + path + '" ' + lang[err.code] ? lang[err.code] : err.code + '<br>';
+                    if (!--len)
+                        sendResult();
+                });
         });
     else
-        fs.unlink(path, function (err) {
-            var result = {success: !err};
-            if (err)
-                result.message = lang[err.code] ? lang[err.code] : err.code;
-            res.end(JSON.stringify(result));
-        });
+        res.end(JSON.stringify({success: false, message: '"paths" is not defined!'}));
+
 };
 
 exports.rename = function (req, res) {
