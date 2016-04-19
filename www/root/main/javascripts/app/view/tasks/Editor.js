@@ -83,10 +83,25 @@ Ext.apply(Ext.form.field.VTypes, {
 });
 Ext.requiredLabel = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
 Ext.define('IVR.view.tasks.Editor', {
+    id: 'IVR.view.tasks.Editor',
     extend: 'Ext.container.Container',
     xtype: 'tasksEditor',
     requires: ['IVR.view.scripts.Tree', 'IVR.view.resource.Editor'],
     layout: 'border',
+    oldDataForm: "",
+    form: {},
+    setStateButtonSave: function () {
+        if ( !Ext.getCmp("IVR.view.tasks.Editor").form || !Ext.getCmp("IVR.view.tasks.Editor").form.getValues ) {
+            return false;
+        }
+        if ( Ext.getCmp("IVR.view.tasks.Editor").oldDataForm != JSON.stringify( Ext.getCmp("IVR.view.tasks.Editor").form.getValues() ) ) {
+            console.log("Есть изменения в задаче");
+            Ext.getCmp("IVR.view.tasks.Editor.save").setDisabled(false);
+        } else {
+            console.log("Нет изменений в задаче");
+            Ext.getCmp("IVR.view.tasks.Editor.save").setDisabled(true);
+        }
+    },
     items: [
         {
             title: lang['tasks'],
@@ -135,6 +150,7 @@ Ext.define('IVR.view.tasks.Editor', {
                         {
                             iconCls: 'dtmfData',
                             text: lang['save'],
+                            id: "IVR.view.tasks.Editor.save",
                             handler: function () {
                                 var form = this.ownerCt.ownerCt.getForm();
                                 form.formValid = function () {
@@ -147,6 +163,9 @@ Ext.define('IVR.view.tasks.Editor', {
                                 if (!form.formValid() ||
                                         (!form.getValues().onEvent && !form.getValues().target))
                                     return;
+                                Ext.getCmp("IVR.view.tasks.Editor").oldDataForm = JSON.stringify( form.getValues() );
+                                Ext.getCmp("IVR.view.tasks.Editor").form = form;
+
                                 var list = this.ownerCt.ownerCt.ownerCt.ownerCt.getComponent('list');
                                 if (!list.selectedRow)
                                     return;
@@ -155,9 +174,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                     value: JSON.stringify(form.getValues()),
                                     cb: function () {
                                         list.store.load();
-                                        Ext.showInfo(lang["dataSaved"]);
+                                        //Ext.showInfo(lang["dataSaved"]);
                                     }
                                 });
+                                Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                             }
                         }
                     ],
@@ -172,7 +192,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                     //boxLabel: 'Active',
                                     name: 'active',
                                     inputValue: 'true',
-                                    uncheckedValue: 'false'
+                                    uncheckedValue: 'false',
+                                    handler: function () {
+                                        Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                    }
                                 },
                                 {
                                     xtype: 'combobox',
@@ -186,9 +209,16 @@ Ext.define('IVR.view.tasks.Editor', {
                                     valueField: 'text',
                                     displayField: 'text',
                                     store: Ext.data.StoreManager.lookup('ScriptsList') ? Ext.data.StoreManager.lookup('ScriptsList') : Ext.create('IVR.store.ScriptsList'),
+                                    handler: function () {
+                                        Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                    },
                                     listeners: {
                                         beforequery: function (qe) {
                                             delete qe.combo.lastQuery;
+                                            Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                        },
+                                        select:  function () {
+                                            Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                         }
                                     }
                                 }
@@ -210,6 +240,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                     }
                                     if (c.title == lang.scheduled)
                                         this.ownerCt.getForm().findField('onEvent').clearValue();
+                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                 }
                             },
                             defaults: {
@@ -239,6 +270,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                             listeners: {
                                                 beforequery: function (qe) {
                                                     delete qe.combo.lastQuery;
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                },
+                                                select:  function () {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
                                         }
@@ -266,6 +301,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                 startTime.getValue().replace(/^\s*\S+\s+\S+(\s+\S+\s+\S+\s+\S+\s*)$/, time + '$1')
                                                                 );
                                                     }
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
                                         },
@@ -307,6 +343,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     }
 
                                                     ;
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             },
                                             items: [
@@ -402,7 +439,12 @@ Ext.define('IVR.view.tasks.Editor', {
                                             name: 'startTime',
                                             itemId: 'startTime',
                                             value: '* * * * *',
-                                            vtype: 'cron'
+                                            vtype: 'cron',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
                                         },
                                         {
                                             xtype: 'container',
@@ -422,6 +464,9 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     listeners: {
                                                         beforequery: function (qe) {
                                                             delete qe.combo.lastQuery;
+                                                        },
+                                                        select:  function () {
+                                                            Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                         }
                                                     }
                                                 },
@@ -513,6 +558,9 @@ Ext.define('IVR.view.tasks.Editor', {
                                             listeners: {
                                                 afterrender: function () {
                                                     this.store.load();
+                                                },
+                                                select:  function () {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
 
@@ -577,6 +625,9 @@ Ext.define('IVR.view.tasks.Editor', {
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
                 //settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
+                Ext.getCmp("IVR.view.tasks.Editor").oldDataForm = JSON.stringify( settingsForm.getForm().getValues() );
+                Ext.getCmp("IVR.view.tasks.Editor").form = settingsForm.getForm();
+                Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
             }
             catch (e) {
                 Ext.showError(e.message);
