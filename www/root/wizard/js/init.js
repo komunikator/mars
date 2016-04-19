@@ -7,6 +7,13 @@ var ivona_sett;
 var from_elem;
 var isInIframe = (window.location != window.parent.location) ? true : false;
 
+//nodewebkit huck
+try { 
+ window.parent.location.host;
+}
+catch(e){isInIframe = false;};
+//
+
 function init_master() {
     $("#header").css("display", "block");
     $("#content").css("display", "flex");

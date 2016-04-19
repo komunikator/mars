@@ -6,6 +6,7 @@ Ext.define('IVR.view.Viewport', {
     layout: 'border',
     title: lang.mainTitle,
     style: "padding: 5px;",
+    hidden: true,
     items: [
         {
             xtype: 'container',
@@ -226,10 +227,12 @@ Ext.define('IVR.view.Viewport', {
                             this.reconfigure(undefined, columns);
                             this.onRefresh(this, function (data) {
                                 if (data && data[0] && data[0].join('')) {
+                                    Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
                                 }
                                 else
-                                    Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                    //Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                    window.location.href = '/wizard';
                             });
                         }
                     },
