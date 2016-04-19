@@ -601,8 +601,10 @@ Ext.define('IVR.view.tasks.Editor', {
         list.on('itemclick', function () {
             list.store.load();
         });
+        settingsForm.setDisabled(true);
 
         list.on('selectionchange', function (view, selections, options) {
+            settingsForm.setDisabled(true);
             if (!selections || !selections[0])
                 return;
             editor.getComponent('list').selectedRow = selections[0];
@@ -626,6 +628,7 @@ Ext.define('IVR.view.tasks.Editor', {
                 Ext.getCmp("IVR.view.tasks.Editor").oldDataForm = JSON.stringify( settingsForm.getForm().getValues() );
                 Ext.getCmp("IVR.view.tasks.Editor").form = settingsForm.getForm();
                 Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                settingsForm.setDisabled(false);
             }
             catch (e) {
                 Ext.showError(e.message);
