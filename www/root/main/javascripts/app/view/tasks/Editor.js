@@ -95,10 +95,8 @@ Ext.define('IVR.view.tasks.Editor', {
             return false;
         }
         if ( Ext.getCmp("IVR.view.tasks.Editor").oldDataForm != JSON.stringify( Ext.getCmp("IVR.view.tasks.Editor").form.getValues() ) ) {
-            console.log("Есть изменения в задаче");
             Ext.getCmp("IVR.view.tasks.Editor.save").setDisabled(false);
         } else {
-            console.log("Нет изменений в задаче");
             Ext.getCmp("IVR.view.tasks.Editor.save").setDisabled(true);
         }
     },
