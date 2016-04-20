@@ -618,6 +618,7 @@ Ext.define('IVR.view.tasks.Editor', {
                 editor.getComponent('settings').setTitle(lang.settings);
             var obj;
             try {
+                settingsForm.setDisabled(false);
                 eval('obj = (' + selections[0].data.value + ')');
                 if (obj.script)
                     obj.script = obj.script.replace(/(\.js)$/, '');
@@ -629,7 +630,6 @@ Ext.define('IVR.view.tasks.Editor', {
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
                 //settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
-                settingsForm.setDisabled(false);
                 var tasks = Ext.getCmp("IVR.view.tasks.Editor");
                 tasks.oldDataForm = JSON.stringify( settingsForm.getForm().getValues() );
                 tasks.form = settingsForm.getForm();
