@@ -161,7 +161,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                     return isValid;
                                 };
                                 if (!form.formValid() || (!form.getValues().onEvent && !form.getValues().target)) {
-                                    Ext.showError('Заполнените обязательные поля');
+                                    Ext.showError(lang["fill_required_field"]);
                                     return;
                                 }
                                 var tasks = Ext.getCmp("IVR.view.tasks.Editor");

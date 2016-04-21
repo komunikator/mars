@@ -185,7 +185,8 @@ lang = {
     findings: 'Данные',
     hour:'час',
     minute:'мин',
-    second:'сек'
+    second:'сек',
+    fill_required_field:'Заполните обязательные поля!'
 };
 
 if (typeof exports !== 'undefined')
