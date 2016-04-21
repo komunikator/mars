@@ -223,7 +223,6 @@ Ext.define('IVR.view.resource.Editor', {
                     lastSelected = self.selectOnLoad.index;
                 }
 
-                // Определить индекс и выбрать его. И удалить selectOnLoad.itemText
                 if (self && self.store && self.store.selectOnLoad && self.store.selectOnLoad.itemText) {
                     var itemText = self.store.selectOnLoad.itemText;
                     delete self.store.selectOnLoad.itemText;
