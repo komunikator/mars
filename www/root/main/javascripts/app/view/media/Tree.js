@@ -122,7 +122,7 @@ Ext.define('IVR.view.media.Tree', {
                                         }
                                         else
                                             node = self.getRootNode();
-                                        var path = self.getPath();
+                                        var path = self.getPath() || '/media';
                                         Ext.MessageBox.prompt(lang.createForder + ' "' + path + '"', lang.enterFolderName + ':', function (btn, text) {
                                             if (btn == 'ok') {
                                                 // send node text and parent id to server using ajax
