@@ -160,10 +160,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                             isValid = false;
                                     return isValid;
                                 };
-                                if (!form.formValid() ||
-                                        (!form.getValues().onEvent && !form.getValues().target))
+                                if (!form.formValid() || (!form.getValues().onEvent && !form.getValues().target)) {
+                                    Ext.showError('Заполнените обязательные поля');
                                     return;
-
+                                }
                                 var tasks = Ext.getCmp("IVR.view.tasks.Editor");
                                 tasks.oldDataForm = JSON.stringify( form.getValues() );
                                 tasks.form = form;
@@ -262,6 +262,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             name: 'onEvent',
                                             itemId: 'onEvent',
                                             //triggerAction: 'all',
+                                            afterLabelTextTpl: Ext.requiredLabel,
                                             editable: false,
                                             valueField: 'id',
                                             displayField: 'text',
@@ -555,6 +556,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             itemId: 'sipAccountID',
                                             editable: false,
                                             valueField: 'id',
+                                            afterLabelTextTpl: Ext.requiredLabel,
                                             displayField: 'name',
                                             store: Ext.data.StoreManager.lookup('SipConnection') ? Ext.data.StoreManager.lookup('SipConnection') : Ext.create('IVR.store.SipConnection'),
                                             listeners: {
