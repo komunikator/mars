@@ -51,7 +51,6 @@ Ext.define('IVR.view.code.Editor', {
                                 text: lang['save'],
                                 handler: function() {
                                     var editor = this.ownerCt.ownerCt.ownerCt.ownerCt;
-					                console.log(editor.getComponent('list'));
                                     if (!editor.getComponent('list').selectedRow)
                                         return;
                                     var name = editor.getComponent('list').selectedRow.data.text;
