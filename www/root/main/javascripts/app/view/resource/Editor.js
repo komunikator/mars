@@ -82,7 +82,10 @@ Ext.define('IVR.view.resource.Editor', {
                                     value: '{}',
                                     isCreate: true,
                                     cb: function() {
-                                        me.ownerCt.ownerCt.store.load();
+                                        var store = me.ownerCt.ownerCt.store;
+                                        store.selectOnLoad = store.selectOnLoad || {};
+                                        store.selectOnLoad.itemText = text;
+                                        store.load();
                                         //me.ownerCt.getComponent('refresh').handler();
                                     }
                                 });
@@ -219,6 +222,23 @@ Ext.define('IVR.view.resource.Editor', {
                     self.getSelectionModel().select(self.selectOnLoad.index);
                     lastSelected = self.selectOnLoad.index;
                 }
+
+                // Определить индекс и выбрать его. И удалить selectOnLoad.itemText
+                if (self && self.store && self.store.selectOnLoad && self.store.selectOnLoad.itemText) {
+                    var itemText = self.store.selectOnLoad.itemText;
+                    delete self.store.selectOnLoad.itemText;
+                    var totalCount = self.store.getAt(lastSelected.index).store.totalCount;
+
+                    for (var i = 0; i < totalCount; i++) {
+                        if (itemText == self.store.getAt(i).data.text) {
+                            //self.fireEvent('selectionchange', self, [self.store.getAt(i)]);
+                            self.getSelectionModel().select(i);
+                            break;
+                        }
+                    }
+                    return;
+                }
+
                 if (lastSelected)
                     self.fireEvent('selectionchange', self, [self.store.getAt(lastSelected.index)]);
             });
