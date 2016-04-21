@@ -309,7 +309,7 @@ function createConnections() {
             url: "/keyCheck",
             data: { 
                 "type": "yandex",
-                "key": $(this).val() 
+                "key": $("#key").val() 
             },
             success: function (res) {
                 if (!res.checked){
@@ -820,7 +820,7 @@ function createConnections() {
             url: "/keyCheck",
             data: { 
                 "type": "yandex",
-                "key": $(this).val() 
+                "key": $("#key").val() 
             },
             success: function (res) {
                if (!res.checked){
