@@ -611,6 +611,11 @@ Ext.define('IVR.view.tasks.Editor', {
             settingsForm.setDisabled(true);
             if (!selections || !selections[0])
                 return;
+
+            if (selections[0].data.value == "{}") {
+                selections[0].data.value =  '{"active":"false", "onEvent": "on_call[0]"}';
+            }
+
             editor.getComponent('list').selectedRow = selections[0];
             if (selections[0])
                 editor.getComponent('settings').setTitle(lang.settings + " '" + selections[0].data.text + "'");
