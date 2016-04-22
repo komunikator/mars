@@ -21,7 +21,7 @@ Ext.define('IVR.view.scripts.Tree', {
     tools: [{
             //type: 'refresh',
             xtype: 'button',
-            hidden: true,
+            //hidden: true,
             iconCls: 'button-refresh',
             tooltip: lang['refresh'],
             handler: function() {
