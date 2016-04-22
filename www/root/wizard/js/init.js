@@ -136,9 +136,7 @@ function getAccountsList() {
             
             createConnections();
         }
-    }).fail(function() {
-        window.location = "../../";
-    });
+    })
 }
 
 function createConnections() {
@@ -513,6 +511,11 @@ function createConnections() {
     });
 
     $("#done_button").on('click', done_handler);
+    $("#done_button a").on('click', function() {
+        if ($("#work_mode").is(":visible") && $("#done_button > a").text() == "Закрыть") {
+            window.location = '../../';
+        }
+    });
     
     $(".del_btn").on('click',function() {
         var tmp_id = $(this).parent().attr("id").substr(5);
@@ -966,16 +969,11 @@ function done_handler() {
             }
             $("#header > div.col.s12.header_bottom").hide();
             $("#header_top > div > h1").hide();
-            $("#done_button > a").text("Закрыть");
-            if (isInIframe){
-                $("#done_button").hide();
-            }
+           
             $("#work_mode > .collection > .collection-item").removeClass("active_item");
             $("#voice_choose").hide();
             $("#prev_button").hide();
             $("#sintez_fields").hide();
-            $("#work_mode").show();
-            $("#header_title").text("Мастер настроек");
             $.ajax({
                 url: '/resourceData/settings',
                 method: 'get',
@@ -1016,9 +1014,14 @@ function done_handler() {
                     myAlert(textStatus,errorThrown);
                 }
             }); 
-        };  
-    } else
-    if ($("#enter_login_password").is(":visible")) {
+            $("#work_mode").show();
+            $("#header_title").text("Мастер настроек");
+            $("#done_button > a").text("Закрыть");
+            if (isInIframe){
+                $("#done_button").hide();
+            }
+        }  
+    } else if ($("#enter_login_password").is(":visible")) {
         if ($("#enter_login").val() && $("#enter_password").val()){
             if ($("#enter_domain").is(":visible") && $("#enter_domain").val() == ""){
                 myAlert("Внимание!","Поле Домен должно быть заполнено!");
@@ -1220,7 +1223,5 @@ function done_handler() {
         $("#work_mode").show();
         $("#header_title").text("Мастер настроек");
 
-    } else if ($("#work_mode").is(":visible")) {
-        window.location = '../../';
-    }
+    } 
 }
