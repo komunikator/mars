@@ -563,6 +563,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                                 afterrender: function () {
                                                     this.store.load();
                                                 },
+                                                beforequery: function (qe) {
+                                                    delete qe.combo.lastQuery;
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                },
                                                 select:  function () {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
