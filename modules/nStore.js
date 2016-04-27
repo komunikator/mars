@@ -71,7 +71,20 @@ function deleteOldRecords(records) {
     {
         var key = records[i];
         //console.log('key: ', key);
+
+        /*
+        // Удаление записей по ключу
+        cdrs.remove(key, function (err) {
+            if (err) {
+                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                console.log("Error executing query:", err);
+                return;
+            }
+        });
+        */
     }
+
+    // Добавить удаление медиа данных
 }
 
 // Ротация данных
@@ -82,9 +95,13 @@ function rotationRecords() {
     expiresDate.setDate(expiresDate.getDate() - daysLife);
 
     cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
-        var records = [];
-        if (err) console.log('err ', err);
+        if (err) {
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
 
+        var records = [];
         for (var key in data) {
             //console.log('key:  ', key, ' gdate: ', data[key].gdate);
             records.push(key);
