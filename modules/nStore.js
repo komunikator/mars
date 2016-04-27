@@ -1,5 +1,6 @@
 var dbPath = 'data/cdr.db',
         cdrs,
+        counterUpdates = 0,
         connection,
         nStore = require('nstore'),
         bus = require('../lib/system/bus'),
@@ -63,6 +64,35 @@ function sortHashTableByKey(hash, key_order, desc)
     return end;
 }
 
+
+// Удаление старых записей в хранилище
+function deleteOldRecords(records) {
+    for (var i = 0, l = records.length; i < l; i++)
+    {
+        var key = records[i];
+        //console.log('key: ', key);
+    }
+}
+
+// Ротация данных
+function rotationRecords() {
+    // Время жизни записи получить из config
+    var daysLife = bus.config.get("dataStorageDays");
+    var expiresDate = new Date();
+    expiresDate.setDate(expiresDate.getDate() - daysLife);
+
+    cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
+        var records = [];
+        if (err) console.log('err ', err);
+
+        for (var key in data) {
+            //console.log('key:  ', key, ' gdate: ', data[key].gdate);
+            records.push(key);
+        }
+        deleteOldRecords(records);
+    });
+}
+
 bus.on('cdr', function (data) {
     var dtmfString = '';
     var i = 0,
@@ -80,6 +110,7 @@ bus.on('cdr', function (data) {
 
     var rec = {
         gdate: require('dateformat')(date, 'yyyy.mm.dd HH:MM:ss'),
+        msec: date.valueOf(),
         step: i,
         session_id: data.sessionID,
         parent_id: data.parentID,
@@ -104,8 +135,16 @@ bus.on('cdr', function (data) {
             console.log("Error executing query:", err, key);
             return;
         }
-    });
 
+        // Увеличиваем счетчик количества обновлений хранилища
+        counterUpdates++;
+
+        // Запуск процедуры ротации данных на каждые n обновлений хранилища
+        if (counterUpdates > 99) {
+            counterUpdates = 0;
+            rotationRecords();
+        }
+    });
 })
 
 bus.onRequest('reportData', function (param, cb) {
