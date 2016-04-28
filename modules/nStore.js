@@ -1,6 +1,7 @@
 var dbPath = 'data/cdr.db',
         cdrs,
         counterUpdates = 0,
+        UPDATE_FOR_ROTATION = 99,
         fs = require('fs'),
         connection,
         nStore = require('nstore'),
@@ -70,14 +71,21 @@ function sortHashTableByKey(hash, key_order, desc)
 function deleteOldRecords(records, mediaFiles) {
     function deleteMediaFile(path) {
         try {
-            fs.unlink(path, function (err) {
-                if (err) {
-                    bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-                    console.log("Error executing query:", err);
-                    return;
+            // Проверка на наличие файла
+            fs.exists(path, function(exists) {
+                //console.log('exists: ', exists);
+                if (exists) {
+                    // Удаление файла
+                    fs.unlink(path, function (err) {
+                        if (err) {
+                            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                            console.log("Error executing query:", err);
+                            return;
+                        }
+                        //console.log('Success delete media file: ', path);
+                    });
                 }
-                console.log('Success delete media file: ', path);
-             });
+            });
         } catch (err) {
             if (err) {
                 bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
@@ -104,7 +112,7 @@ function deleteOldRecords(records, mediaFiles) {
                                    
         // Удаление медиа данных
         var dir = __dirname + '/../rec/' + mediaFiles[i];
-        //console.log('dir: ', dir);
+        deleteMediaFile(dir + '.wav');
         deleteMediaFile(dir + '.wav.in');
         deleteMediaFile(dir + '.wav.out');
     }
@@ -115,9 +123,13 @@ function rotationRecords() {
     // Время жизни записи получить из config
     var daysLife = bus.config.get("dataStorageDays");
     var expiresDate = new Date();
-    expiresDate.setDate( expiresDate.getDate() - (daysLife + 1) );
+    expiresDate.setDate(expiresDate.getDate() - daysLife);
+    expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
 
-    cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
+    //console.log('expiresDate: ', expiresDate);
+    //cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
+
+    cdrs.find({"gdate <": expiresDate}, function (err, data) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
@@ -152,7 +164,6 @@ bus.on('cdr', function (data) {
 
     var rec = {
         gdate: require('dateformat')(date, 'yyyy.mm.dd HH:MM:ss'),
-        msec: date.valueOf(),
         step: i,
         session_id: data.sessionID,
         parent_id: data.parentID,
@@ -182,7 +193,7 @@ bus.on('cdr', function (data) {
         counterUpdates++;
 
         // Запуск процедуры ротации данных на каждые n обновлений хранилища
-        if (counterUpdates > 1) {
+        if (counterUpdates > UPDATE_FOR_ROTATION) {
             counterUpdates = 0;
             rotationRecords();
         }
