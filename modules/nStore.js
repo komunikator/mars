@@ -1,6 +1,7 @@
 var dbPath = 'data/cdr.db',
         cdrs,
         counterUpdates = 0,
+        fs = require('fs'),
         connection,
         nStore = require('nstore'),
         bus = require('../lib/system/bus'),
@@ -66,14 +67,32 @@ function sortHashTableByKey(hash, key_order, desc)
 
 
 // Удаление старых записей в хранилище
-function deleteOldRecords(records) {
-    for (var i = 0, l = records.length; i < l; i++)
-    {
+function deleteOldRecords(records, mediaFiles) {
+    function deleteMediaFile(path) {
+        try {
+            fs.unlink(path, function (err) {
+                if (err) {
+                    bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                    console.log("Error executing query:", err);
+                    return;
+                }
+                console.log('Success delete media file: ', path);
+             });
+        } catch (err) {
+            if (err) {
+                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                console.log("Error executing query:", err);
+                return;
+            }
+        }
+
+    }
+
+    for (var i = 0, l = records.length; i < l; i++) {
         var key = records[i];
         //console.log('key: ', key);
 
-        /*
-        // Удаление записей по ключу
+        // Удаление записей по ключу в cdr.db
         cdrs.remove(key, function (err) {
             if (err) {
                 bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
@@ -81,10 +100,14 @@ function deleteOldRecords(records) {
                 return;
             }
         });
-        */
-    }
 
-    // Добавить удаление медиа данных
+                                   
+        // Удаление медиа данных
+        var dir = __dirname + '/../rec/' + mediaFiles[i];
+        //console.log('dir: ', dir);
+        deleteMediaFile(dir + '.wav.in');
+        deleteMediaFile(dir + '.wav.out');
+    }
 }
 
 // Ротация данных
@@ -92,7 +115,7 @@ function rotationRecords() {
     // Время жизни записи получить из config
     var daysLife = bus.config.get("dataStorageDays");
     var expiresDate = new Date();
-    expiresDate.setDate(expiresDate.getDate() - daysLife);
+    expiresDate.setDate( expiresDate.getDate() - (daysLife + 1) );
 
     cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
         if (err) {
@@ -102,11 +125,13 @@ function rotationRecords() {
         }
 
         var records = [];
+        var mediaFiles = [];
         for (var key in data) {
             //console.log('key:  ', key, ' gdate: ', data[key].gdate);
+            mediaFiles.push(data[key].session_id);
             records.push(key);
         }
-        deleteOldRecords(records);
+        deleteOldRecords(records, mediaFiles);
     });
 }
 
@@ -157,7 +182,7 @@ bus.on('cdr', function (data) {
         counterUpdates++;
 
         // Запуск процедуры ротации данных на каждые n обновлений хранилища
-        if (counterUpdates > 99) {
+        if (counterUpdates > 1) {
             counterUpdates = 0;
             rotationRecords();
         }
