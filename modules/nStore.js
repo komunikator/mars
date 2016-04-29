@@ -122,29 +122,32 @@ function deleteOldRecords(records, mediaFiles) {
 function rotationRecords() {
     // Время жизни записи получить из config
     var daysLife = bus.config.get("dataStorageDays");
-    var expiresDate = new Date();
-    expiresDate.setDate(expiresDate.getDate() - daysLife);
-    expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
 
-    //console.log('expiresDate: ', expiresDate);
-    //cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
+    if (daysLife > 0) {
+        var expiresDate = new Date();
+        expiresDate.setDate(expiresDate.getDate() - daysLife);
+        expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
 
-    cdrs.find({"gdate <": expiresDate}, function (err, data) {
-        if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
-            return;
-        }
+        //console.log('expiresDate: ', expiresDate);
+        //cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
 
-        var records = [];
-        var mediaFiles = [];
-        for (var key in data) {
-            //console.log('key:  ', key, ' gdate: ', data[key].gdate);
-            mediaFiles.push(data[key].session_id);
-            records.push(key);
-        }
-        deleteOldRecords(records, mediaFiles);
-    });
+        cdrs.find({"gdate <": expiresDate}, function (err, data) {
+            if (err) {
+                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                console.log("Error executing query:", err);
+                return;
+            }
+
+            var records = [];
+            var mediaFiles = [];
+            for (var key in data) {
+                //console.log('key:  ', key, ' gdate: ', data[key].gdate);
+                mediaFiles.push(data[key].session_id);
+                records.push(key);
+            }
+            deleteOldRecords(records, mediaFiles);
+        });
+    }
 }
 
 bus.on('cdr', function (data) {
