@@ -2,7 +2,7 @@
     "webPort": 8000,
     "audioCodec": "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
-    "dataStorageDays": "2",
+    "dataStorageDays": 100,
     "webAccounts": [
         {
             "username": "admin",
