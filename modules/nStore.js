@@ -67,8 +67,8 @@ function sortHashTableByKey(hash, key_order, desc)
 }
 
 
-// Удаление старых записей в хранилище
-function deleteOldRecords(records, mediaFiles) {
+// Удаление устаревших медиаданных
+function deleteOldRecords(mediaFiles) {
     function deleteMediaFile(path) {
         try {
             // Проверка на наличие файла
@@ -96,21 +96,8 @@ function deleteOldRecords(records, mediaFiles) {
 
     }
 
-    for (var i = 0, l = records.length; i < l; i++) {
-        var key = records[i];
-        //console.log('key: ', key);
-
-        // Удаление записей по ключу в cdr.db
-        cdrs.remove(key, function (err) {
-            if (err) {
-                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err);
-                return;
-            }
-        });
-
-                                   
-        // Удаление медиа данных
+    // Удаление устаревших медиа данных
+    for (var i = 0, l = mediaFiles.length; i < l; i++) {
         var dir = __dirname + '/../rec/' + mediaFiles[i];
         deleteMediaFile(dir + '.wav');
         deleteMediaFile(dir + '.wav.in');
@@ -127,9 +114,7 @@ function rotationRecords() {
         var expiresDate = new Date();
         expiresDate.setDate(expiresDate.getDate() - daysLife);
         expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
-
         //console.log('expiresDate: ', expiresDate);
-        //cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
 
         cdrs.find({"gdate <": expiresDate}, function (err, data) {
             if (err) {
@@ -138,14 +123,12 @@ function rotationRecords() {
                 return;
             }
 
-            var records = [];
             var mediaFiles = [];
             for (var key in data) {
                 //console.log('key:  ', key, ' gdate: ', data[key].gdate);
                 mediaFiles.push(data[key].session_id);
-                records.push(key);
             }
-            deleteOldRecords(records, mediaFiles);
+            deleteOldRecords(mediaFiles);
         });
     }
 }
