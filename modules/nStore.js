@@ -1,5 +1,7 @@
 var dbPath = 'data/cdr.db',
         cdrs,
+        dbPathTmp = 'data/tmp.db',
+        cdrsTmp,
         counterUpdates = 0,
         UPDATE_FOR_ROTATION = 99,
         fs = require('fs'),
@@ -18,6 +20,12 @@ function connect() {
          return doc.lastAccess > Date.now() - 360000;
          };
          */
+    });
+}
+
+function connectCdrTmp() {
+    cdrsTmp = nStore.new(dbPathTmp, function () {
+        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
     });
 }
 
@@ -105,6 +113,128 @@ function deleteOldRecords(mediaFiles) {
     }
 }
 
+// Сохраняем во временное хранилище целиком
+function saveDataAsTmp(data, cb) {
+    cdrsTmp.save(null, data, function (err, key) {
+        if (err) {
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err, key);
+            return;
+        }
+        if (cb) { cb(); }
+    });
+}
+
+// Закрываем основную коллекцию
+function closeCdr(cb) {
+    fs.close(cdrs.fd, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        if (cb) { cb(); }
+    });
+}
+
+// Удаляем cdr
+function deleteCdr(cb) {
+    fs.unlink(dbPath, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        if (cb) { cb(); }
+    });
+}
+
+// Соединяемся с бд
+function connectCdr(cb) {
+    cdrs = nStore.new(dbPath, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
+        if (cb) { cb(); }
+    });
+}
+
+// Забираем всю коллекцию из временного хранилища
+function getAllTmpData(cb) {
+    cdrsTmp.all(function (err, data) {
+        if (err) {
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        cb(data);
+    });
+}
+
+// Сохраняем в основное хранилище
+function saveDataCdr(data, cb) {
+    var counter = 0;
+    for (var key in data) {
+        for (var key2 in data[key]) {
+            counter++;
+        }
+    }
+
+    for (var key in data) {
+        for (var key2 in data[key]) {
+            cdrs.save(key2, data[key][key2], function (err, key2) {
+                if (err) {
+                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+                    console.log("Error executing query:", err, key2);
+                    return;
+                }
+                counter--;
+                if (counter === 0) cb(key2);
+            });
+        }
+    }
+}
+
+// Закрываем временную коллекцию
+function closeTmpDb(cb) {
+    fs.close(cdrsTmp.fd, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        if (cb) { cb(); }
+    });
+}
+
+// Удаляем tmp
+function deleteTmpDb(cb) {
+    fs.unlink(dbPathTmp, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        if (cb) { cb(); }
+    });
+}
+
+// Соединиться с временной коллекцией
+function connectTmpDb(cb) {
+    cdrsTmp = nStore.new(dbPathTmp, function (err) {
+        if (err) {
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+            console.log("Error executing query:", err);
+            return;
+        }
+        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
+        if (cb) { cb(); }
+    });
+}
+
 // Ротация данных
 function rotationRecords() {
     // Время жизни записи получить из config
@@ -116,9 +246,22 @@ function rotationRecords() {
         expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
         //console.log('expiresDate: ', expiresDate);
 
+        // Поиск актуальных данных
+        function getActualData(cb) {
+            cdrs.find({"gdate >=": expiresDate}, function (err, data) {
+                if (err) {
+                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
+                    console.log("Error executing query:", err);
+                    return;
+                }
+                if (cb) { cb(data); }
+            });
+        }
+
+        // Удаление старых медиаданных
         cdrs.find({"gdate <": expiresDate}, function (err, data) {
             if (err) {
-                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
+                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
                 console.log("Error executing query:", err);
                 return;
             }
@@ -129,6 +272,59 @@ function rotationRecords() {
                 mediaFiles.push(data[key].session_id);
             }
             deleteOldRecords(mediaFiles);
+
+            // Поиск актуальных данных
+            getActualData(
+                function(data) {
+                    // Сохранить во временное хранилище одним объектом
+                    saveDataAsTmp(
+                        data,
+                        function() {
+                            // Закрыть основную коллекцию
+                            closeCdr(
+                                function() {
+                                    // Удалить основную коллекцию
+                                    deleteCdr(
+                                        function() {
+                                            // Соединиться с основной коллекцией
+                                            connectCdr(
+                                                function() {
+                                                    // Получить коллекцию из временного хранилища
+                                                    getAllTmpData(
+                                                        function(data) {
+                                                            // Сохранить в основное хранилище из временного
+                                                            saveDataCdr(
+                                                                data,
+                                                                function(data) {
+                                                                    // Закрыть временную коллекцию
+                                                                    closeTmpDb(
+                                                                        function() {
+                                                                            // Удалить временную коллекцию
+                                                                            deleteTmpDb(
+                                                                                function () {
+                                                                                    // Соединиться с временной коллекцией
+                                                                                    connectTmpDb(
+                                                                                        function() {
+                                                                                        }
+                                                                                    );
+                                                                                }
+                                                                            );
+                                                                        }
+                                                                    )
+                                                                }
+                                                            );
+                                                        }
+                                                    );
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    );
+                }
+            );
         });
     }
 }
@@ -277,3 +473,4 @@ bus.onRequest('reportData', function (param, cb) {
 })
 
 connect();
+connectCdrTmp();
