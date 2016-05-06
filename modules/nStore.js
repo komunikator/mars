@@ -113,7 +113,7 @@ function deleteOldRecords(mediaFiles) {
     }
 }
 
-// Сохраняем во временное хранилище целиком
+// Сохранить во временное хранилище одним объектом
 function saveDataAsTmp(data, cb) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
@@ -125,7 +125,7 @@ function saveDataAsTmp(data, cb) {
     });
 }
 
-// Закрываем основную коллекцию
+// Закрыть основную коллекцию
 function closeCdr(cb) {
     fs.close(cdrs.fd, function (err) {
         if (err) {
@@ -137,7 +137,7 @@ function closeCdr(cb) {
     });
 }
 
-// Удаляем cdr
+// Удалить основную коллекцию
 function deleteCdr(cb) {
     fs.unlink(dbPath, function (err) {
         if (err) {
@@ -149,7 +149,7 @@ function deleteCdr(cb) {
     });
 }
 
-// Соединяемся с бд
+// Соединиться с основной коллекцией
 function connectCdr(cb) {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
@@ -162,7 +162,7 @@ function connectCdr(cb) {
     });
 }
 
-// Забираем всю коллекцию из временного хранилища
+// Получить коллекцию из временного хранилища
 function getAllTmpData(cb) {
     cdrsTmp.all(function (err, data) {
         if (err) {
@@ -174,7 +174,7 @@ function getAllTmpData(cb) {
     });
 }
 
-// Сохраняем в основное хранилище
+// Сохранить в основное хранилище из временного
 function saveDataCdr(data, cb) {
     var counter = 0;
     for (var key in data) {
@@ -198,7 +198,7 @@ function saveDataCdr(data, cb) {
     }
 }
 
-// Закрываем временную коллекцию
+// Закрыть временную коллекцию
 function closeTmpDb(cb) {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
@@ -210,7 +210,7 @@ function closeTmpDb(cb) {
     });
 }
 
-// Удаляем tmp
+// Удалить временную коллекцию
 function deleteTmpDb(cb) {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
