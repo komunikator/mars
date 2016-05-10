@@ -250,24 +250,25 @@ function connectTmpDb(cb) {
 function saveTmpDataCdr(cb) {
     var counter = tmpStorageLogs.length;
 
-    for (var i = 0, l = tmpStorageLogs.length; i < l; i++) {
-        var rec = tmpStorageLogs[i];
+    if (counter) {
+        for (var i = 0, l = tmpStorageLogs.length; i < l; i++) {
+            var rec = tmpStorageLogs[i];
 
-        cdrs.save(null, rec, function (err, key) {
-            counter--;
-            if (err) {
-                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err, key);
-                if (counter === 0) startedRotation = false;
-                return;
-            }
-            if (counter === 0) {
-                tmpStorageLogs = [];
-                if (cb) {
-                    cb();
+            cdrs.save(null, rec, function (err, key) {
+                counter--;
+                if (err) {
+                    bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
+                    if (counter === 0) startedRotation = false;
+                    return;
                 }
-            }
-        });
+                if (counter === 0) {
+                    tmpStorageLogs = [];
+                    if (cb) cb();
+                }
+            });
+        }
+    } else {
+        if (cb) cb();
     }
 }
 
