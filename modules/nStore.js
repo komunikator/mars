@@ -2,6 +2,8 @@ var dbPath = 'data/cdr.db',
         cdrs,
         dbPathTmp = 'data/tmp.db',
         cdrsTmp,
+        startedRotation = false,
+        tmpStorageLogs = [],
         counterUpdates = 0,
         UPDATE_FOR_ROTATION = 99,
         fs = require('fs'),
@@ -14,7 +16,7 @@ nStore = nStore.extend(require('nstore/query')());
 
 function connect() {
     cdrs = nStore.new(dbPath, function () {
-        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
+        bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
         /*
          cdrs.filterFn = function(doc, meta) {
          return doc.lastAccess > Date.now() - 360000;
@@ -119,6 +121,7 @@ function saveDataAsTmp(data, cb) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err, key);
+            startedRotation = false;
             return;
         }
         if (cb) { cb(); }
@@ -131,6 +134,7 @@ function closeCdr(cb) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
         if (cb) { cb(); }
@@ -143,6 +147,7 @@ function deleteCdr(cb) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
         if (cb) { cb(); }
@@ -155,10 +160,11 @@ function connectCdr(cb) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
-        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
-        if (cb) { cb(); }
+        bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
+        if (cb) cb();
     });
 }
 
@@ -168,9 +174,10 @@ function getAllTmpData(cb) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
-        cb(data);
+        if (cb) cb(data);
     });
 }
 
@@ -186,12 +193,13 @@ function saveDataCdr(data, cb) {
     for (var key in data) {
         for (var key2 in data[key]) {
             cdrs.save(key2, data[key][key2], function (err, key2) {
+                counter--;
                 if (err) {
                     bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
                     console.log("Error executing query:", err, key2);
+                    if (counter === 0) startedRotation = false;
                     return;
                 }
-                counter--;
                 if (counter === 0) cb(key2);
             });
         }
@@ -204,9 +212,10 @@ function closeTmpDb(cb) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
-        if (cb) { cb(); }
+        if (cb) cb();
     });
 }
 
@@ -216,27 +225,55 @@ function deleteTmpDb(cb) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
+            startedRotation = false;
             return;
         }
-        if (cb) { cb(); }
+        if (cb) cb();
     });
 }
 
 // Соединиться с временной коллекцией
 function connectTmpDb(cb) {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
+        startedRotation = false;
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
             console.log("Error executing query:", err);
             return;
         }
-        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
-        if (cb) { cb(); }
+        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
+        if (cb) cb();
     });
+}
+
+// Сохранить в основное хранилище из временного
+function saveTmpDataCdr(cb) {
+    var counter = tmpStorageLogs.length;
+
+    for (var i = 0, l = tmpStorageLogs.length; i < l; i++) {
+        var rec = tmpStorageLogs[i];
+
+        cdrs.save(null, rec, function (err, key) {
+            counter--;
+            if (err) {
+                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
+                console.log("Error executing query:", err, key);
+                if (counter === 0) startedRotation = false;
+                return;
+            }
+            if (counter === 0) {
+                tmpStorageLogs = [];
+                if (cb) {
+                    cb();
+                }
+            }
+        });
+    }
 }
 
 // Ротация данных
 function rotationRecords() {
+    startedRotation = true;
     // Время жизни записи получить из config
     var daysLife = bus.config.get("dataStorageDays");
 
@@ -252,6 +289,7 @@ function rotationRecords() {
                 if (err) {
                     bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
                     console.log("Error executing query:", err);
+                    startedRotation = false;
                     return;
                 }
                 if (cb) { cb(data); }
@@ -305,6 +343,11 @@ function rotationRecords() {
                                                                                     // Соединиться с временной коллекцией
                                                                                     connectTmpDb(
                                                                                         function() {
+                                                                                            // Сохранить данные в основную коллекцию из временного хранилища
+                                                                                            saveTmpDataCdr(
+                                                                                                function() {
+                                                                                                }
+                                                                                            );
                                                                                         }
                                                                                     );
                                                                                 }
@@ -326,6 +369,8 @@ function rotationRecords() {
                 }
             );
         });
+    } else {
+        startedRotation = false;
     }
 }
 
@@ -364,22 +409,27 @@ bus.on('cdr', function (data) {
 
     if (data.refer)
         rec.refer = data.refer;
-    cdrs.save(null, rec, function (err, key) {
-        if (err) {
-            bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err, key);
-            return;
-        }
 
-        // Увеличиваем счетчик количества обновлений хранилища
-        counterUpdates++;
+    if (startedRotation) {
+        tmpStorageLogs.push(rec);
+    } else {
+        cdrs.save(null, rec, function (err, key) {
+            if (err) {
+                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
+                console.log("Error executing query:", err, key);
+                return;
+            }
 
-        // Запуск процедуры ротации данных на каждые n обновлений хранилища
-        if (counterUpdates > UPDATE_FOR_ROTATION) {
-            counterUpdates = 0;
-            rotationRecords();
-        }
-    });
+            // Увеличиваем счетчик количества обновлений хранилища
+            counterUpdates++;
+
+            // Запуск процедуры ротации данных на каждые n обновлений хранилища
+            if ( (counterUpdates > UPDATE_FOR_ROTATION) && (!startedRotation) ) {
+                counterUpdates = 0;
+                rotationRecords();
+            }
+        });
+    }
 })
 
 bus.onRequest('reportData', function (param, cb) {
