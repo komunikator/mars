@@ -88,8 +88,8 @@ function deleteOldRecords(mediaFiles) {
                     // Удаление файла
                     fs.unlink(path, function (err) {
                         if (err) {
-                            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-                            console.log("Error executing query:", err);
+                            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+                            console.log("Error deleting file:", err);
                             return;
                         }
                         //console.log('Success delete media file: ', path);
@@ -98,8 +98,8 @@ function deleteOldRecords(mediaFiles) {
             });
         } catch (err) {
             if (err) {
-                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err);
+                bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+                console.log("Error deleting file: ", err);
                 return;
             }
         }
@@ -119,8 +119,8 @@ function deleteOldRecords(mediaFiles) {
 function saveDataAsTmp(data, cb) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err, key);
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
+            console.log("Error saving data: ", err, key);
             startedRotation = false;
             return;
         }
@@ -132,8 +132,8 @@ function saveDataAsTmp(data, cb) {
 function closeCdr(cb) {
     fs.close(cdrs.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error close file: " + err});
+            console.log("Error close file:", err);
             startedRotation = false;
             return;
         }
@@ -145,8 +145,8 @@ function closeCdr(cb) {
 function deleteCdr(cb) {
     fs.unlink(dbPath, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+            console.log("Error deleting file: ", err);
             startedRotation = false;
             return;
         }
@@ -158,8 +158,8 @@ function deleteCdr(cb) {
 function connectCdr(cb) {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
+            console.log("Error connecting Cdr: ", err);
             startedRotation = false;
             return;
         }
@@ -172,8 +172,8 @@ function connectCdr(cb) {
 function getAllTmpData(cb) {
     cdrsTmp.all(function (err, data) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error get data: " + err});
+            console.log("Error get data:", err);
             startedRotation = false;
             return;
         }
@@ -195,8 +195,8 @@ function saveDataCdr(data, cb) {
             cdrs.save(key2, data[key][key2], function (err, key2) {
                 counter--;
                 if (err) {
-                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-                    console.log("Error executing query:", err, key2);
+                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
+                    console.log("Error saving data: ", err, key2);
                     if (counter === 0) startedRotation = false;
                     return;
                 }
@@ -210,8 +210,8 @@ function saveDataCdr(data, cb) {
 function closeTmpDb(cb) {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error close Tmp DB: " + err});
+            console.log("Error close Tmp DB: ", err);
             startedRotation = false;
             return;
         }
@@ -223,8 +223,8 @@ function closeTmpDb(cb) {
 function deleteTmpDb(cb) {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+            console.log("Error deleting file: ", err);
             startedRotation = false;
             return;
         }
@@ -237,11 +237,11 @@ function connectTmpDb(cb) {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
         startedRotation = false;
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Tmp Db: " + err});
+            console.log("Error connecting Tmp Db: ", err);
             return;
         }
-        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
+        bus.emit('message', {type: 'info', msg: "nStore Tmp db connected"});
         if (cb) cb();
     });
 }
@@ -257,7 +257,7 @@ function saveTmpDataCdr(cb) {
             cdrs.save(null, rec, function (err, key) {
                 counter--;
                 if (err) {
-                    bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
+                    bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error saving data: " + err});
                     if (counter === 0) startedRotation = false;
                     return;
                 }
@@ -288,8 +288,8 @@ function rotationRecords() {
         function getActualData(cb) {
             cdrs.find({"gdate >=": expiresDate}, function (err, data) {
                 if (err) {
-                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-                    console.log("Error executing query:", err);
+                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data: " + err});
+                    console.log("Error find data: ", err);
                     startedRotation = false;
                     return;
                 }
@@ -300,8 +300,8 @@ function rotationRecords() {
         // Удаление старых медиаданных
         cdrs.find({"gdate <": expiresDate}, function (err, data) {
             if (err) {
-                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err);
+                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data:" + err});
+                console.log("Error find data: ", err);
                 return;
             }
 
@@ -416,8 +416,8 @@ bus.on('cdr', function (data) {
     } else {
         cdrs.save(null, rec, function (err, key) {
             if (err) {
-                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err, key);
+                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error saving data: " + err});
+                console.log("Error saving data: ", err, key);
                 return;
             }
 
