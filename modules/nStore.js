@@ -134,7 +134,7 @@ rotation.on('saveDataAsTmp', function(data) {
 rotation.on('closeCdr', function() {
     fs.close(cdrs.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error close file: " + err});
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close file: " + err});
             console.log("Error close file:", err);
             startedRotation = false;
             return;
@@ -147,7 +147,7 @@ rotation.on('closeCdr', function() {
 rotation.on('deleteCdr', function() {
     fs.unlink(dbPath, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
             console.log("Error deleting file: ", err);
             startedRotation = false;
             return;
@@ -212,7 +212,7 @@ rotation.on('saveDataCdr', function(data) {
 rotation.on('closeTmpDb', function() {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error close Tmp DB: " + err});
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close Tmp DB: " + err});
             console.log("Error close Tmp DB: ", err);
             startedRotation = false;
             return;
@@ -225,7 +225,7 @@ rotation.on('closeTmpDb', function() {
 rotation.on('deleteTmpDb', function() {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
             console.log("Error deleting file: ", err);
             startedRotation = false;
             return;
