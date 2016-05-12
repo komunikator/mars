@@ -12,7 +12,7 @@ var dbPath = 'data/cdr.db',
         bus = require('../lib/system/bus'),
         scriptList = [],
         events = require('events'),
-        nStoreBus = new events.EventEmitter();
+        rotation = new events.EventEmitter();
 
 nStore = nStore.extend(require('nstore/query')());
 
@@ -118,7 +118,7 @@ function deleteOldRecords(mediaFiles) {
 }
 
 // Сохранить во временное хранилище одним объектом
-nStoreBus.on('saveDataAsTmp', function(data, cb) {
+rotation.on('saveDataAsTmp', function(data, cb) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
@@ -127,12 +127,12 @@ nStoreBus.on('saveDataAsTmp', function(data, cb) {
             return;
         }
         if (cb) cb();
-        nStoreBus.emit('closeCdr');
+        rotation.emit('closeCdr');
     });
 });
 
 // Закрыть основную коллекцию
-nStoreBus.on('closeCdr', function(cb) {
+rotation.on('closeCdr', function(cb) {
     fs.close(cdrs.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close file: " + err});
@@ -141,12 +141,12 @@ nStoreBus.on('closeCdr', function(cb) {
             return;
         }
         if (cb) cb();
-        nStoreBus.emit('deleteCdr');
+        rotation.emit('deleteCdr');
     });
 });
 
 // Удалить основную коллекцию
-nStoreBus.on('deleteCdr', function(cb) {
+rotation.on('deleteCdr', function(cb) {
     fs.unlink(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -155,12 +155,12 @@ nStoreBus.on('deleteCdr', function(cb) {
             return;
         }
         if (cb) cb();
-        nStoreBus.emit('connectCdr');
+        rotation.emit('connectCdr');
     });
 });
 
 // Соединиться с основной коллекцией
-nStoreBus.on('connectCdr', function(cb) {
+rotation.on('connectCdr', function(cb) {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
@@ -170,12 +170,12 @@ nStoreBus.on('connectCdr', function(cb) {
         }
         bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
         if (cb) cb();
-        nStoreBus.emit('getAllTmpData');
+        rotation.emit('getAllTmpData');
     });
 });
 
 // Получить коллекцию из временного хранилища
-nStoreBus.on('getAllTmpData', function(cb) {
+rotation.on('getAllTmpData', function(cb) {
     cdrsTmp.all(function (err, data) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error get data: " + err});
@@ -184,12 +184,12 @@ nStoreBus.on('getAllTmpData', function(cb) {
             return;
         }
         if (cb) cb(data);
-        nStoreBus.emit('saveDataCdr', data);
+        rotation.emit('saveDataCdr', data);
     });
 });
 
 // Сохранить в основное хранилище из временного
-nStoreBus.on('saveDataCdr', function(data, cb) {
+rotation.on('saveDataCdr', function(data, cb) {
     var counter = 0;
     for (var key in data) {
         for (var key2 in data[key]) {
@@ -209,7 +209,7 @@ nStoreBus.on('saveDataCdr', function(data, cb) {
                 }
                 if (counter === 0) {
                     if (cb) cb();
-                    nStoreBus.emit('closeTmpDb');
+                    rotation.emit('closeTmpDb');
                 }
             });
         }
@@ -217,7 +217,7 @@ nStoreBus.on('saveDataCdr', function(data, cb) {
 });
 
 // Закрыть временную коллекцию
-nStoreBus.on('closeTmpDb', function(cb) {
+rotation.on('closeTmpDb', function(cb) {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close Tmp DB: " + err});
@@ -226,12 +226,12 @@ nStoreBus.on('closeTmpDb', function(cb) {
             return;
         }
         if (cb) cb();
-        nStoreBus.emit('deleteTmpDb');
+        rotation.emit('deleteTmpDb');
     });
 });
 
 // Удалить временную коллекцию
-nStoreBus.on('deleteTmpDb', function(cb) {
+rotation.on('deleteTmpDb', function(cb) {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -240,12 +240,12 @@ nStoreBus.on('deleteTmpDb', function(cb) {
             return;
         }
         if (cb) cb();
-        nStoreBus.emit('connectTmpDb');
+        rotation.emit('connectTmpDb');
     });
 });
 
 // Соединиться с временной коллекцией
-nStoreBus.on('connectTmpDb', function(cb) {
+rotation.on('connectTmpDb', function(cb) {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
         startedRotation = false;
         if (err) {
@@ -255,12 +255,12 @@ nStoreBus.on('connectTmpDb', function(cb) {
         }
         bus.emit('message', {type: 'info', msg: "nStore Tmp db connected"});
         if (cb) cb();
-        nStoreBus.emit('saveTmpDataCdr');
+        rotation.emit('saveTmpDataCdr');
     });
 });
 
 // Сохранить в основное хранилище из временного
-nStoreBus.on('saveTmpDataCdr', function(cb) {
+rotation.on('saveTmpDataCdr', function(cb) {
     var counter = tmpStorageLogs.length;
 
     if (counter) {
@@ -309,7 +309,7 @@ function rotationRecords() {
                 if (cb) cb(data);
 
                 // Сохранить во временное хранилище одним объектом
-                nStoreBus.emit('saveDataAsTmp', data);
+                rotation.emit('saveDataAsTmp', data);
             });
         }
 
