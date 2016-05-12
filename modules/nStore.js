@@ -10,7 +10,9 @@ var dbPath = 'data/cdr.db',
         connection,
         nStore = require('nstore'),
         bus = require('../lib/system/bus'),
-        scriptList = [];
+        scriptList = [],
+        events = require('events'),
+        nStoreBus = new events.EventEmitter();
 
 nStore = nStore.extend(require('nstore/query')());
 
@@ -116,7 +118,7 @@ function deleteOldRecords(mediaFiles) {
 }
 
 // Сохранить во временное хранилище одним объектом
-function saveDataAsTmp(data, cb) {
+nStoreBus.on('saveDataAsTmp', function(data, cb) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
@@ -124,12 +126,13 @@ function saveDataAsTmp(data, cb) {
             startedRotation = false;
             return;
         }
-        if (cb) { cb(); }
+        if (cb) cb();
+        nStoreBus.emit('closeCdr');
     });
-}
+});
 
 // Закрыть основную коллекцию
-function closeCdr(cb) {
+nStoreBus.on('closeCdr', function(cb) {
     fs.close(cdrs.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close file: " + err});
@@ -137,12 +140,13 @@ function closeCdr(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) { cb(); }
+        if (cb) cb();
+        nStoreBus.emit('deleteCdr');
     });
-}
+});
 
 // Удалить основную коллекцию
-function deleteCdr(cb) {
+nStoreBus.on('deleteCdr', function(cb) {
     fs.unlink(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -150,12 +154,13 @@ function deleteCdr(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) { cb(); }
+        if (cb) cb();
+        nStoreBus.emit('connectCdr');
     });
-}
+});
 
 // Соединиться с основной коллекцией
-function connectCdr(cb) {
+nStoreBus.on('connectCdr', function(cb) {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
@@ -165,11 +170,12 @@ function connectCdr(cb) {
         }
         bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
         if (cb) cb();
+        nStoreBus.emit('getAllTmpData');
     });
-}
+});
 
 // Получить коллекцию из временного хранилища
-function getAllTmpData(cb) {
+nStoreBus.on('getAllTmpData', function(cb) {
     cdrsTmp.all(function (err, data) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error get data: " + err});
@@ -178,11 +184,12 @@ function getAllTmpData(cb) {
             return;
         }
         if (cb) cb(data);
+        nStoreBus.emit('saveDataCdr', data);
     });
-}
+});
 
 // Сохранить в основное хранилище из временного
-function saveDataCdr(data, cb) {
+nStoreBus.on('saveDataCdr', function(data, cb) {
     var counter = 0;
     for (var key in data) {
         for (var key2 in data[key]) {
@@ -200,14 +207,17 @@ function saveDataCdr(data, cb) {
                     if (counter === 0) startedRotation = false;
                     return;
                 }
-                if (counter === 0) cb(key2);
+                if (counter === 0) {
+                    if (cb) cb();
+                    nStoreBus.emit('closeTmpDb');
+                }
             });
         }
     }
-}
+});
 
 // Закрыть временную коллекцию
-function closeTmpDb(cb) {
+nStoreBus.on('closeTmpDb', function(cb) {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close Tmp DB: " + err});
@@ -216,11 +226,12 @@ function closeTmpDb(cb) {
             return;
         }
         if (cb) cb();
+        nStoreBus.emit('deleteTmpDb');
     });
-}
+});
 
 // Удалить временную коллекцию
-function deleteTmpDb(cb) {
+nStoreBus.on('deleteTmpDb', function(cb) {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -229,11 +240,12 @@ function deleteTmpDb(cb) {
             return;
         }
         if (cb) cb();
+        nStoreBus.emit('connectTmpDb');
     });
-}
+});
 
 // Соединиться с временной коллекцией
-function connectTmpDb(cb) {
+nStoreBus.on('connectTmpDb', function(cb) {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
         startedRotation = false;
         if (err) {
@@ -243,11 +255,12 @@ function connectTmpDb(cb) {
         }
         bus.emit('message', {type: 'info', msg: "nStore Tmp db connected"});
         if (cb) cb();
+        nStoreBus.emit('saveTmpDataCdr');
     });
-}
+});
 
 // Сохранить в основное хранилище из временного
-function saveTmpDataCdr(cb) {
+nStoreBus.on('saveTmpDataCdr', function(cb) {
     var counter = tmpStorageLogs.length;
 
     if (counter) {
@@ -270,7 +283,7 @@ function saveTmpDataCdr(cb) {
     } else {
         if (cb) cb();
     }
-}
+});
 
 // Ротация данных
 function rotationRecords() {
@@ -293,7 +306,10 @@ function rotationRecords() {
                     startedRotation = false;
                     return;
                 }
-                if (cb) { cb(data); }
+                if (cb) cb(data);
+
+                // Сохранить во временное хранилище одним объектом
+                nStoreBus.emit('saveDataAsTmp', data);
             });
         }
 
@@ -311,64 +327,7 @@ function rotationRecords() {
                 mediaFiles.push(data[key].session_id);
             }
             deleteOldRecords(mediaFiles);
-
-            // Поиск актуальных данных
-            getActualData(
-                function(data) {
-                    // Сохранить во временное хранилище одним объектом
-                    saveDataAsTmp(
-                        data,
-                        function() {
-                            // Закрыть основную коллекцию
-                            closeCdr(
-                                function() {
-                                    // Удалить основную коллекцию
-                                    deleteCdr(
-                                        function() {
-                                            // Соединиться с основной коллекцией
-                                            connectCdr(
-                                                function() {
-                                                    // Получить коллекцию из временного хранилища
-                                                    getAllTmpData(
-                                                        function(data) {
-                                                            // Сохранить в основное хранилище из временного
-                                                            saveDataCdr(
-                                                                data,
-                                                                function(data) {
-                                                                    // Закрыть временную коллекцию
-                                                                    closeTmpDb(
-                                                                        function() {
-                                                                            // Удалить временную коллекцию
-                                                                            deleteTmpDb(
-                                                                                function () {
-                                                                                    // Соединиться с временной коллекцией
-                                                                                    connectTmpDb(
-                                                                                        function() {
-                                                                                            // Сохранить данные в основную коллекцию из временного хранилища
-                                                                                            saveTmpDataCdr(
-                                                                                                function() {
-                                                                                                }
-                                                                                            );
-                                                                                        }
-                                                                                    );
-                                                                                }
-                                                                            );
-                                                                        }
-                                                                    )
-                                                                }
-                                                            );
-                                                        }
-                                                    );
-                                                }
-                                            );
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
-                }
-            );
+            getActualData();
         });
     } else {
         startedRotation = false;
