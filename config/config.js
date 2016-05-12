@@ -63,7 +63,8 @@
                 "call",
                 "task",
                 "error",
-                "http"
+                "http",
+                "rotation"
             ]
         },
         {
@@ -131,10 +132,10 @@
         },
         {
             "type": "file",
-            "filename": "logs/softphone.log",
+            "filename": "logs/rotation.log",
             "maxLogSize": 1048576,
             "backups": 10,
-            "category": "softphone"
+            "category": "rotation"
         }
     ]
 }
