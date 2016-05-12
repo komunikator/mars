@@ -80,7 +80,7 @@ function sortHashTableByKey(hash, key_order, desc)
 
 
 // Удаление устаревших медиаданных
-function deleteOldRecords(mediaFiles) {
+rotation.on('deleteOldRecords', function(mediaFiles) {
     function deleteMediaFile(path) {
         try {
             // Проверка на наличие файла
@@ -90,7 +90,7 @@ function deleteOldRecords(mediaFiles) {
                     // Удаление файла
                     fs.unlink(path, function (err) {
                         if (err) {
-                            bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+                            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
                             console.log("Error deleting file:", err);
                             return;
                         }
@@ -100,7 +100,7 @@ function deleteOldRecords(mediaFiles) {
             });
         } catch (err) {
             if (err) {
-                bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
+                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
                 console.log("Error deleting file: ", err);
                 return;
             }
@@ -115,10 +115,10 @@ function deleteOldRecords(mediaFiles) {
         deleteMediaFile(dir + '.wav.in');
         deleteMediaFile(dir + '.wav.out');
     }
-}
+});
 
 // Сохранить во временное хранилище одним объектом
-rotation.on('saveDataAsTmp', function(data, cb) {
+rotation.on('saveDataAsTmp', function(data) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
@@ -126,13 +126,12 @@ rotation.on('saveDataAsTmp', function(data, cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb();
         rotation.emit('closeCdr');
     });
 });
 
 // Закрыть основную коллекцию
-rotation.on('closeCdr', function(cb) {
+rotation.on('closeCdr', function() {
     fs.close(cdrs.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close file: " + err});
@@ -140,13 +139,12 @@ rotation.on('closeCdr', function(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb();
         rotation.emit('deleteCdr');
     });
 });
 
 // Удалить основную коллекцию
-rotation.on('deleteCdr', function(cb) {
+rotation.on('deleteCdr', function() {
     fs.unlink(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -154,13 +152,12 @@ rotation.on('deleteCdr', function(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb();
         rotation.emit('connectCdr');
     });
 });
 
 // Соединиться с основной коллекцией
-rotation.on('connectCdr', function(cb) {
+rotation.on('connectCdr', function() {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
@@ -169,13 +166,12 @@ rotation.on('connectCdr', function(cb) {
             return;
         }
         bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
-        if (cb) cb();
         rotation.emit('getAllTmpData');
     });
 });
 
 // Получить коллекцию из временного хранилища
-rotation.on('getAllTmpData', function(cb) {
+rotation.on('getAllTmpData', function() {
     cdrsTmp.all(function (err, data) {
         if (err) {
             bus.emit('message', {category: 'rotation', type: 'error', msg: "Error get data: " + err});
@@ -183,13 +179,12 @@ rotation.on('getAllTmpData', function(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb(data);
         rotation.emit('saveDataCdr', data);
     });
 });
 
 // Сохранить в основное хранилище из временного
-rotation.on('saveDataCdr', function(data, cb) {
+rotation.on('saveDataCdr', function(data) {
     var counter = 0;
     for (var key in data) {
         for (var key2 in data[key]) {
@@ -207,17 +202,14 @@ rotation.on('saveDataCdr', function(data, cb) {
                     if (counter === 0) startedRotation = false;
                     return;
                 }
-                if (counter === 0) {
-                    if (cb) cb();
-                    rotation.emit('closeTmpDb');
-                }
+                if (counter === 0) rotation.emit('closeTmpDb');
             });
         }
     }
 });
 
 // Закрыть временную коллекцию
-rotation.on('closeTmpDb', function(cb) {
+rotation.on('closeTmpDb', function() {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error close Tmp DB: " + err});
@@ -225,13 +217,12 @@ rotation.on('closeTmpDb', function(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb();
         rotation.emit('deleteTmpDb');
     });
 });
 
 // Удалить временную коллекцию
-rotation.on('deleteTmpDb', function(cb) {
+rotation.on('deleteTmpDb', function() {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
             bus.emit('message', {category: 'call', type: 'error', msg: "Error deleting file: " + err});
@@ -239,13 +230,12 @@ rotation.on('deleteTmpDb', function(cb) {
             startedRotation = false;
             return;
         }
-        if (cb) cb();
         rotation.emit('connectTmpDb');
     });
 });
 
 // Соединиться с временной коллекцией
-rotation.on('connectTmpDb', function(cb) {
+rotation.on('connectTmpDb', function() {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
         startedRotation = false;
         if (err) {
@@ -254,13 +244,12 @@ rotation.on('connectTmpDb', function(cb) {
             return;
         }
         bus.emit('message', {type: 'info', msg: "nStore Tmp db connected"});
-        if (cb) cb();
         rotation.emit('saveTmpDataCdr');
     });
 });
 
 // Сохранить в основное хранилище из временного
-rotation.on('saveTmpDataCdr', function(cb) {
+rotation.on('saveTmpDataCdr', function() {
     var counter = tmpStorageLogs.length;
 
     if (counter) {
@@ -270,18 +259,15 @@ rotation.on('saveTmpDataCdr', function(cb) {
             cdrs.save(null, rec, function (err, key) {
                 counter--;
                 if (err) {
-                    bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error saving data: " + err});
+                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
                     if (counter === 0) startedRotation = false;
                     return;
                 }
                 if (counter === 0) {
                     tmpStorageLogs = [];
-                    if (cb) cb();
                 }
             });
         }
-    } else {
-        if (cb) cb();
     }
 });
 
@@ -298,7 +284,7 @@ function rotationRecords() {
         //console.log('expiresDate: ', expiresDate);
 
         // Поиск актуальных данных
-        function getActualData(cb) {
+        function getActualData() {
             cdrs.find({"gdate >=": expiresDate}, function (err, data) {
                 if (err) {
                     bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data: " + err});
@@ -306,8 +292,6 @@ function rotationRecords() {
                     startedRotation = false;
                     return;
                 }
-                if (cb) cb(data);
-
                 // Сохранить во временное хранилище одним объектом
                 rotation.emit('saveDataAsTmp', data);
             });
@@ -326,7 +310,7 @@ function rotationRecords() {
                 //console.log('key:  ', key, ' gdate: ', data[key].gdate);
                 mediaFiles.push(data[key].session_id);
             }
-            deleteOldRecords(mediaFiles);
+            rotation.emit('deleteOldRecords', mediaFiles);
             getActualData();
         });
     } else {
