@@ -79,6 +79,51 @@ function sortHashTableByKey(hash, key_order, desc)
 }
 
 
+// Логгирование при ошибке удаления файла
+rotation.on('errorDeleteFile', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
+        console.log("Error deleting file: ", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке записи в файл
+rotation.on('errorSaveData', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
+        console.log("Error saving data: ", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке закрытия файла
+rotation.on('errorCloseFile', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close file: " + err});
+        console.log("Error close file:", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке соединения
+rotation.on('errorConnectDb', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
+        console.log("Error connecting Cdr: ", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке поиска данных
+rotation.on('errorFindData', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data: " + err});
+        console.log("Error find data: ", err);
+        return;
+    }
+});
+
 // Удаление устаревших медиаданных
 rotation.on('deleteOldRecords', function(mediaFiles) {
     function deleteMediaFile(path) {
@@ -90,8 +135,7 @@ rotation.on('deleteOldRecords', function(mediaFiles) {
                     // Удаление файла
                     fs.unlink(path, function (err) {
                         if (err) {
-                            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
-                            console.log("Error deleting file:", err);
+                            rotation.emit('errorDeleteFile', err);
                             return;
                         }
                         //console.log('Success delete media file: ', path);
@@ -100,8 +144,7 @@ rotation.on('deleteOldRecords', function(mediaFiles) {
             });
         } catch (err) {
             if (err) {
-                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
-                console.log("Error deleting file: ", err);
+                rotation.emit('errorDeleteFile', err);
                 return;
             }
         }
@@ -121,8 +164,7 @@ rotation.on('deleteOldRecords', function(mediaFiles) {
 rotation.on('saveDataAsTmp', function(data) {
     cdrsTmp.save(null, data, function (err, key) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
-            console.log("Error saving data: ", err, key);
+            rotation.emit('errorSaveData', err);
             startedRotation = false;
             return;
         }
@@ -134,8 +176,7 @@ rotation.on('saveDataAsTmp', function(data) {
 rotation.on('closeCdr', function() {
     fs.close(cdrs.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close file: " + err});
-            console.log("Error close file:", err);
+            rotation.emit('errorCloseFile', err);
             startedRotation = false;
             return;
         }
@@ -147,8 +188,7 @@ rotation.on('closeCdr', function() {
 rotation.on('deleteCdr', function() {
     fs.unlink(dbPath, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
-            console.log("Error deleting file: ", err);
+            rotation.emit('errorDeleteFile', err);
             startedRotation = false;
             return;
         }
@@ -160,12 +200,10 @@ rotation.on('deleteCdr', function() {
 rotation.on('connectCdr', function() {
     cdrs = nStore.new(dbPath, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
-            console.log("Error connecting Cdr: ", err);
+            rotation.emit('errorConnectDb', err);
             startedRotation = false;
             return;
         }
-        bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
         rotation.emit('getAllTmpData');
     });
 });
@@ -197,8 +235,7 @@ rotation.on('saveDataCdr', function(data) {
             cdrs.save(key2, data[key][key2], function (err, key2) {
                 counter--;
                 if (err) {
-                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
-                    console.log("Error saving data: ", err, key2);
+                    rotation.emit('errorSaveData', err);
                     if (counter === 0) startedRotation = false;
                     return;
                 }
@@ -212,8 +249,7 @@ rotation.on('saveDataCdr', function(data) {
 rotation.on('closeTmpDb', function() {
     fs.close(cdrsTmp.fd, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close Tmp DB: " + err});
-            console.log("Error close Tmp DB: ", err);
+            rotation.emit('errorCloseFile', err);
             startedRotation = false;
             return;
         }
@@ -225,8 +261,7 @@ rotation.on('closeTmpDb', function() {
 rotation.on('deleteTmpDb', function() {
     fs.unlink(dbPathTmp, function (err) {
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
-            console.log("Error deleting file: ", err);
+            rotation.emit('errorDeleteFile', err);
             startedRotation = false;
             return;
         }
@@ -239,11 +274,9 @@ rotation.on('connectTmpDb', function() {
     cdrsTmp = nStore.new(dbPathTmp, function (err) {
         startedRotation = false;
         if (err) {
-            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Tmp Db: " + err});
-            console.log("Error connecting Tmp Db: ", err);
+            rotation.emit('errorConnectDb', err);
             return;
         }
-        bus.emit('message', {type: 'info', msg: "nStore Tmp db connected"});
         rotation.emit('saveTmpDataCdr');
     });
 });
@@ -259,7 +292,7 @@ rotation.on('saveTmpDataCdr', function() {
             cdrs.save(null, rec, function (err, key) {
                 counter--;
                 if (err) {
-                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
+                    rotation.emit('errorSaveData', err);
                     if (counter === 0) startedRotation = false;
                     return;
                 }
@@ -287,8 +320,7 @@ function rotationRecords() {
         function getActualData() {
             cdrs.find({"gdate >=": expiresDate}, function (err, data) {
                 if (err) {
-                    bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data: " + err});
-                    console.log("Error find data: ", err);
+                    rotation.emit('errorFindData', err);
                     startedRotation = false;
                     return;
                 }
@@ -300,8 +332,7 @@ function rotationRecords() {
         // Удаление старых медиаданных
         cdrs.find({"gdate <": expiresDate}, function (err, data) {
             if (err) {
-                bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data:" + err});
-                console.log("Error find data: ", err);
+                rotation.emit('errorFindData', err);
                 return;
             }
 
