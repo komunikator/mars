@@ -16,7 +16,7 @@ GNU GPLv3
 #### Установка:
   1. скачать и установить LTS версию node.js (с сайта https://nodejs.org/en/)
   2. скачать и установить git (для linux есть в репозиториях, для windows качаем последнюю версию с http://git-scm.com/download/win )
-  3. сделать локальную копию стабильной версии проекта: git clone https://github.com/komunikator/mars.git
+  3. сделать локальную копию стабильной версии проекта: git clone -b stable https://github.com/komunikator/mars.git
   4. установить программу sox (для linux есть в репозиторях, для windows качаем последнюю версию с http://sourceforge.net/projects/sox/ )
   5. установить зависимости проекта командой npm i
 
