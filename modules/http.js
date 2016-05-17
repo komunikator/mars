@@ -9,6 +9,9 @@ function init() {
 
     bus.setWorker(worker);
 
+    bus.on('restartApp', function() {
+        process.exit(1);
+    });
 }
 if (!(bus.config.get("web") == "disable"))
  init();
