@@ -280,6 +280,11 @@ Ext.define('IVR.view.Viewport', {
                             handler: function () {
                                 //console.log('Click restart button');
                                 IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
+
+                                // Попытка переподключения
+                                setTimeout(function() { 
+                                    IVR.getApplication().wsLaunch();
+                                }, 5000);
                             }
                         },
                         {
