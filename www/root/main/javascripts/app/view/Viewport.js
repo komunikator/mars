@@ -257,7 +257,7 @@ Ext.define('IVR.view.Viewport', {
                 // {
                 //     xtype: 'button',
                 //     text: 'Запустить мастер настройки',
-                //     renderTo: Ext.getBody(),        
+                //     renderTo: Ext.getBody(),
                 //     handler: function() {
                 //         window.location = "wizard/";
                 //     }
@@ -279,7 +279,7 @@ Ext.define('IVR.view.Viewport', {
                             tooltip: lang['restart'],
                             handler: function () {
                                 //console.log('Click restart button');
-                                IVR.getApplication().socket.send('{"abc": "abc"}');
+                                IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
                             }
                         },
                         {
