@@ -50,6 +50,7 @@ Ext.application({
     timerClock: null,
     serverTime: 0,
     deltaTime: 0,
+    socket: {},
     wsLaunch: function () {
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
@@ -59,6 +60,7 @@ Ext.application({
             IVR.getApplication().wsConnect = 'expect';
 
             var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            IVR.getApplication().socket = socket;
 
             socket.onmessage = function (event) {
                 //var incomingMessage = event.data;
@@ -139,6 +141,7 @@ Ext.application({
             };
 
             socket.onopen = function () {
+                IVR.getApplication().socket = socket;
                 console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
