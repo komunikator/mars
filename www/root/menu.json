@@ -77,7 +77,7 @@
         "text": "restart",
         "iconCls": "icon_restart",
         "enabled": true,
-        "id": "icon_restart",
+        "id": "restart",
         "leaf": true
     },
     {

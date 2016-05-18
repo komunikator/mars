@@ -91,12 +91,20 @@ Ext.define('IVR.view.menu.Tree', {
             if ((n.leaf || n._leaf) && n.id != sn.id) {  // ignore clicks on folders and currently selected node
                 /* show panel */
                 // if (n.id == 'settingsMaster'){
-                //    
-                // }else 
-                if (n.id == 'logout')
+                //
+                // }else
+                if (n.id == 'logout') {
                     window.location.href = '/logOut';
-                else
+                } else if (n.id == 'restart') {
+                    IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
+
+                    // Попытка переподключения
+                    setTimeout(function() {
+                        IVR.getApplication().wsLaunch();
+                    }, 5000);
+                } else {
                     this.showPanel(n.id, n.parentId, n, e.shiftKey, e.ctrlKey);
+                }
                 return;
             }
         });

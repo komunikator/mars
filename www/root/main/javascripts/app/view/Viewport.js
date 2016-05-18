@@ -273,21 +273,6 @@ Ext.define('IVR.view.Viewport', {
                     style: 'margin: 5px;',
                     items: [
                         {
-                            //type: 'refresh',
-                            xtype: 'button',
-                            iconCls: 'button-refresh',
-                            tooltip: lang['restart'],
-                            handler: function () {
-                                //console.log('Click restart button');
-                                IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
-
-                                // Попытка переподключения
-                                setTimeout(function() { 
-                                    IVR.getApplication().wsLaunch();
-                                }, 5000);
-                            }
-                        },
-                        {
                             xtype: 'displayfield',
                             value: lang.user + ': <b>' + window['_username'] + '</b>',
                         },
