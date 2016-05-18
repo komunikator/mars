@@ -93,18 +93,26 @@ Ext.define('IVR.view.menu.Tree', {
                 // if (n.id == 'settingsMaster'){
                 //
                 // }else
-                if (n.id == 'logout') {
+
+                switch(n.id) {
+                  case 'logout':
                     window.location.href = '/logOut';
-                } else if (n.id == 'restart') {
+                    break;
+
+                  case 'restart':
                     IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
 
                     // Попытка переподключения
                     setTimeout(function() {
                         IVR.getApplication().wsLaunch();
                     }, 5000);
-                } else {
+                    break;
+
+                  default:
                     this.showPanel(n.id, n.parentId, n, e.shiftKey, e.ctrlKey);
+                    break;
                 }
+
                 return;
             }
         });

@@ -8,10 +8,6 @@ function init() {
     });
 
     bus.setWorker(worker);
-
-    bus.on('restartApp', function() {
-        process.exit(0);
-    });
 }
 if (!(bus.config.get("web") == "disable"))
  init();
