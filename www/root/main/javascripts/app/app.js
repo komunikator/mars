@@ -24,7 +24,6 @@ Ext.application({
         'reports.List',
         'scripts.Editor',
         'master.List',
-        'restart.List',
         'settings.Tree',
         'tasks.Editor',
         'settings.Editor',
