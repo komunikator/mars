@@ -6,6 +6,7 @@ exports.src = {
 
 			sendDtmf: {
 				text: 'R100',
+				interval: 1000,
 				next: {
 
 					// Ждем 1 с
