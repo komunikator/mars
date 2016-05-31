@@ -74,6 +74,13 @@
         "enabled": false
     },
     {
+        "text": "restart",
+        "iconCls": "icon_restart",
+        "enabled": true,
+        "id": "restart",
+        "leaf": true
+    },
+    {
         "text": "logout",
         "iconCls": "icon_disconnect",
         "id": "logout",

@@ -1,21 +1,35 @@
 var dbPath = 'data/cdr.db',
         cdrs,
+        dbPathTmp = 'data/tmp.db',
+        cdrsTmp,
+        startedRotation = false,
+        tmpStorageLogs = [],
         counterUpdates = 0,
+        UPDATE_FOR_ROTATION = 99,
+        fs = require('fs'),
         connection,
         nStore = require('nstore'),
         bus = require('../lib/system/bus'),
-        scriptList = [];
+        scriptList = [],
+        events = require('events'),
+        rotation = new events.EventEmitter();
 
 nStore = nStore.extend(require('nstore/query')());
 
 function connect() {
     cdrs = nStore.new(dbPath, function () {
-        bus.emit('message', {type: 'info', msg: "nStore DB connected"});
+        bus.emit('message', {type: 'info', msg: "nStore CDR DB connected"});
         /*
          cdrs.filterFn = function(doc, meta) {
          return doc.lastAccess > Date.now() - 360000;
          };
          */
+    });
+}
+
+function connectCdrTmp() {
+    cdrsTmp = nStore.new(dbPathTmp, function () {
+        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
     });
 }
 
@@ -65,49 +79,274 @@ function sortHashTableByKey(hash, key_order, desc)
 }
 
 
-// Удаление старых записей в хранилище
-function deleteOldRecords(records) {
-    for (var i = 0, l = records.length; i < l; i++)
-    {
-        var key = records[i];
-        //console.log('key: ', key);
+// Логгирование при ошибке удаления файла
+rotation.on('errorDeleteFile', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error deleting file: " + err});
+        console.log("Error deleting file: ", err);
+        return;
+    }
+});
 
-        /*
-        // Удаление записей по ключу
-        cdrs.remove(key, function (err) {
+// Логгирование при ошибке записи в файл
+rotation.on('errorSaveData', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error saving data: " + err});
+        console.log("Error saving data: ", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке закрытия файла
+rotation.on('errorCloseFile', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error close file: " + err});
+        console.log("Error close file:", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке соединения
+rotation.on('errorConnectDb', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error connecting Cdr: " + err});
+        console.log("Error connecting Cdr: ", err);
+        return;
+    }
+});
+
+// Логгирование при ошибке поиска данных
+rotation.on('errorFindData', function(err) {
+    if (err) {
+        bus.emit('message', {category: 'rotation', type: 'error', msg: "Error find data: " + err});
+        console.log("Error find data: ", err);
+        return;
+    }
+});
+
+// Удаление устаревших медиаданных
+rotation.on('deleteOldRecords', function(mediaFiles) {
+    function deleteMediaFile(path) {
+        try {
+            // Проверка на наличие файла
+            fs.exists(path, function(exists) {
+                //console.log('exists: ', exists);
+                if (exists) {
+                    // Удаление файла
+                    fs.unlink(path, function (err) {
+                        if (err) {
+                            rotation.emit('errorDeleteFile', err);
+                            return;
+                        }
+                        //console.log('Success delete media file: ', path);
+                    });
+                }
+            });
+        } catch (err) {
             if (err) {
-                bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-                console.log("Error executing query:", err);
+                rotation.emit('errorDeleteFile', err);
                 return;
             }
-        });
-        */
+        }
+
     }
 
-    // Добавить удаление медиа данных
-}
+    // Удаление устаревших медиа данных
+    for (var i = 0, l = mediaFiles.length; i < l; i++) {
+        var dir = __dirname + '/../rec/' + mediaFiles[i];
+        deleteMediaFile(dir + '.wav');
+        deleteMediaFile(dir + '.wav.in');
+        deleteMediaFile(dir + '.wav.out');
+    }
+});
+
+// Сохранить во временное хранилище одним объектом
+rotation.on('saveDataAsTmp', function(data) {
+    cdrsTmp.save(null, data, function (err, key) {
+        if (err) {
+            rotation.emit('errorSaveData', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('closeCdr');
+    });
+});
+
+// Закрыть основную коллекцию
+rotation.on('closeCdr', function() {
+    fs.close(cdrs.fd, function (err) {
+        if (err) {
+            rotation.emit('errorCloseFile', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('deleteCdr');
+    });
+});
+
+// Удалить основную коллекцию
+rotation.on('deleteCdr', function() {
+    fs.unlink(dbPath, function (err) {
+        if (err) {
+            rotation.emit('errorDeleteFile', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('connectCdr');
+    });
+});
+
+// Соединиться с основной коллекцией
+rotation.on('connectCdr', function() {
+    cdrs = nStore.new(dbPath, function (err) {
+        if (err) {
+            rotation.emit('errorConnectDb', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('getAllTmpData');
+    });
+});
+
+// Получить коллекцию из временного хранилища
+rotation.on('getAllTmpData', function() {
+    cdrsTmp.all(function (err, data) {
+        if (err) {
+            bus.emit('message', {category: 'rotation', type: 'error', msg: "Error get data: " + err});
+            console.log("Error get data:", err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('saveDataCdr', data);
+    });
+});
+
+// Сохранить в основное хранилище из временного
+rotation.on('saveDataCdr', function(data) {
+    var counter = 0;
+    for (var key in data) {
+        for (var key2 in data[key]) {
+            counter++;
+        }
+    }
+
+    for (var key in data) {
+        for (var key2 in data[key]) {
+            cdrs.save(key2, data[key][key2], function (err, key2) {
+                counter--;
+                if (err) {
+                    rotation.emit('errorSaveData', err);
+                    if (counter === 0) startedRotation = false;
+                    return;
+                }
+                if (counter === 0) rotation.emit('closeTmpDb');
+            });
+        }
+    }
+});
+
+// Закрыть временную коллекцию
+rotation.on('closeTmpDb', function() {
+    fs.close(cdrsTmp.fd, function (err) {
+        if (err) {
+            rotation.emit('errorCloseFile', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('deleteTmpDb');
+    });
+});
+
+// Удалить временную коллекцию
+rotation.on('deleteTmpDb', function() {
+    fs.unlink(dbPathTmp, function (err) {
+        if (err) {
+            rotation.emit('errorDeleteFile', err);
+            startedRotation = false;
+            return;
+        }
+        rotation.emit('connectTmpDb');
+    });
+});
+
+// Соединиться с временной коллекцией
+rotation.on('connectTmpDb', function() {
+    cdrsTmp = nStore.new(dbPathTmp, function (err) {
+        startedRotation = false;
+        if (err) {
+            rotation.emit('errorConnectDb', err);
+            return;
+        }
+        rotation.emit('saveTmpDataCdr');
+    });
+});
+
+// Сохранить в основное хранилище из временного
+rotation.on('saveTmpDataCdr', function() {
+    var counter = tmpStorageLogs.length;
+
+    if (counter) {
+        for (var i = 0, l = tmpStorageLogs.length; i < l; i++) {
+            var rec = tmpStorageLogs[i];
+
+            cdrs.save(null, rec, function (err, key) {
+                counter--;
+                if (err) {
+                    rotation.emit('errorSaveData', err);
+                    if (counter === 0) startedRotation = false;
+                    return;
+                }
+                if (counter === 0) {
+                    tmpStorageLogs = [];
+                }
+            });
+        }
+    }
+});
 
 // Ротация данных
 function rotationRecords() {
+    startedRotation = true;
     // Время жизни записи получить из config
     var daysLife = bus.config.get("dataStorageDays");
-    var expiresDate = new Date();
-    expiresDate.setDate(expiresDate.getDate() - daysLife);
 
-    cdrs.find({"msec <": expiresDate.valueOf()}, function (err, data) {
-        if (err) {
-            bus.emit('message', {category: 'call', type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err);
-            return;
+    if (daysLife > 0) {
+        var expiresDate = new Date();
+        expiresDate.setDate(expiresDate.getDate() - daysLife);
+        expiresDate = require('dateformat')(expiresDate, 'yyyy.mm.dd');
+        //console.log('expiresDate: ', expiresDate);
+
+        // Поиск актуальных данных
+        function getActualData() {
+            cdrs.find({"gdate >=": expiresDate}, function (err, data) {
+                if (err) {
+                    rotation.emit('errorFindData', err);
+                    startedRotation = false;
+                    return;
+                }
+                // Сохранить во временное хранилище одним объектом
+                rotation.emit('saveDataAsTmp', data);
+            });
         }
 
-        var records = [];
-        for (var key in data) {
-            //console.log('key:  ', key, ' gdate: ', data[key].gdate);
-            records.push(key);
-        }
-        deleteOldRecords(records);
-    });
+        // Удаление старых медиаданных
+        cdrs.find({"gdate <": expiresDate}, function (err, data) {
+            if (err) {
+                rotation.emit('errorFindData', err);
+                return;
+            }
+
+            var mediaFiles = [];
+            for (var key in data) {
+                //console.log('key:  ', key, ' gdate: ', data[key].gdate);
+                mediaFiles.push(data[key].session_id);
+            }
+            rotation.emit('deleteOldRecords', mediaFiles);
+            getActualData();
+        });
+    } else {
+        startedRotation = false;
+    }
 }
 
 bus.on('cdr', function (data) {
@@ -127,7 +366,6 @@ bus.on('cdr', function (data) {
 
     var rec = {
         gdate: require('dateformat')(date, 'yyyy.mm.dd HH:MM:ss'),
-        msec: date.valueOf(),
         step: i,
         session_id: data.sessionID,
         parent_id: data.parentID,
@@ -146,22 +384,27 @@ bus.on('cdr', function (data) {
 
     if (data.refer)
         rec.refer = data.refer;
-    cdrs.save(null, rec, function (err, key) {
-        if (err) {
-            bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error executing query:" + err});
-            console.log("Error executing query:", err, key);
-            return;
-        }
 
-        // Увеличиваем счетчик количества обновлений хранилища
-        counterUpdates++;
+    if (startedRotation) {
+        tmpStorageLogs.push(rec);
+    } else {
+        cdrs.save(null, rec, function (err, key) {
+            if (err) {
+                bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: "Error saving data: " + err});
+                console.log("Error saving data: ", err, key);
+                return;
+            }
 
-        // Запуск процедуры ротации данных на каждые n обновлений хранилища
-        if (counterUpdates > 99) {
-            counterUpdates = 0;
-            rotationRecords();
-        }
-    });
+            // Увеличиваем счетчик количества обновлений хранилища
+            counterUpdates++;
+
+            // Запуск процедуры ротации данных на каждые n обновлений хранилища
+            if ( (counterUpdates > UPDATE_FOR_ROTATION) && (!startedRotation) ) {
+                counterUpdates = 0;
+                rotationRecords();
+            }
+        });
+    }
 })
 
 bus.onRequest('reportData', function (param, cb) {
@@ -255,3 +498,4 @@ bus.onRequest('reportData', function (param, cb) {
 })
 
 connect();
+connectCdrTmp();

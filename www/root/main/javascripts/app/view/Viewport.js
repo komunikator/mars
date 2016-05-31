@@ -257,7 +257,7 @@ Ext.define('IVR.view.Viewport', {
                 // {
                 //     xtype: 'button',
                 //     text: 'Запустить мастер настройки',
-                //     renderTo: Ext.getBody(),        
+                //     renderTo: Ext.getBody(),
                 //     handler: function() {
                 //         window.location = "wizard/";
                 //     }
