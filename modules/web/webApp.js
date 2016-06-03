@@ -118,14 +118,39 @@ var WebSocketServer = require('ws').Server,
         wss = new WebSocketServer({server: server});
 
 wss.on('connection', function (ws) {
-
-    bus.emit('message', {category: 'http', type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
+    var confSipCli;
+    bus.request('sipClients', {}, function (err, data) {
+        confSipCli = data || [];
+        var obj = {};
+        obj.source = 'hideSipCli';
+        obj.data = true;
+        var msgSipCliHide;
+        //bus.emit('message', {type: 'info', msg: confSipCli.length});
+        if (confSipCli.length == 0) {
+            msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+            ws.send(msgSipCliHide);
+        } else {
+            msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+            ws.send(msgSipCliHide);
+        }
+    });
+    
+    
+    // bus.emit('message', {type: 'info', msg: confSipCli});
+    bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
     //        bus.emit('updateData', {source: 'statusUA', data: []});
 
     var timerWs = setTimeout(function () {
         sendTimeToUser(ws);
     }, 5000);
     //["refresh","config"]
+    // ws.on('open', function(){
+    //     // var confSipCli = bus.config.get('sipClients');
+    //     bus.emit('message', {type: 'info', msg: 'confSipCli'});
+    //     // if (confSipCli) {
+
+    //     // } 
+    // });
     ws.on('message', function (message) {
         try {
             var args = JSON.parse(message);
@@ -168,6 +193,7 @@ var onData = function (obj) {
     var controllerPath = './application/controller/',
             dialogController = require(controllerPath + 'dialog'),
             statusUAController = require(controllerPath + 'statusUA');
+            statusSipCliController = require(controllerPath + 'statusSipCli');
 
     if (wss.clients.length == 0)
         return;
@@ -180,14 +206,18 @@ var onData = function (obj) {
         obj.data = statusUAController.getStoreData(obj.data);
     }
 
+    if (obj.source == 'statusSipCli') {
+        obj.data = statusSipCliController.getStoreData(obj.data);
+    }
+
     wss.clients.forEach(function (conn) {
         conn.send(JSON.stringify({success: true, data: obj}));
     });
 };
 bus.on('updateData', onData);
 
-app.use("/rec", Express.static('./rec'));
-app.use("/media", Express.static('./media'));
+app.use("/rec", Express.static(__dirname.substr(0,__dirname.indexOf("/node_modules"))+'/rec'));
+app.use("/media", Express.static(__dirname.substr(0,__dirname.indexOf("/node_modules"))+'/media'));
 
 function render(req, res, name) {
     res.render(name, {webPath: app.get('webPath'), username: req.user && req.user.username});

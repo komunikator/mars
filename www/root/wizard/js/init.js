@@ -511,12 +511,13 @@ function createConnections() {
     });
 
     $("#done_button").on('click', done_handler);
+    
     $("#done_button a").on('click', function() {
         if ($("#work_mode").is(":visible") && $("#done_button > a").text() == "Закрыть") {
             window.location = '../../';
         }
     });
-    
+
     $(".del_btn").on('click',function() {
         var tmp_id = $(this).parent().attr("id").substr(5);
         var del_index = tmp_id;
