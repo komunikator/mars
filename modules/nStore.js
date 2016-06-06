@@ -27,12 +27,6 @@ function connect() {
     });
 }
 
-function connectCdrTmp() {
-    cdrsTmp = nStore.new(dbPathTmp, function () {
-        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
-    });
-}
-
 function sortHashTableByKey(hash, key_order, desc)
 {
 
@@ -162,13 +156,17 @@ rotation.on('deleteOldRecords', function(mediaFiles) {
 
 // Сохранить во временное хранилище одним объектом
 rotation.on('saveDataAsTmp', function(data) {
-    cdrsTmp.save(null, data, function (err, key) {
-        if (err) {
-            rotation.emit('errorSaveData', err);
-            startedRotation = false;
-            return;
-        }
-        rotation.emit('closeCdr');
+    cdrsTmp = nStore.new(dbPathTmp, function () {
+        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
+
+        cdrsTmp.save(null, data, function (err, key) {
+            if (err) {
+                rotation.emit('errorSaveData', err);
+                startedRotation = false;
+                return;
+            }
+            rotation.emit('closeCdr');
+        });
     });
 });
 
@@ -498,4 +496,3 @@ bus.onRequest('reportData', function (param, cb) {
 })
 
 connect();
-connectCdrTmp();
