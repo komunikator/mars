@@ -156,9 +156,7 @@ rotation.on('deleteOldRecords', function(mediaFiles) {
 
 // Сохранить во временное хранилище одним объектом
 rotation.on('saveDataAsTmp', function(data) {
-    cdrsTmp = nStore.new(dbPathTmp, function () {
-        bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
-
+    function saveData() {
         cdrsTmp.save(null, data, function (err, key) {
             if (err) {
                 rotation.emit('errorSaveData', err);
@@ -167,7 +165,16 @@ rotation.on('saveDataAsTmp', function(data) {
             }
             rotation.emit('closeCdr');
         });
-    });
+    }
+
+    if (!cdrsTmp) {
+        cdrsTmp = nStore.new(dbPathTmp, function () {
+            bus.emit('message', {type: 'info', msg: "nStore TMP DB connected"});
+            saveData();
+        });
+    } else {
+        saveData();
+    }
 });
 
 // Закрыть основную коллекцию
