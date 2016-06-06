@@ -75,22 +75,12 @@ proxy.start({
     sipDigestRegister(rq, username);
   }
   else {
-      
-     // bus.emit('message', {msg: require("ip").address()});
-    
-    // if (rq.method === 'BYE') {
-    //   bus.emit('message', {msg: '123123'});
-    //   //bus.emit('message', {msg: JSON.stringify(rq)});
-    // }  
+
     if (rq.headers.contact && rq.headers.contact[0].uri){
       var tmp_uri = sip.parseUri(rq.headers.contact[0].uri);
-      //bus.emit('message', {msg: '1'});
       tmp_uri.host = require("ip").address();
-      //bus.emit('message', {msg: '2'});
       tmp_uri.port = '5060';
-      //bus.emit('message', {msg: '3'});
       rq.headers.contact[0].uri = sip.stringifyUri(tmp_uri);
-      //bus.emit('message', {msg: '4 '+ rq.headers.contact[0].uri});
     }
     var user = sip.parseUri(rq.uri).user;
     if(contacts[user] && Array.isArray(contacts[user]) && contacts[user].length > 0) {
