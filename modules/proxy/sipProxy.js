@@ -12,8 +12,6 @@ var realm = os.hostname();
 var lastToSend;
 var registry = {};
 
-bus.emit('message', {msg: 'SIP_SERVER STARTED'});
-
 function sendContacts() {
   var toSendContacts = [];
   for(var item in contacts) {
@@ -29,9 +27,7 @@ function sendContacts() {
 }
 
 function sipDigestRegister(rq, username) {
-
   var userinfo = registry[username];
-
   if(!userinfo) { // we don't know this user and answer with a challenge to hide this fact 
     var session = {realm: realm};
     sip.send(digest.challenge({realm: realm}, sip.makeResponse(rq, 401, 'Authentication Required')));
@@ -54,28 +50,25 @@ function sipDigestRegister(rq, username) {
   }
 }
 
-for (var i = 0; i < conf.length; i++){
-  registry[conf[i].username] = { password: conf[i].password}
-}
-
-proxy.start({
-  logger: {
-     recv: function(m) {
-        //if (m.headers.contact){
-         
-        //}
-      },
-     // recv: function(m) { JSON.stringify(sip.parseUri(m.headers.to.uri).user) },
-    // send: function(m) {console.log('------------SEND-----------'); console.log(m); console.log('------------SEND-----------'); },
-    error: function(e) { bus.emit('message', {msg: 'SIP_SERVER Error: ' + e.toString()}); }
+if (conf){
+  for (var i = 0; i < conf.length; i++){
+    registry[conf[i].username] = { password: conf[i].password}
   }
+}
+bus.emit('message', {msg: 'SIP_SERVER STARTED:' + require("ip").address()});
+proxy.start({
+  // logger: {
+  //    //recv: function(m) { JSON.stringify(sip.parseUri(m.headers.to.uri).user) },
+  //   // send: function(m) {console.log('------------SEND-----------'); console.log(m); console.log('------------SEND-----------'); },
+  //   //error: function(e) { bus.emit('message', {msg: 'SIP_SERVER Error: ' + e.toString()}); }
+  // }
 }, function(rq) {
+
   if(rq.method === 'REGISTER') {  
     var username = sip.parseUri(rq.headers.to.uri).user;
     sipDigestRegister(rq, username);
   }
   else {
-
     if (rq.headers.contact && rq.headers.contact[0].uri){
       var tmp_uri = sip.parseUri(rq.headers.contact[0].uri);
       tmp_uri.host = require("ip").address();

@@ -118,22 +118,34 @@ var WebSocketServer = require('ws').Server,
         wss = new WebSocketServer({server: server});
 
 wss.on('connection', function (ws) {
-    var confSipCli;
-    bus.request('sipClients', {}, function (err, data) {
-        confSipCli = data || [];
-        var obj = {};
-        obj.source = 'hideSipCli';
-        obj.data = true;
-        var msgSipCliHide;
-        //bus.emit('message', {type: 'info', msg: confSipCli.length});
-        if (confSipCli.length == 0) {
-            msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
-            ws.send(msgSipCliHide);
-        } else {
-            msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
-            ws.send(msgSipCliHide);
-        }
+    var confSipCli, confSipProxy;
+    // bus.request('sipClients', {}, function (err, data) {
+    //     confSipCli = data || [];
+    //     var msgSipCliHide;
+    //     if (confSipCli.length == 0 || confSipProxy == 'disable') {
+    //         msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+    //         ws.send(msgSipCliHide);
+    //     } else {
+    //         msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+    //         ws.send(msgSipCliHide);
+    //     }
+    // });
+
+    bus.request('sipProxy', {}, function (err, data) {
+        confSipProxy = data || '';
+            bus.request('sipClients', {}, function (err, data) {
+                confSipCli = data || [];
+                var msgSipCliHide;
+                if (confSipCli.length == 0 || confSipProxy == 'disable') {
+                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+                    ws.send(msgSipCliHide);
+                } else {
+                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+                    ws.send(msgSipCliHide);
+                }
+            });
     });
+
     
     
     // bus.emit('message', {type: 'info', msg: confSipCli});
