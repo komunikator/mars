@@ -228,8 +228,8 @@ var onData = function (obj) {
 };
 bus.on('updateData', onData);
 
-app.use("/rec", Express.static(__dirname.substr(0,__dirname.indexOf("/node_modules"))+'/rec'));
-app.use("/media", Express.static(__dirname.substr(0,__dirname.indexOf("/node_modules"))+'/media'));
+app.use("/rec", Express.static('./rec'));
+app.use("/media", Express.static('./media'));
 
 function render(req, res, name) {
     res.render(name, {webPath: app.get('webPath'), username: req.user && req.user.username});
