@@ -24,12 +24,14 @@ exports.getStoreData = function (data) {
     var rec = [null, null, null, null, null, null, null, null, null, null,
     
                 null, null, null, null, null, null, null, null, null, null];
+    
+
     var clients = bus.config.get('sipClients');
 
     if (clients){
          clients.forEach(function (row, i) {
             rec[i] = 0;
-            rec[10+i] = row.username;
+            rec[10+i] = row.user;
         });
     }
 

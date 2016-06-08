@@ -6,11 +6,10 @@ var os = require('os');
 var util = require('util');
 var conf = bus.config.get('sipClients');
 var contacts = {};
-var request = require('request');
-var btoa = require('btoa');
 var realm = os.hostname();
 var lastToSend;
 var registry = {};
+var timer;
 
 function sendContacts() {
   var toSendContacts = [];
@@ -23,7 +22,6 @@ function sendContacts() {
     bus.emit('setSipClients', JSON.stringify(toSendContacts));
   }
   lastToSend = toSendContacts;
-  // process.send(JSON.stringify(toSendContacts));
 }
 
 function sipDigestRegister(rq, username) {
@@ -33,15 +31,20 @@ function sipDigestRegister(rq, username) {
     sip.send(digest.challenge({realm: realm}, sip.makeResponse(rq, 401, 'Authentication Required')));
   } else {
     userinfo.session = userinfo.session || {realm: realm};
-    // console.log(userinfo);
     registry[username] = userinfo;
     if(!digest.authenticateRequest(userinfo.session, rq, {user: username, password: userinfo.password})) {
       sip.send(digest.challenge(userinfo.session, sip.makeResponse(rq, 401, 'Authentication Required')));
     }
     else {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        delete contacts[username]; 
+        sendContacts();
+      },parseInt(rq.headers.expires) * 1000);
       userinfo.contact = rq.headers.contact;
       registry[username] = userinfo;
       var rs = sip.makeResponse(rq, 200, 'Ok');
+      
       contacts[username] = rq.headers.contact;
       sendContacts();
       rs.headers.contact = rq.headers.contact;
@@ -49,12 +52,12 @@ function sipDigestRegister(rq, username) {
     }
   }
 }
-
 if (conf){
-  for (var i = 0; i < conf.length; i++){
-    registry[conf[i].username] = { password: conf[i].password}
-  }
+    for (var i = 0; i < conf.length; i++){
+      registry[conf[i].user] = { password: conf[i].password}
+    }
 }
+
 bus.emit('message', {msg: 'SIP_SERVER STARTED:' + require("ip").address()});
 proxy.start({
   // logger: {
@@ -63,7 +66,6 @@ proxy.start({
   //   //error: function(e) { bus.emit('message', {msg: 'SIP_SERVER Error: ' + e.toString()}); }
   // }
 }, function(rq) {
-
   if(rq.method === 'REGISTER') {  
     var username = sip.parseUri(rq.headers.to.uri).user;
     sipDigestRegister(rq, username);
@@ -86,3 +88,29 @@ proxy.start({
     }
   }
 });
+
+bus.on('refresh', function (type) {
+  if (type == 'configData') {
+    bus.request('sipClients', {}, function (err, data) {
+      var tmp=[];
+      for (var i = 0; i < data.length; i++){
+        tmp[i] = data[i].user;
+      }
+
+      for (var i = 0; i < data.length; i++){
+        if (!registry[data[i].user]){
+          registry[data[i].user] = { password: data[i].password}
+        } else {
+          for( var item in registry ) {
+            if (tmp.indexOf(item)+1 == 0){
+              delete registry[item];
+            }
+          } 
+        }
+      }
+      
+    });
+    sendContacts();
+  }
+});
+
