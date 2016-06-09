@@ -92,23 +92,24 @@ proxy.start({
 bus.on('refresh', function (type) {
   if (type == 'configData') {
     bus.request('sipClients', {}, function (err, data) {
-      var tmp=[];
-      for (var i = 0; i < data.length; i++){
-        tmp[i] = data[i].user;
-      }
-
-      for (var i = 0; i < data.length; i++){
-        if (!registry[data[i].user]){
-          registry[data[i].user] = { password: data[i].password}
-        } else {
-          for( var item in registry ) {
-            if (tmp.indexOf(item)+1 == 0){
-              delete registry[item];
-            }
-          } 
+      if (data){
+        var tmp=[];
+        for (var i = 0; i < data.length; i++){
+          tmp[i] = data[i].user;
         }
+  
+        for (var i = 0; i < data.length; i++){
+          if (!registry[data[i].user]){
+            registry[data[i].user] = { password: data[i].password}
+          } else {
+            for( var item in registry ) {
+              if (tmp.indexOf(item)+1 == 0){
+                delete registry[item];
+              }
+            } 
+          }
+        } 
       }
-      
     });
     sendContacts();
   }
