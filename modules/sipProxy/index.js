@@ -11,6 +11,11 @@ var lastToSend;
 var registry = {};
 var timer;
 
+process.on('uncaughtException', function (e) {
+    bus.emit('message', {category: 'debug', type: 'error', msg: e.toString()});
+    //console.log(e);
+});
+
 function sendContacts() {
   var toSendContacts = [];
   for(var item in contacts) {
@@ -59,6 +64,7 @@ if (conf){
 }
 
 bus.emit('message', {msg: 'SIP_SERVER STARTED:' + require("ip").address()});
+
 proxy.start({
   // logger: {
   //    //recv: function(m) { JSON.stringify(sip.parseUri(m.headers.to.uri).user) },
