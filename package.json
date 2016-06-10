@@ -43,6 +43,7 @@
     "path": "latest",
     "request": "^2.69.0",
     "require-dir": "^0.3.0",
+    "sip": "0.0.3",
     "sockjs": "latest",
     "url": "^0.11.0",
     "uuid": "^2.0.1",

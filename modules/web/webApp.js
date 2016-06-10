@@ -118,14 +118,51 @@ var WebSocketServer = require('ws').Server,
         wss = new WebSocketServer({server: server});
 
 wss.on('connection', function (ws) {
+    var confSipCli, confSipProxy;
+    // bus.request('sipClients', {}, function (err, data) {
+    //     confSipCli = data || [];
+    //     var msgSipCliHide;
+    //     if (confSipCli.length == 0 || confSipProxy == 'disable') {
+    //         msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+    //         ws.send(msgSipCliHide);
+    //     } else {
+    //         msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+    //         ws.send(msgSipCliHide);
+    //     }
+    // });
 
-    bus.emit('message', {category: 'http', type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
+    bus.request('sipProxy', {}, function (err, data) {
+        confSipProxy = data || '';
+            bus.request('sipClients', {}, function (err, data) {
+                confSipCli = data || [];
+                var msgSipCliHide;
+                if (confSipCli.length == 0 || confSipProxy == 'disable') {
+                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+                    ws.send(msgSipCliHide);
+                } else {
+                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+                    ws.send(msgSipCliHide);
+                }
+            });
+    });
+
+
+
+    // bus.emit('message', {type: 'info', msg: confSipCli});
+    bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
     //        bus.emit('updateData', {source: 'statusUA', data: []});
 
     var timerWs = setTimeout(function () {
         sendTimeToUser(ws);
     }, 5000);
     //["refresh","config"]
+    // ws.on('open', function(){
+    //     // var confSipCli = bus.config.get('sipClients');
+    //     bus.emit('message', {type: 'info', msg: 'confSipCli'});
+    //     // if (confSipCli) {
+
+    //     // }
+    // });
     ws.on('message', function (message) {
         try {
             var args = JSON.parse(message);
@@ -168,6 +205,7 @@ var onData = function (obj) {
     var controllerPath = './application/controller/',
             dialogController = require(controllerPath + 'dialog'),
             statusUAController = require(controllerPath + 'statusUA');
+            statusSipCliController = require(controllerPath + 'statusSipCli');
 
     if (wss.clients.length == 0)
         return;
@@ -178,6 +216,10 @@ var onData = function (obj) {
 
     if (obj.source == 'statusUA') {
         obj.data = statusUAController.getStoreData(obj.data);
+    }
+
+    if (obj.source == 'statusSipCli') {
+        obj.data = statusSipCliController.getStoreData(obj.data);
     }
 
     wss.clients.forEach(function (conn) {
@@ -207,6 +249,9 @@ app.get('/media', function (req, res) {
 });
 app.get('/scripts', function (req, res) {
     render(req, res, 'scripts');
+});
+app.get('/updates', function (req, res) {
+    render(req, res, 'updates');
 });
 
 (require('./logview'))(server, bus);

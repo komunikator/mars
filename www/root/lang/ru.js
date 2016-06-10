@@ -79,6 +79,7 @@ lang = {
     copy: 'Скопировать',
     paste: 'Вставить',
     refresh: 'Обновить',
+    restart: 'Перезагрузить',
     connect: 'Подключить',
     remove: 'Удалить',
     edit: 'Изменить',
@@ -186,6 +187,7 @@ lang = {
     hour:'час',
     minute:'мин',
     second:'сек',
+    sip_clients_title: 'SIP клиенты',
     fill_required_field:'Заполните обязательные поля!'
 };
 

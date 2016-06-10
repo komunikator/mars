@@ -254,14 +254,96 @@ Ext.define('IVR.view.Viewport', {
                             }
                         }]
                 },
-                // {
-                //     xtype: 'button',
-                //     text: 'Запустить мастер настройки',
-                //     renderTo: Ext.getBody(),        
-                //     handler: function() {
-                //         window.location = "wizard/";
-                //     }
-                // },
+                {
+                    xtype: 'grid',
+                    iconCls: 'connect',
+                    id: 'statusSipClientGrid',
+                    frame: true,
+                    hidden: false,
+                    style: 'margin: 2px;', // padding: 5px 3px;',
+                    hideHeaders: true,
+                    width: 216,
+                    disableSelection: true,
+                    renderer: function (value, metadata, record, rowIndex, colIndex, store) {
+                        var status;
+                        switch (value) {
+                            case 1:
+                                metadata.css = 'ua-online';
+                                status = lang['registered'];
+                                break;
+                            case 0:
+                                metadata.css = 'ua-disable';
+                                status = lang['disabled'];
+                                break;
+                            default:
+                                metadata.style = "background-color:white !important";
+                                //new_value = '';
+                                break;
+                        }
+                        ;
+                        metadata.style += ';color:white;';
+                        if (status)
+                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11) ] + ' ' + status + '"';
+                        return '';//new_value;
+                    },
+                    onRefresh: function (grid, cb) {
+                        Ext.Ajax.request({
+                            url: _webPath + '/statusSipCli',
+                            method: 'get',
+                            success: function (response, o) {
+                                var resObj = Ext.decode(response.responseText);
+                                if (resObj && resObj.success) {
+                                    grid.store.loadData(resObj.data);
+                                    if (cb)
+                                        cb(resObj.data);
+                                }
+                                else
+                                    Ext.showError(resObj.message || lang.error);
+
+                            },
+                            failure: function (response, o) {
+                                Ext.showError(response.responseText);
+                            }
+                        });
+                    },
+                    listeners: {
+                        afterrender: function () {
+                            var columns = [];
+                            var l = 10;
+                            while (l--)
+                                columns.push({dataIndex: 'field' + (l + 1), align: 'center', renderer: this.renderer, width: 20});
+                            columns.reverse();
+                            this.reconfigure(undefined, columns);
+                            this.onRefresh(this, function (data) {
+                                if (data && data[0] && data[0].join('')) {
+                                    Ext.getCmp('IVR.view.Viewport').setVisible(true);
+                                    Ext.getCmp('menuTree').showPanel('dialogsList');
+                                }
+                                else {
+                                    //Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                    //window.location.href = '/wizard';
+                                }
+                            });
+                        }
+                    },
+                    columns: [
+                        {dataIndex: 'field1'}
+                    ],
+                    store: [[
+                            null, null, null, null, null, null, null, null, null, null, //status
+                            null, null, null, null, null, null, null, null, null, null//name
+                        ]],
+                    title: lang['sip_clients_title'],
+                    tools: [{
+                            //type: 'refresh',
+                            xtype: 'button',
+                            iconCls: 'button-refresh',
+                            tooltip: lang['refresh'],
+                            handler: function () {
+                                this.ownerCt.ownerCt.onRefresh(this.ownerCt.ownerCt);
+                            }
+                        }]
+                },
                 {
                     xtype: 'container',
                     flex: 4

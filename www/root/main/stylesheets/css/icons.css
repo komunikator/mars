@@ -8,6 +8,9 @@
 .icon_disconnect {
     background-image:url(../../images/icon/disconnect.png) !important;
 }
+.icon_restart {
+    background-image:url(../../images/icon/restart.png) !important;
+}
 .icon_app_resize_full {
     background-image:url(../../images/icon/application-resize-full.png) !important;
 }

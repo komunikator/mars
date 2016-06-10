@@ -50,6 +50,7 @@ Ext.application({
     timerClock: null,
     serverTime: 0,
     deltaTime: 0,
+    socket: {},
     wsLaunch: function () {
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
@@ -59,16 +60,26 @@ Ext.application({
             IVR.getApplication().wsConnect = 'expect';
 
             var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            IVR.getApplication().socket = socket;
 
             socket.onmessage = function (event) {
                 //var incomingMessage = event.data;
                 //console.log(incomingMessage);
+
                 var obj = Ext.JSON.decode(event.data).data;
+                if (Ext.JSON.decode(event.data).source == 'hideSipCli') {
+                    if (Ext.JSON.decode(event.data).data) {
+                        Ext.getCmp('statusSipClientGrid').hide();
+                    } else {
+                        Ext.getCmp('statusSipClientGrid').show();
+                    }
+                }
                 if (obj.source) {
                     var store = Ext.data.StoreManager.lookup(obj.source) || (Ext.getCmp(obj.source + 'Grid') && Ext.getCmp(obj.source + 'Grid').store);
                     //if (store && store.store)
                     //    store = store.store;
                     //console.log(obj.source, store);
+
                     if (store) {
                         if (obj.data) {
                             store.loadRawData(obj.data, false);
@@ -81,6 +92,9 @@ Ext.application({
                     } else {
                         if (obj.source == 'statusUA') {
                             refreshSipAccounts(obj);
+                        }
+                        if (obj.source == 'statusSipCli') {
+                            refreshSipClients(obj);
                         }
                     }
                 } else {
@@ -139,6 +153,7 @@ Ext.application({
             };
 
             socket.onopen = function () {
+                IVR.getApplication().socket = socket;
                 console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
@@ -173,6 +188,7 @@ Ext.application({
                 refreshStatusConnect();
                 refreshStoreDialogs();
                 refreshSipAccounts();
+                refreshSipClients();
             }
 
             function refreshStatusConnect() {
@@ -206,6 +222,17 @@ Ext.application({
                     //console.log(obj.data);
                 } else {
                     sipAccounts.onRefresh(sipAccounts);
+                }
+            }
+
+            function refreshSipClients(obj) {
+                var ivr = Ext.getCmp("IVR.view.Viewport");
+                var sipClients = ivr.items.items[0].items.items[2];
+                if (obj && obj.data) {
+                    sipClients.store.loadData(obj.data);
+                    //console.log(obj.data);
+                } else {
+                    sipClients.onRefresh(sipClients);
                 }
             }
 
