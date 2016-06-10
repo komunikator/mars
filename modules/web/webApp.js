@@ -146,8 +146,8 @@ wss.on('connection', function (ws) {
             });
     });
 
-    
-    
+
+
     // bus.emit('message', {type: 'info', msg: confSipCli});
     bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
     //        bus.emit('updateData', {source: 'statusUA', data: []});
@@ -161,7 +161,7 @@ wss.on('connection', function (ws) {
     //     bus.emit('message', {type: 'info', msg: 'confSipCli'});
     //     // if (confSipCli) {
 
-    //     // } 
+    //     // }
     // });
     ws.on('message', function (message) {
         try {
@@ -249,6 +249,9 @@ app.get('/media', function (req, res) {
 });
 app.get('/scripts', function (req, res) {
     render(req, res, 'scripts');
+});
+app.get('/updates', function (req, res) {
+    render(req, res, 'updates');
 });
 
 (require('./logview'))(server, bus);
