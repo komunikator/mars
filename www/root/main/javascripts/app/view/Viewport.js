@@ -363,14 +363,27 @@ Ext.define('IVR.view.Viewport', {
                             value: lang.VERSION,
                             fieldStyle: {
                                 'font-family': 'lucida grande,tahoma,arial,sans-serif',
-                                'font-weight': 'bold',
                                 'font-size': '12px',
                                 color: 'black',
                                 marginRight: '5px',
                                 paddingTop: '0px'
                             }
                         }
-                    ]
+                    ],
+                    listeners: {
+                        afterrender: function () {
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('GET', '/updates', false);
+                            xhr.send();
+                            if (xhr.status != 200) {
+                                alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+                            } else {
+                                var ver = JSON.parse(xhr.response);
+                                var vers = ver.data.current;
+                                document.getElementById('displayfield-1022-inputEl').innerHTML += ': <b>' + vers[0] + '.' + vers[1] + '.' + vers[2] + '</b>'; 
+                            }
+                        }
+                    }
                 }],
             margins: '0 0 4 0'
         }, {
