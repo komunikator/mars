@@ -109,26 +109,54 @@ Ext.define('IVR.view.menu.Tree', {
                     break;
 
                   case 'upgrade':
-                    /*
-                    Ext.Msg.show({
-                        title : 'Доступные обновления',
-                        msg : 'Есть доступные обновления. Обновиться?',
-                        width : 300,
-                        closable : false,
-                        buttons : Ext.Msg.YESNO,
-                        buttonText :
-                        {
-                            yes : 'Да',
-                            no : 'Нет'
-                        },
-                        multiline : false,
-                        fn : function(buttonValue, inputText, showConfig){
-                            Ext.Msg.alert('Status', buttonValue);
-                        },
-                        icon : Ext.Msg.QUESTION
-                    });
-                    */
-                    Ext.showInfo('Нет доступных обновлений');
+                    function startUpgrade() {
+                        console.log('startUpgrade');
+                    }
+
+                    function showOfferUpgrade(msg) {
+                        Ext.Msg.show({
+                            title : lang['availableUpdates'],
+                            msg : msg + ' ' + lang['toUpgrade'],
+                            width : 270,
+                            closable : false,
+                            buttons : Ext.Msg.YESNO,
+                            buttonText :
+                            {
+                                yes : lang['yes'],
+                                no : lang['no']
+                            },
+                            multiline : false,
+                            fn : function(buttonValue, inputText, showConfig){
+                                if (buttonValue == 'yes') {
+                                    startUpgrade();
+                                }
+                            },
+                            icon : Ext.Msg.QUESTION
+                        });
+                    }
+
+                    var request = new XMLHttpRequest();
+                    var url = window.location.href + 'updates';
+
+                    request.onreadystatechange = function () {
+                        if (request.readyState === 4 && request.status === 200) {
+                            var response = JSON.parse(request.responseText);
+                            var current = response.data.current;
+                            var last = response.data.last;
+                            var availableUpdates = response.data.availableUpdates;
+
+                            if (availableUpdates) {
+                                var msg = lang['versionBuild'] + ' ' + current[0] + '.' + current[1] + '.' + current[2] +
+                                            ' ' + lang['availableVersionBuild'] + ' ' + last[0] + '.' + last[1] + '.' + last[2];
+                                showOfferUpgrade(msg);
+                            } else {
+                                //Ext.showInfo(lang['noUpdatesAvailable']);
+                                Ext.showInfo(lang['noUpdatesAvailable']);
+                            }
+                        }
+                    }
+                    request.open('GET', url);
+                    request.send();
                     break;
 
                   default:

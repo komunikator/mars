@@ -188,7 +188,14 @@ lang = {
     minute:'мин',
     second:'сек',
     sip_clients_title: 'SIP клиенты',
-    fill_required_field:'Заполните обязательные поля!'
+    fill_required_field:'Заполните обязательные поля!',
+    availableUpdates: 'Доступны обновления',
+    toUpgrade: 'Обновиться?',
+    yes: 'Да',
+    no: 'Нет',
+    versionBuild: 'Ваша версия продукта',
+    availableVersionBuild: 'Доступна версия продукта',
+    noUpdatesAvailable: 'Нет доступных обновлений'
 };
 
 if (typeof exports !== 'undefined')
