@@ -108,6 +108,29 @@ Ext.define('IVR.view.menu.Tree', {
                     }, 5000);
                     break;
 
+                  case 'upgrade':
+                    /*
+                    Ext.Msg.show({
+                        title : 'Доступные обновления',
+                        msg : 'Есть доступные обновления. Обновиться?',
+                        width : 300,
+                        closable : false,
+                        buttons : Ext.Msg.YESNO,
+                        buttonText :
+                        {
+                            yes : 'Да',
+                            no : 'Нет'
+                        },
+                        multiline : false,
+                        fn : function(buttonValue, inputText, showConfig){
+                            Ext.Msg.alert('Status', buttonValue);
+                        },
+                        icon : Ext.Msg.QUESTION
+                    });
+                    */
+                    Ext.showInfo('Нет доступных обновлений');
+                    break;
+
                   default:
                     this.showPanel(n.id, n.parentId, n, e.shiftKey, e.ctrlKey);
                     break;
