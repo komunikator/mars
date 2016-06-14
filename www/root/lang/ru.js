@@ -195,7 +195,8 @@ lang = {
     no: 'Нет',
     versionBuild: 'Ваша версия продукта',
     availableVersionBuild: 'Доступна версия продукта',
-    noUpdatesAvailable: 'Нет доступных обновлений'
+    noUpdatesAvailable: 'Нет доступных обновлений',
+    updating: 'Идет обновление'
 };
 
 if (typeof exports !== 'undefined')

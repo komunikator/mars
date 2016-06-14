@@ -129,6 +129,7 @@ Ext.define('IVR.view.menu.Tree', {
                             fn : function(buttonValue, inputText, showConfig){
                                 if (buttonValue == 'yes') {
                                     startUpgrade();
+                                    Ext.showInfo(lang['updating']);
                                 }
                             },
                             icon : Ext.Msg.QUESTION
@@ -150,7 +151,6 @@ Ext.define('IVR.view.menu.Tree', {
                                             ' ' + lang['availableVersionBuild'] + ' ' + last[0] + '.' + last[1] + '.' + last[2];
                                 showOfferUpgrade(msg);
                             } else {
-                                //Ext.showInfo(lang['noUpdatesAvailable']);
                                 Ext.showInfo(lang['noUpdatesAvailable']);
                             }
                         }
