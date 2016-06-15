@@ -39,7 +39,7 @@ function reqLastVersion(res) {
             body = JSON.parse(body);
             reqCurVersion(res, body.version);
         } else {
-            res.send({success: false, data: {}});
+            res.send({success: false});
         }
     });
 }
