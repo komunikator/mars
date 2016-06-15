@@ -373,13 +373,14 @@ Ext.define('IVR.view.Viewport', {
                     listeners: {
                         afterrender: function () {
                             Ext.Ajax.request({
-                                url: '/updates',
+                                url: _webPath + '/updates',
                                 method: 'GET',
                                 disableCaching: true,
                                 success: function(response) {
                                     var ver = JSON.parse(response.responseText);
                                     var vers = ver.data.current;
-                                    document.getElementById('product-version').innerHTML += ': <b>' + vers[0] + '.' + vers[1] + '.' + vers[2] + '</b>';
+                                    console.log(vers);
+                                    document.getElementById('product-version').innerHTML += ': <b>' + vers + '</b>';
                                 },                           
                                 failure: function(response) {
                                     console.log("Something terrible happened!!!");
