@@ -360,7 +360,7 @@ Ext.define('IVR.view.Viewport', {
                         },
                         {
                             xtype: 'displayfield',
-                            value: lang.VERSION,
+                            value: lang.VERSION + `<span id="product-version"></span>`,
                             fieldStyle: {
                                 'font-family': 'lucida grande,tahoma,arial,sans-serif',
                                 'font-size': '12px',
@@ -372,16 +372,19 @@ Ext.define('IVR.view.Viewport', {
                     ],
                     listeners: {
                         afterrender: function () {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', '/updates', false);
-                            xhr.send();
-                            if (xhr.status != 200) {
-                                alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
-                            } else {
-                                var ver = JSON.parse(xhr.response);
-                                var vers = ver.data.current;
-                                document.getElementById('displayfield-1022-inputEl').innerHTML += ': <b>' + vers[0] + '.' + vers[1] + '.' + vers[2] + '</b>'; 
-                            }
+                            Ext.Ajax.request({
+                                url: '/updates',
+                                method: 'GET',
+                                disableCaching: true,
+                                success: function(response) {
+                                    var ver = JSON.parse(response.responseText);
+                                    var vers = ver.data.current;
+                                    document.getElementById('product-version').innerHTML += ': <b>' + vers[0] + '.' + vers[1] + '.' + vers[2] + '</b>';
+                                },                           
+                                failure: function(response) {
+                                    console.log("Something terrible happened!!!");
+                                }
+                            });
                         }
                     }
                 }],
