@@ -360,7 +360,8 @@ Ext.define('IVR.view.Viewport', {
                         },
                         {
                             xtype: 'displayfield',
-                            value: lang.VERSION + `<span id="product-version"></span>`,
+                            value: lang.VERSION,
+                            id: 'product-version',
                             fieldStyle: {
                                 'font-family': 'lucida grande,tahoma,arial,sans-serif',
                                 'font-size': '12px',
@@ -379,8 +380,7 @@ Ext.define('IVR.view.Viewport', {
                                 success: function(response) {
                                     var ver = JSON.parse(response.responseText);
                                     var vers = ver.data.current;
-                                    console.log(vers);
-                                    document.getElementById('product-version').innerHTML += ': <b>' + vers + '</b>';
+                                    Ext.getCmp('product-version').setValue(lang.VERSION + ': <b>' + vers + '</b>');
                                 },                           
                                 failure: function(response) {
                                     console.log("Something terrible happened!!!");
