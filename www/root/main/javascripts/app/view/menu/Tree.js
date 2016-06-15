@@ -162,8 +162,7 @@ Ext.define('IVR.view.menu.Tree', {
                             var availableUpdates = response.data.availableUpdates;
 
                             if (availableUpdates) {
-                                var msg = lang['versionBuild'] + ' ' + current[0] + '.' + current[1] + '.' + current[2] +
-                                            ' ' + lang['availableVersionBuild'] + ' ' + last[0] + '.' + last[1] + '.' + last[2];
+                                var msg = lang['versionBuild'] + ' ' + current + ' ' + lang['availableVersionBuild'] + ' ' + last;
                                 showOfferUpgrade(msg);
                             } else {
                                 Ext.showInfo(lang['noUpdatesAvailable']);
