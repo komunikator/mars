@@ -196,7 +196,10 @@ lang = {
     versionBuild: 'Ваша версия продукта',
     availableVersionBuild: 'Доступна версия продукта',
     noUpdatesAvailable: 'Нет доступных обновлений',
-    updating: 'Идет обновление'
+    updating: 'Идет обновление',
+    completeUpdate: 'Обновление завершено',
+    errorUpdate: 'При обновлении произошла ошибка'
+
 };
 
 if (typeof exports !== 'undefined')

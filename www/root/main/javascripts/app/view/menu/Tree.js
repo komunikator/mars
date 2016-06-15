@@ -110,7 +110,22 @@ Ext.define('IVR.view.menu.Tree', {
 
                   case 'upgrade':
                     function startUpgrade() {
-                        console.log('startUpgrade');
+                        var request = new XMLHttpRequest();
+                        var url = window.location.href + 'startupdates';
+
+                        request.onreadystatechange = function () {
+                            if (request.readyState === 4 && request.status === 200) {
+                                var response = JSON.parse(request.responseText);
+
+                                if (response.success) {
+                                    Ext.showInfo(lang['completeUpdate']);
+                                } else {
+                                    Ext.showInfo(lang['errorUpdate']);
+                                }
+                            }
+                        }
+                        request.open('GET', url);
+                        request.send();
                     }
 
                     function showOfferUpgrade(msg) {
