@@ -9,15 +9,15 @@ exports.read = function (req, res) {
     exec('git pull', function (error, stdout, stderr) {
         if (error) {
             res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: "git pull error: " + error});
+            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
             return;
         }
         if (stderr) {
             res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: "git pull stdout: " + stderr});
+            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stdout: ' + stderr});
             return;
         }
         res.send({success: true});
-        bus.emit('message', {category: 'server', type: 'info', msg: "git pull stdout: " + stdout});
+        bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
     });
 };
