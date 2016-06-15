@@ -132,7 +132,7 @@ Ext.define('IVR.view.menu.Tree', {
                         Ext.Msg.show({
                             title : lang['availableUpdates'],
                             msg : msg + ' ' + lang['toUpgrade'],
-                            width : 270,
+                            width : 400,
                             closable : false,
                             buttons : Ext.Msg.YESNO,
                             buttonText :
