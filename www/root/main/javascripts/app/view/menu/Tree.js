@@ -100,12 +100,29 @@ Ext.define('IVR.view.menu.Tree', {
                     break;
 
                   case 'restart':
-                    IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
+                    Ext.Msg.show({
+                        title : lang['restart'],
+                        msg : lang['confirmRestart'],
+                        width : 350,
+                        closable : false,
+                        buttons : Ext.Msg.YESNO,
+                        buttonText :
+                        {
+                            yes : lang['yes'],
+                            no : lang['no']
+                        },
+                        multiline : false,
+                        fn : function(buttonValue, inputText, showConfig){
+                            if (buttonValue == 'yes') {
+                                IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
 
-                    // Попытка переподключения
-                    setTimeout(function() {
-                        IVR.getApplication().wsLaunch();
-                    }, 5000);
+                                setTimeout(function() {
+                                    IVR.getApplication().wsLaunch();
+                                }, 5000);
+                            }
+                        },
+                        icon : Ext.Msg.QUESTION
+                    });
                     break;
 
                   case 'upgrade':
