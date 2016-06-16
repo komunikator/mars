@@ -118,7 +118,7 @@ Ext.define('IVR.view.menu.Tree', {
                                 var response = JSON.parse(request.responseText);
 
                                 if (response.success) {
-                                    Ext.showInfo(lang['completeUpdate']);
+                                    Ext.showInfo(lang['completeUpdate'] + '<br>' + lang['toRestart']);
                                 } else {
                                     Ext.showInfo(lang['errorUpdate']);
                                 }
