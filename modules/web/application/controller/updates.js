@@ -34,7 +34,9 @@ function reqCurVersion(res, lastVersion) {
 }
 
 function reqLastVersion(res) {
-    request('https://raw.githubusercontent.com/komunikator/mars/stable/package.json', function (error, response, body) {
+    var repository = bus.config.get("repository") || 'https://raw.githubusercontent.com/komunikator/mars/stable/package.json';
+
+    request(repository, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
             reqCurVersion(res, body.version);
