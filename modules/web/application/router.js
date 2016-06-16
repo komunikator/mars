@@ -17,7 +17,7 @@ exports.init = function (app)
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
             updates = require('./controller/updates'),
-            startupdates = require('./controller/startupdates'),
+            startUpdates = require('./controller/startUpdates'),
             statusSipCli = require('./controller/statusSipCli'),
             keyCheck = require('./controller/keyCheck'),
             listSIP = require('./controller/listSIP');
@@ -33,7 +33,7 @@ exports.init = function (app)
     media.init(app.bus);
     statusUA.init(app.bus);
     updates.init(app.bus);
-    startupdates.init(app.bus);
+    startUpdates.init(app.bus);
     statusSipCli.init(app.bus);
     keyCheck.init(app.bus);
     listSIP.init(app.bus);
@@ -121,7 +121,7 @@ exports.init = function (app)
     });
 
     app.get('/updates', updates.read);
-    app.get('/startupdates', startupdates.read);
+    app.get('/startUpdates', startUpdates.read);
     app.get('/statusUA', statusUA.read);
     app.get('/statusSipCli', statusSipCli.read);
     app.get('/listSIP', listSIP.read);

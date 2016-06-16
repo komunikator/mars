@@ -253,8 +253,8 @@ app.get('/scripts', function (req, res) {
 app.get('/updates', function (req, res) {
     render(req, res, 'updates');
 });
-app.get('/startupdates', function (req, res) {
-    render(req, res, 'startupdates');
+app.get('/startUpdates', function (req, res) {
+    render(req, res, 'startUpdates');
 });
 
 (require('./logview'))(server, bus);

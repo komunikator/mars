@@ -111,7 +111,7 @@ Ext.define('IVR.view.menu.Tree', {
                   case 'upgrade':
                     function startUpgrade() {
                         var request = new XMLHttpRequest();
-                        var url = window.location.href + 'startupdates';
+                        var url = window.location.href + 'startUpdates';
 
                         request.onreadystatechange = function () {
                             if (request.readyState === 4 && request.status === 200) {
