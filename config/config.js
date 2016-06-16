@@ -3,7 +3,7 @@
     "audioCodec": "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
     "dataStorageDays": 100,
-    "repository": "https://raw.githubusercontent.com/komunikator/mars/stable/package.json",
+    "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [
         {
             "username": "admin",
