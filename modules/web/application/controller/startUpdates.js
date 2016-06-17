@@ -23,7 +23,7 @@ exports.read = function (req, res) {
         });
     }
 
-    exec('git commit -a -m "Save local changes"', function (error, stdout, stderr) {
+    exec('git commit -a -m "Save"', function (error, stdout, stderr) {
         if (error) {
             res.send({success: false});
             bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit error: ' + error});
