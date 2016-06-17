@@ -6,18 +6,35 @@ exports.init = function (_bus) {
 };
 
 exports.read = function (req, res) {
-    exec('git pull', function (error, stdout, stderr) {
+    function gitPull() {
+        exec('git pull', function (error, stdout, stderr) {
+            if (error) {
+                res.send({success: false});
+                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
+                return;
+            }
+            if (stderr) {
+                res.send({success: false});
+                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stdout: ' + stderr});
+                return;
+            }
+            res.send({success: true});
+            bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
+        });
+    }
+
+    exec('git commit -a -m "Save local changes"', function (error, stdout, stderr) {
         if (error) {
             res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
+            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit error: ' + error});
             return;
         }
         if (stderr) {
             res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stdout: ' + stderr});
+            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit stdout: ' + stderr});
             return;
         }
-        res.send({success: true});
-        bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
+        gitPull();
+        bus.emit('message', {category: 'server', type: 'info', msg: 'Git commit stdout: ' + stdout});
     });
 };
