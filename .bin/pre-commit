@@ -1,0 +1,4 @@
+#!/bin/sh
+
+node ./.bin/updateversion
+git add -A
