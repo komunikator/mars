@@ -15,7 +15,7 @@ exports.read = function (req, res) {
             }
             if (stderr) {
                 res.send({success: false});
-                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stdout: ' + stderr});
+                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stderr: ' + stderr});
                 return;
             }
             res.send({success: true});
@@ -31,7 +31,7 @@ exports.read = function (req, res) {
         }
         if (stderr) {
             res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit stdout: ' + stderr});
+            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit stderr: ' + stderr});
             return;
         }
         gitPull();
