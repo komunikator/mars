@@ -2,7 +2,6 @@
     "webPort": 8000,
     "audioCodec": "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
-    "testKey": "testValue",
     "dataStorageDays": 100,
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [
