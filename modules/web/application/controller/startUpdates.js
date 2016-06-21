@@ -20,6 +20,24 @@ exports.init = function (_bus) {
             }
             //res.send({success: true});
             bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
+
+            // Копирование содержимого каталога config в tmp/config
+            fse.copy('./tmp/config', './config', function (err) {
+                if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory config: ' + err});
+                bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory config'});
+
+                    // Копирование содержимого каталога scripts в tmp/scripts
+                    fse.copy('./tmp/scripts', './scripts', function (err) {
+                        if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory scripts: ' + err});
+                        bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory scripts'});
+
+                            // Копирование содержимого каталога tasks в tmp/tasks
+                            fse.copy('./tmp/tasks', './tasks', function (err) {
+                                if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory tasks: ' + err});
+                                bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory tasks'});
+                            });
+                    });
+            });
         });
     }
 
