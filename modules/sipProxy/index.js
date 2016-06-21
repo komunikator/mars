@@ -10,7 +10,6 @@ var realm = os.hostname();
 var lastToSend;
 var registry = {};
 var timer;
-
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'debug', type: 'error', msg: e.toString()});
     //console.log(e);
@@ -66,11 +65,17 @@ if (conf){
 bus.emit('message', {msg: 'SIP_SERVER STARTED:' + require("ip").address()});
 
 proxy.start({
-  // logger: {
-  //    //recv: function(m) { JSON.stringify(sip.parseUri(m.headers.to.uri).user) },
-  //   // send: function(m) {console.log('------------SEND-----------'); console.log(m); console.log('------------SEND-----------'); },
-  //   //error: function(e) { bus.emit('message', {msg: 'SIP_SERVER Error: ' + e.toString()}); }
-  // }
+  logger: {
+    recv: function (m, i) {
+      bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
+    },
+    send: function (m, i) {
+      bus.emit('message', {category: 'sip_proxy', msg: 'SEND to ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
+    },
+    error: function (e) {
+      bus.emit('message', {category: 'error', type: 'error', msg: e.stack});
+    }
+  }
 }, function(rq) {
   if(rq.method === 'REGISTER') {  
     var username = sip.parseUri(rq.headers.to.uri).user;
