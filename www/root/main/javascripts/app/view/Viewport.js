@@ -361,16 +361,33 @@ Ext.define('IVR.view.Viewport', {
                         {
                             xtype: 'displayfield',
                             value: lang.VERSION,
+                            id: 'product-version',
                             fieldStyle: {
                                 'font-family': 'lucida grande,tahoma,arial,sans-serif',
-                                'font-weight': 'bold',
                                 'font-size': '12px',
                                 color: 'black',
                                 marginRight: '5px',
                                 paddingTop: '0px'
                             }
                         }
-                    ]
+                    ],
+                    listeners: {
+                        afterrender: function () {
+                            Ext.Ajax.request({
+                                url: _webPath + '/updates',
+                                method: 'GET',
+                                disableCaching: true,
+                                success: function(response) {
+                                    var ver = JSON.parse(response.responseText);
+                                    var vers = ver.data.current;
+                                    Ext.getCmp('product-version').setValue(lang.VERSION + ': <b>' + vers + '</b>');
+                                },                           
+                                failure: function(response) {
+                                    console.log("Something terrible happened!!!");
+                                }
+                            });
+                        }
+                    }
                 }],
             margins: '0 0 4 0'
         }, {

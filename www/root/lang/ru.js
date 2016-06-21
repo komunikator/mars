@@ -1,5 +1,5 @@
 lang = {
-    VERSION: 'версия 1.2.0',
+    VERSION: 'Версия',
     user: 'Пользователь',
     unknown_user: 'Неизвестное имя пользователя',
     invalid_password: 'Неправильный пароль',
@@ -188,7 +188,21 @@ lang = {
     minute:'мин',
     second:'сек',
     sip_clients_title: 'SIP клиенты',
-    fill_required_field:'Заполните обязательные поля!'
+    fill_required_field:'Заполните обязательные поля!',
+    availableUpdates: 'Доступны обновления',
+    toUpgrade: 'Обновиться?',
+    yes: 'Да',
+    no: 'Нет',
+    versionBuild: 'Ваша версия',
+    availableVersionBuild: 'Доступна версия',
+    noUpdatesAvailable: 'Нет доступных обновлений',
+    updating: 'Идет обновление',
+    completeUpdate: 'Обновление завершено',
+    errorUpdate: 'При обновлении произошла ошибка',
+    toRestart: 'Перезагрузите для применения изменений',
+    confirmRestart: 'Вы действительно хотите перезагрузить?',
+    restart: 'Перезагрузка'
+
 };
 
 if (typeof exports !== 'undefined')

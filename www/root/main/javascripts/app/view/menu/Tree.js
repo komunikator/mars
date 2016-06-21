@@ -100,12 +100,94 @@ Ext.define('IVR.view.menu.Tree', {
                     break;
 
                   case 'restart':
-                    IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
+                    Ext.Msg.show({
+                        title : lang['restart'],
+                        msg : lang['confirmRestart'],
+                        width : 350,
+                        closable : false,
+                        buttons : Ext.Msg.YESNO,
+                        buttonText :
+                        {
+                            yes : lang['yes'],
+                            no : lang['no']
+                        },
+                        multiline : false,
+                        fn : function(buttonValue, inputText, showConfig){
+                            if (buttonValue == 'yes') {
+                                IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
 
-                    // Попытка переподключения
-                    setTimeout(function() {
-                        IVR.getApplication().wsLaunch();
-                    }, 5000);
+                                setTimeout(function() {
+                                    IVR.getApplication().wsLaunch();
+                                }, 5000);
+                            }
+                        },
+                        icon : Ext.Msg.QUESTION
+                    });
+                    break;
+
+                  case 'upgrade':
+                    function startUpgrade() {
+                        var request = new XMLHttpRequest();
+                        var url = window.location.href + 'startUpdates';
+
+                        request.onreadystatechange = function () {
+                            if (request.readyState === 4 && request.status === 200) {
+                                var response = JSON.parse(request.responseText);
+
+                                if (response.success) {
+                                    Ext.showInfo(lang['completeUpdate'] + '<br>' + lang['toRestart']);
+                                } else {
+                                    Ext.showInfo(lang['errorUpdate']);
+                                }
+                            }
+                        }
+                        request.open('GET', url);
+                        request.send();
+                    }
+
+                    function showOfferUpgrade(msg) {
+                        Ext.Msg.show({
+                            title : lang['availableUpdates'],
+                            msg : msg + '<br> ' + lang['toUpgrade'],
+                            width : 270,
+                            closable : false,
+                            buttons : Ext.Msg.YESNO,
+                            buttonText :
+                            {
+                                yes : lang['yes'],
+                                no : lang['no']
+                            },
+                            multiline : false,
+                            fn : function(buttonValue, inputText, showConfig){
+                                if (buttonValue == 'yes') {
+                                    startUpgrade();
+                                    Ext.showInfo(lang['updating']);
+                                }
+                            },
+                            icon : Ext.Msg.QUESTION
+                        });
+                    }
+
+                    var request = new XMLHttpRequest();
+                    var url = window.location.href + 'updates';
+
+                    request.onreadystatechange = function () {
+                        if (request.readyState === 4 && request.status === 200) {
+                            var response = JSON.parse(request.responseText);
+                            var current = response.data.current;
+                            var last = response.data.last;
+                            var availableUpdates = response.data.availableUpdates;
+
+                            if (availableUpdates) {
+                                var msg = lang['versionBuild'] + ' ' + current + '<br> ' + lang['availableVersionBuild'] + ' ' + last;
+                                showOfferUpgrade(msg);
+                            } else {
+                                Ext.showInfo(lang['noUpdatesAvailable']);
+                            }
+                        }
+                    }
+                    request.open('GET', url);
+                    request.send();
                     break;
 
                   default:

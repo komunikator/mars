@@ -1,0 +1,5 @@
+#!/bin/sh
+
+node ./.bin/updateversion
+
+git add ./package.json
