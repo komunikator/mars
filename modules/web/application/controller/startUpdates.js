@@ -6,6 +6,23 @@ var bus,
 exports.init = function (_bus) {
     bus = _bus;
 
+    function gitPull() {
+        exec('git pull', function (error, stdout, stderr) {
+            if (error) {
+                //res.send({success: false});
+                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
+                return;
+            }
+            if (stderr) {
+                //res.send({success: false});
+                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stderr: ' + stderr});
+                return;
+            }
+            //res.send({success: true});
+            bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
+        });
+    }
+
     // Создание каталога tmp
     fse.mkdirs('./tmp', function(err) {
         if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error create directory tmp: ' + err});
@@ -42,7 +59,20 @@ exports.init = function (_bus) {
                                 bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory tasks'});
 
                                 // Реверт файлов
-
+                                exec('git reset --hard', function (error, stdout, stderr) {
+                                    if (error) {
+                                        //res.send({success: false});
+                                        bus.emit('message', {category: 'server', type: 'error', msg: 'Git reset error: ' + error});
+                                        return;
+                                    }
+                                    if (stderr) {
+                                        //res.send({success: false});
+                                        bus.emit('message', {category: 'server', type: 'error', msg: 'Git reset stderr: ' + stderr});
+                                        return;
+                                    }
+                                    bus.emit('message', {category: 'server', type: 'info', msg: 'Git reset stdout: ' + stdout});
+                                    gitPull();
+                                });
                                 /*
                                 // Удаление содержимого директории config
                                 fs.unlink('./config/', function (err) {
