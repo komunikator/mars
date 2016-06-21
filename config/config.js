@@ -136,6 +136,13 @@
             "maxLogSize": 1048576,
             "backups": 10,
             "category": "rotation"
+        },
+        {
+            "type": "file",
+            "filename": "logs/sip_proxy.log",
+            "maxLogSize": 1048576,
+            "backups": 10,
+            "category": "sip_proxy"
         }
     ]
 }
