@@ -4,7 +4,6 @@
     "stunServer": "stun.sipnet.ru:3478",
     "testKey": "testValue",
     "dataStorageDays": 100,
-    "webAuth": "disable",
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [
         {
