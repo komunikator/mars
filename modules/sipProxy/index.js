@@ -62,7 +62,7 @@ if (conf){
     }
 }
 
-bus.emit('message', {msg: 'SIP_SERVER STARTED:' + require("ip").address()});
+bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
 
 proxy.start({
   logger: {
