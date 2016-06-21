@@ -7,15 +7,29 @@ exports.init = function (_bus) {
 
 function isAvailableUpdates(curVersion, lastVersion) {
     var versions = {};
-    curVersion = curVersion;
-    lastVersion = lastVersion;
-    var availableUpdates = false;
-
     versions['current'] = curVersion;
     versions['last'] = lastVersion;
 
-    if (lastVersion > curVersion) {
+    curVersion = curVersion.split('.');
+    lastVersion = lastVersion.split('.');
+    var availableUpdates = false;
+
+    if (lastVersion[0] > curVersion[0]) {
         availableUpdates = true;
+    }
+
+    if (lastVersion[0] == curVersion[0]) {
+        if (lastVersion[1] > curVersion[1]) {
+            availableUpdates = true;
+        }
+    }
+
+    if (lastVersion[0] == curVersion[0]) {
+        if (lastVersion[1] == curVersion[1]) {
+            if (lastVersion[2] > curVersion[2]) {
+                availableUpdates = true;
+            }
+        }
     }
 
     versions['availableUpdates'] = availableUpdates;
