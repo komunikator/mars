@@ -5,42 +5,9 @@ var bus,
 
 exports.init = function (_bus) {
     bus = _bus;
+};
 
-    function gitPull() {
-        exec('git pull', function (error, stdout, stderr) {
-            if (error) {
-                //res.send({success: false});
-                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
-                return;
-            }
-            if (stderr) {
-                //res.send({success: false});
-                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stderr: ' + stderr});
-                return;
-            }
-            //res.send({success: true});
-            bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
-
-            // Копирование содержимого каталога config в tmp/config
-            fse.copy('./tmp/config', './config', function (err) {
-                if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory config: ' + err});
-                bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory config'});
-
-                    // Копирование содержимого каталога scripts в tmp/scripts
-                    fse.copy('./tmp/scripts', './scripts', function (err) {
-                        if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory scripts: ' + err});
-                        bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory scripts'});
-
-                            // Копирование содержимого каталога tasks в tmp/tasks
-                            fse.copy('./tmp/tasks', './tasks', function (err) {
-                                if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory tasks: ' + err});
-                                bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory tasks'});
-                            });
-                    });
-            });
-        });
-    }
-
+exports.read = function (req, res) {
     // Создание каталога tmp
     fse.mkdirs('./tmp', function(err) {
         if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error create directory tmp: ' + err});
@@ -79,37 +46,51 @@ exports.init = function (_bus) {
                                 // Реверт файлов
                                 exec('git reset --hard', function (error, stdout, stderr) {
                                     if (error) {
-                                        //res.send({success: false});
+                                        res.send({success: false});
                                         bus.emit('message', {category: 'server', type: 'error', msg: 'Git reset error: ' + error});
                                         return;
                                     }
                                     if (stderr) {
-                                        //res.send({success: false});
+                                        res.send({success: false});
                                         bus.emit('message', {category: 'server', type: 'error', msg: 'Git reset stderr: ' + stderr});
                                         return;
                                     }
                                     bus.emit('message', {category: 'server', type: 'info', msg: 'Git reset stdout: ' + stdout});
-                                    gitPull();
-                                });
-                                /*
-                                // Удаление содержимого директории config
-                                fs.unlink('./config/', function (err) {
-                                    if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error delete directory config: ' + err});
-                                    bus.emit('message', {category: 'server', type: 'info', msg: 'Delete directory config'});
 
-                                    // Удаление содержимого директории scripts
-                                    fs.unlink('./scripts', function (err) {
-                                        if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error delete directory scripts: ' + err});
-                                        bus.emit('message', {category: 'server', type: 'info', msg: 'Delete directory scripts'});
+                                    // Получить файлы с репозитория
+                                    exec('git pull', function (error, stdout, stderr) {
+                                        if (error) {
+                                            res.send({success: false});
+                                            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
+                                            return;
+                                        }
+                                        if (stderr) {
+                                            res.send({success: false});
+                                            bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stderr: ' + stderr});
+                                            return;
+                                        }
+                                        bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
 
-                                        // Удаление содержимого директории tasks
-                                        fs.unlink('./tasks', function (err) {
-                                            if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error delete directory tasks: ' + err});
-                                            bus.emit('message', {category: 'server', type: 'info', msg: 'Delete directory tasks'});
+                                        // Копирование содержимого каталога config в tmp/config
+                                        fse.copy('./tmp/config', './config', function (err) {
+                                            if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory config: ' + err});
+                                            bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory config'});
+
+                                            // Копирование содержимого каталога scripts в tmp/scripts
+                                            fse.copy('./tmp/scripts', './scripts', function (err) {
+                                                if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory scripts: ' + err});
+                                                bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory scripts'});
+
+                                                // Копирование содержимого каталога tasks в tmp/tasks
+                                                fse.copy('./tmp/tasks', './tasks', function (err) {
+                                                    if (err) return bus.emit('message', {category: 'server', type: 'error', msg: 'Error copy directory tasks: ' + err});
+                                                    bus.emit('message', {category: 'server', type: 'info', msg: 'Copy directory tasks'});
+                                                    res.send({success: true});
+                                                });
+                                            });
                                         });
                                     });
                                 });
-                                */
                             });
                         });
                     });
@@ -117,42 +98,4 @@ exports.init = function (_bus) {
             });
         });
     });
-};
-
-exports.read = function (req, res) {
-    function gitPull() {
-        exec('git pull', function (error, stdout, stderr) {
-            if (error) {
-                res.send({success: false});
-                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull error: ' + error});
-                return;
-            }
-            if (stderr) {
-                res.send({success: false});
-                bus.emit('message', {category: 'server', type: 'error', msg: 'Git pull stderr: ' + stderr});
-                return;
-            }
-            res.send({success: true});
-            bus.emit('message', {category: 'server', type: 'info', msg: 'Git pull stdout: ' + stdout});
-        });
-    }
-
-
-
-    /*
-    exec('git commit -a -m "Save"', function (error, stdout, stderr) {
-        if (error) {
-            res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit error: ' + error});
-            return;
-        }
-        if (stderr) {
-            res.send({success: false});
-            bus.emit('message', {category: 'server', type: 'error', msg: 'Git commit stderr: ' + stderr});
-            return;
-        }
-        gitPull();
-        bus.emit('message', {category: 'server', type: 'info', msg: 'Git commit stdout: ' + stdout});
-    });
-    */
 };
