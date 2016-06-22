@@ -6,7 +6,8 @@
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [
         {
-            "username": "admin"
+            "username": "admin",
+            "password": "admin"
         },
         {
             "username": "user_XXXXXXXXXX"
