@@ -4,11 +4,11 @@
     "stunServer": "stun.sipnet.ru:3478",
     "dataStorageDays": 100,
     "bitrix24": {
-        "portal_link": "",
-        "client_id": "",
-        "client_secret": "",
-        "grant_type": "",
-        "redirect_uri": ""
+        "portal_link": "komunikator.bitrix24.ru",
+        "client_id": "local.576b89bc9fd9b8.12888854",
+        "client_secret": "tGztl9cDK7XPNtIFNCr0g6REnmw1epypXBXeqcg7xKgl8bENzb",
+        "grant_type": "authorization_code",
+        "redirect_uri": "http://localhost:8000"
     },
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [

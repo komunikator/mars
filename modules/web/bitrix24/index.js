@@ -1,7 +1,7 @@
 var bus = require('../../../lib/system/bus'),
         request = require('request');
 
-// Попытка 
+// РђРІС‚РѕСЂРёР·Р°С†РёСЏ РЅР° bitrix24
 function auth(req) {
     if ( ('code' in req.query) && ('state' in req.query) &&
          ('domain' in req.query) && ('member_id' in req.query) &&
@@ -21,24 +21,24 @@ function auth(req) {
         bus.emit('message', {category: 'server', type: 'info', msg: 'config.redirect_uri  = ' + bus.config.get("bitrix24").redirect_uri});
         */
 
-        // добавить указание портала
-        var url = 'https://' + bus.config.get("bitrix24").portal_link + '/oauth/token/?client_id=' + bus.config.get("bitrix24").client_id + 
-           '&grant_type=authorization_code&client_secret=' + bus.config.get("bitrix24").client_secret + '&redirect_uri=' + 
+        // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ Р·Р°РїСЂРѕСЃР°
+        var url = 'https://' + bus.config.get("bitrix24").portal_link + '/oauth/token/?client_id=' + bus.config.get("bitrix24").client_id +
+           '&grant_type=' + bus.config.get("bitrix24").grant_type + '&client_secret=' + bus.config.get("bitrix24").client_secret + '&redirect_uri=' +
             bus.config.get("bitrix24").redirect_uri + '&code=' + req.query['code'] + '&scope=' + req.query['scope'];
 
         request(url, function (err, res, data) {
             if (err) {
                 bus.emit('message', {category: 'server', type: 'error', msg: 'Bitrix24 request error: ' + err});
             } else {
-                bus.emit('message', {type: 'info', msg: data});
+                bus.emit('message', {category: 'server', type: 'info', msg: 'Bitrix24 response: ' + data});
             }
         });
     }
 }
 
+// РџРµСЂРµРЅР°РїСЂР°РІР»РµРЅРёРµ РїРѕ localhost:8000/bitrix24
 function read(req, res) {
-    // добавить указание портала
-    res.redirect('https://' + bus.config.get("bitrix24").portal_link + '/oauth/authorize/?client_id=' + bus.config.get("bitrix24").client_id + 
+    res.redirect('https://' + bus.config.get("bitrix24").portal_link + '/oauth/authorize/?client_id=' + bus.config.get("bitrix24").client_id +
         '&response_type=code&redirect_uri=' + bus.config.get("bitrix24").redirect_uri);
 }
 
