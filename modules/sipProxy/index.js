@@ -44,7 +44,7 @@ function sipDigestRegister(rq, username) {
       timer = setTimeout(function () {
         delete contacts[username]; 
         sendContacts();
-      },parseInt(rq.headers.expires) * 1000);
+      },parseInt(rq.headers.expires || (rq.headers.contact && rq.headers.contact[0] && rq.headers.contact[0].params.expires)) * 1000);
       userinfo.contact = rq.headers.contact;
       registry[username] = userinfo;
       var rs = sip.makeResponse(rq, 200, 'Ok');
