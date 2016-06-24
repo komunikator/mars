@@ -3,6 +3,13 @@
     "audioCodec": "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
     "dataStorageDays": 100,
+    "bitrix24": {
+        "portal_link": "",
+        "client_id": "",
+        "client_secret": "",
+        "grant_type": "",
+        "redirect_uri": ""
+    },
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
     "webAccounts": [
         {
