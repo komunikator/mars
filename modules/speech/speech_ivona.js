@@ -12,6 +12,7 @@ bus.on('ttsLaunch', function (data) {
         if (ivona_cfg && data.voice) // если объект настроек не пуст и задан параметр голос (voice),
         {
             ivona_cfg.name = data.voice; // меняем установленный по умолчанию голос в Ivona
+            if (ivona_cfg.gender) delete(ivona_cfg.gender);
         }
 
         if (!ivona_speech)
