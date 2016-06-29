@@ -53,7 +53,7 @@ bus.on('tts', function (data) {
             });
         }
         bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'Start generate speech from text "' + data.text + '"'});
-        bus.emit('ttsLaunch', {type: data.type, text: data.text, file: file_name + '.tmp', cb: ttsDone});
+        bus.emit('ttsLaunch', {type: data.type, voice: data.voice, text: data.text, file: file_name + '.tmp', cb: ttsDone});
     } else
         data.cb(file_name);
 })
