@@ -9,10 +9,11 @@ bus.on('ttsLaunch', function (data) {
     if (data.type === 'ivona') {
 
         ivona_cfg = config.get("ivona_speech") || {}; // считывание настроек Ivona по умолчанию
+        if (ivona_cfg && ivona_cfg.gender) delete(ivona_cfg.gender);
+
         if (ivona_cfg && data.voice) // если объект настроек не пуст и задан параметр голос (voice),
         {
             ivona_cfg.name = data.voice; // меняем установленный по умолчанию голос в Ivona
-            if (ivona_cfg.gender) delete(ivona_cfg.gender);
         }
 
         if (!ivona_speech)
