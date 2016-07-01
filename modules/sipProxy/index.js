@@ -5,6 +5,8 @@ var proxy = require('sip/proxy');
 var os = require('os');
 var util = require('util');
 var conf = bus.config.get('sipClients');
+var inviteExpires = bus.config.get('sipProxyInviteExpires') || 60;
+var proxyPort = bus.config.get('sipProxyPort') || 5060;
 var contacts = {};
 var realm = os.hostname();
 var lastToSend;
@@ -31,7 +33,7 @@ function sendContacts() {
 function setDefaultDomain(uri) {
     var tmp_uri = sip.parseUri(uri);
     tmp_uri.host = require("ip").address();
-    tmp_uri.port = '5060';
+    tmp_uri.port = proxyPort;
     return sip.stringifyUri(tmp_uri);
 }
 
@@ -86,6 +88,7 @@ if (conf) {
 bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
 
 proxy.start({
+    port: proxyPort,
     logger: {
         recv: function (m, i) {
             bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
@@ -116,7 +119,7 @@ proxy.start({
                 var timer = setTimeout(function () {
                     proxy.send(sip.makeResponse(rq, 486, 'Busy Here'));
                     cancelInvite({headers: {to: {uri: ''}}});
-                }, 10 * 1000);
+                }, inviteExpires * 1000);
                 function cancelInvite(rs) {
                     var inv_rq = invites.shift();
                     if (!inv_rq)
