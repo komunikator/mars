@@ -11,6 +11,7 @@ var contacts = {};
 var realm = os.hostname();
 var lastToSend;
 var registry = {};
+var inviteExpireses = {};
 
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'debug', type: 'error', msg: e.toString()});
@@ -111,21 +112,31 @@ proxy.start({
         var user = sip.parseUri(rq.uri).user;
         if (contacts[user] && Array.isArray(contacts[user]) && contacts[user].length > 0) {
             rq.uri = contacts[user][0].uri;
+            if (rq.method === 'REFER') {
+                rq.headers['refer-to'].params.expires = inviteExpires;
+                if (rq.headers['refer-to'].params.expires && rq.method === 'REFER'){
+                    inviteExpireses[sip.parseUri(rq.headers.to.uri).user+'_'+sip.parseUri(rq.headers['refer-to'].uri).user] = parseInt(rq.headers['refer-to'].params.expires);
+                }
+            }
             proxy.send(rq);
         } else {
             if (rq.method === 'INVITE') {
                 var group = [];
                 var invites = [];
+
+                bus.emit('message', {msg: inviteExpireses});
+                bus.emit('message', {msg: sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user});
+                var cur_expires = rq.headers.expires || inviteExpireses[sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user] || inviteExpireses;
                 var timer = setTimeout(function () {
-                    proxy.send(sip.makeResponse(rq, 486, 'Busy Here'));
+                    proxy.send(sip.makeResponse(rq, 486, 'Invite timeout'));
                     cancelInvite({headers: {to: {uri: ''}}});
-                }, inviteExpires * 1000);
+                }, cur_expires * 1000);
                 function cancelInvite(rs) {
                     var inv_rq = invites.shift();
                     if (!inv_rq)
                         return;
                     if (inv_rq.headers.to.uri == rs.headers.to.uri)
-                        return cancelInvite();
+                        return cancelInvite(rs);
                     var cnc_rq = sip.copyMessage(inv_rq);
                     cnc_rq.method = 'CANCEL';
                     cnc_rq.headers.cseq.method = 'CANCEL';
@@ -151,10 +162,25 @@ proxy.start({
                         invites.push(inv_rq);
                         proxy.send(inv_rq, function (rs) {
                             inv_rq.headers.to = rs.headers.to;
-                            if (rs.status != 487) {
+                            if (rs.status == 486){
+                                var to_del;
+                                for (var i = 0; i < invites.length; i++){
+                                    if (rs.headers.to.uri == invites[i].headers.to.uri){
+                                        to_del = i;
+                                    }
+                                }
+                                delete invites[to_del];
+                            } 
+                            if (rs.status == 486){
+                                if (invites.length <= 1){
+                                    rs.headers.via.shift();
+                                    proxy.send(rs);
+                                }
+                            } else if (rs.status != 487) {
                                 rs.headers.via.shift();
                                 proxy.send(rs);
                             }
+                            
                             if (rs.status == 200 && rs.headers.cseq.method == 'INVITE') {
                                 clearTimeout(timer);
                                 cancelInvite(rs);
