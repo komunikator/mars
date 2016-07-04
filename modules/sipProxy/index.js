@@ -124,8 +124,6 @@ proxy.start({
                 var group = [];
                 var invites = [];
 
-                bus.emit('message', {msg: inviteExpireses});
-                bus.emit('message', {msg: sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user});
                 var cur_expires = rq.headers.expires || inviteExpireses[sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user] || inviteExpireses;
                 var timer = setTimeout(function () {
                     proxy.send(sip.makeResponse(rq, 486, 'Invite timeout'));
