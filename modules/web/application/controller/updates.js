@@ -51,11 +51,16 @@ function reqLastVersion(res) {
     var repository = bus.config.get("repository") || 'https://raw.githubusercontent.com/komunikator/mars/stable/package.json';
 
     request(repository, function (error, response, body) {
+        var lastVersion = "0.0.0";
+        if (body && body['version']) {
+            lastVersion = body.version;
+        }
+
         if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
-            reqCurVersion(res, body.version);
+            reqCurVersion(res, lastVersion);
         } else {
-            res.send({success: false});
+            reqCurVersion(res, lastVersion);
         }
     });
 }
