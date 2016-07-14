@@ -2,8 +2,7 @@ var Express = require('express'),
         Http = require('http'),
         Cookies = require('cookies'),
         gaikan = require('gaikan'),
-        router = require('./application/router'),
-        bitrix24 = require('./bitrix24/index');
+        router = require('./application/router');
 
 var app = Express(),
         bus = app.bus = require('../../lib/system/bus'),
@@ -236,8 +235,7 @@ function render(req, res, name) {
     res.render(name, {webPath: app.get('webPath'), username: req.user && req.user.username});
 }
 
-app.get('/', function (req, res) {
-    bitrix24.auth(req);
+app.get('/', function (req, res) {    
     render(req, res, 'index');
 });
 app.get('/reports', function (req, res) {
@@ -258,6 +256,5 @@ app.get('/updates', function (req, res) {
 app.get('/startUpdates', function (req, res) {
     render(req, res, 'startUpdates');
 });
-app.get('/bitrix24', bitrix24.read);
 
 (require('./logview'))(server, bus);
