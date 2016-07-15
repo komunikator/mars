@@ -52,12 +52,13 @@ function reqLastVersion(res) {
 
     request(repository, function (error, response, body) {
         var lastVersion = "0.0.0";
-        if (body && body['version']) {
-            lastVersion = body.version;
-        }
 
         if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
+
+            if (body && body['version']) {
+                lastVersion = body.version;
+            }
             reqCurVersion(res, lastVersion);
         } else {
             reqCurVersion(res, lastVersion);
