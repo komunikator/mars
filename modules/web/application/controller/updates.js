@@ -14,19 +14,19 @@ function isAvailableUpdates(curVersion, lastVersion) {
     lastVersion = lastVersion.split('.');
     var availableUpdates = false;
 
-    if (lastVersion[0] > curVersion[0]) {
+    if ( Number(lastVersion[0]) > Number(curVersion[0]) ) {
         availableUpdates = true;
     }
 
-    if (lastVersion[0] == curVersion[0]) {
-        if (lastVersion[1] > curVersion[1]) {
+    if ( Number(lastVersion[0]) == Number(curVersion[0]) ) {
+        if ( Number(lastVersion[1]) > Number(curVersion[1]) ) {
             availableUpdates = true;
         }
     }
 
-    if (lastVersion[0] == curVersion[0]) {
-        if (lastVersion[1] == curVersion[1]) {
-            if (lastVersion[2] > curVersion[2]) {
+    if ( Number(lastVersion[0]) == Number(curVersion[0]) ) {
+        if ( Number(lastVersion[1]) == Number(curVersion[1]) ) {
+            if ( Number(lastVersion[2]) > Number(curVersion[2]) ) {
                 availableUpdates = true;
             }
         }
