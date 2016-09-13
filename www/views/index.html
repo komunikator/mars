@@ -19,5 +19,7 @@
         <form id="exportform" method="get" target="exportframe">
             <input id="excelconfig" type="hidden" name="config" value=""></form>
         <div id="main"></div>
+        <img src="!{root.webPath}/main/images/preloader.gif" alt="Preloader" class="preloader" id="preloader">
+        <script>Ext.onReady(function(){document.getElementById("preloader").style.display = "none";})</script>
     </body>
 </html>
