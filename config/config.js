@@ -72,7 +72,8 @@
                 "task",
                 "error",
                 "http",
-                "rotation"
+                "rotation",
+                "sip_proxy"
             ]
         },
         {

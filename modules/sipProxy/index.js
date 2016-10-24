@@ -12,9 +12,10 @@ var realm = os.hostname();
 var lastToSend;
 var registry = {};
 var inviteExpireses = {};
+var fs = require('fs');
 
 process.on('uncaughtException', function (e) {
-    bus.emit('message', {category: 'debug', type: 'error', msg: e.toString()});
+    bus.emit('message', {category: 'sip_proxy', type: 'error', msg: e.toString()});
 });
 
 function sendContacts() {
@@ -100,6 +101,10 @@ proxy.start({
         error: function (e) {
             bus.emit('message', {category: 'error', type: 'error', msg: e.stack});
         }
+    },
+    tls: {
+        key: fs.readFileSync(__dirname + '/server_localhost.key'),
+        cert: fs.readFileSync(__dirname + '/server_localhost.crt')
     }
 }, function (rq) {
     if (rq.method === 'REGISTER') {
@@ -168,7 +173,7 @@ proxy.start({
                                     }
                                 }
                                 delete invites[to_del];
-                            } 
+                            }
                             if (rs.status == 486){
                                 if (invites.length <= 1){
                                     rs.headers.via.shift();
@@ -178,7 +183,7 @@ proxy.start({
                                 rs.headers.via.shift();
                                 proxy.send(rs);
                             }
-                            
+
                             if (rs.status == 200 && rs.headers.cseq.method == 'INVITE') {
                                 clearTimeout(timer);
                                 cancelInvite(rs);
