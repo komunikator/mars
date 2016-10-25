@@ -48,11 +48,17 @@
     },
     "sipAccounts": [
         {
-            "host": "193.201.229.35",
+            "host": "172.17.2.89",
             "expires": 60,
-            "user": "xxxxxxxx",
-            "password": "xxxxxxxx",
-            "domain": "multifon.ru",
+            "user": "1",
+            "password": "1",
+            "disable": 1
+        },
+        {
+            "host": "172.17.2.89",
+            "expires": 60,
+            "user": "2",
+            "password": "2",
             "disable": 1
         }
     ],
@@ -154,7 +160,8 @@
             "category": "sip_proxy"
         }
     ],
-    "sipProxy": {
+    "webAuth": "disable",
+    "sipServer": {
         "ws":  {
             "port": 8506
         },
@@ -162,6 +169,23 @@
             "key": "server_localhost.key",
             "crt": "server_localhost.crt"
         },
-        "sipClients" : []
+        "sipClients" : [
+            {
+                "user": "1",
+                "password": "1"
+            },
+            {
+                "user": "2",
+                "password": "2"
+            },
+            {
+                "user": "3",
+                "password": "3"
+            },
+            {
+                "user": "4",
+                "password": "4"
+            }
+        ]
     }
 }

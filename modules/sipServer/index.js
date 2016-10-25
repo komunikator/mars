@@ -4,11 +4,11 @@ var digest = require('sip/digest');
 var proxy = require('sip/proxy');
 var os = require('os');
 var util = require('util');
-var inviteExpires = bus.config.get('sipProxyInviteExpires') || 60;
-var proxyPort = bus.config.get('sipProxyPort') || 5060;
-var sipProxy = bus.config.get('sipProxy');
+var inviteExpires = bus.config.get('sipServerInviteExpires') || 60;
+var proxyPort = bus.config.get('sipServerPort') || 5060;
+var sipServer = bus.config.get('sipServer');
 //var conf = bus.config.get('sipClients');
-var conf = sipProxy['sipClients'];
+var conf = sipServer['sipClients'];
 var contacts = {};
 var realm = os.hostname();
 var lastToSend;
@@ -115,10 +115,10 @@ function startProxy() {
             }
         },
         tls: {
-            key: fs.readFileSync(__dirname + '/' + sipProxy.tls.key),
-            cert: fs.readFileSync(__dirname + '/' + sipProxy.tls.crt)
+            key: fs.readFileSync(__dirname + '/' + sipServer.tls.key),
+            cert: fs.readFileSync(__dirname + '/' + sipServer.tls.crt)
         },
-        ws_port: sipProxy.ws.port
+        ws_port: sipServer.ws.port
     }, function (rq) {
         if (rq.method === 'REGISTER') {
             var username = sip.parseUri(rq.headers.to.uri).user;
@@ -246,25 +246,25 @@ bus.on('refresh', function (type) {
         });
         sendContacts();
 
-        function isChangeSipProxy(newSipProxy) {
+        function isChangeSipServer(newSipServer) {
             var isChange = false;
-            if ( sipProxy.ws.port != newSipProxy.ws.port ) {
+            if ( sipServer.ws.port != newSipServer.ws.port ) {
                 isChange = true;
-                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.ws.port + ' : ' + newSipProxy.ws.port});
-            } else if ( sipProxy.tls.key != newSipProxy.tls.key ) {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.ws.port + ' : ' + newSipServer.ws.port});
+            } else if ( sipServer.tls.key != newSipServer.tls.key ) {
                 isChange = true;
-                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.tls.key + ' : ' + newSipProxy.tls.key});
-            } else if ( sipProxy.tls.crt != newSipProxy.tls.crt ) {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.key + ' : ' + newSipServer.tls.key});
+            } else if ( sipServer.tls.crt != newSipServer.tls.crt ) {
                 isChange = true;
-                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.tls.crt + ' : ' + newSipProxy.tls.crt});
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.crt + ' : ' + newSipServer.tls.crt});
             }
-            sipProxy = newSipProxy;
+            sipServer = newSipServer;
             return isChange;
         }
 
-        bus.request('sipProxy', {}, function (err, data) {
+        bus.request('sipServer', {}, function (err, data) {
             if (err) return false;
-            if ( isChangeSipProxy(data) ) {
+            if ( isChangeSipServer(data) ) {
                 //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Были изменения'});
                 stopProxy();
                 startProxy();
