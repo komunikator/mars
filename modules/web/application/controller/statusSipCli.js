@@ -26,7 +26,8 @@ exports.getStoreData = function (data) {
                 null, null, null, null, null, null, null, null, null, null];
     
 
-    var clients = bus.config.get('sipClients');
+    //var clients = bus.config.get('sipClients');
+    var clients = bus.config.get('sipProxy')['sipClients'];
 
     if (clients){
          clients.forEach(function (row, i) {

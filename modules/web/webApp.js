@@ -134,8 +134,10 @@ wss.on('connection', function (ws) {
 
     bus.request('sipProxy', {}, function (err, data) {
         confSipProxy = data || '';
-            bus.request('sipClients', {}, function (err, data) {
-                confSipCli = data || [];
+            //bus.request('sipClients', {}, function (err, data) {
+                //confSipCli = data || [];
+                confSipCli = confSipProxy['sipClients'];
+                bus.emit('message', {type: 'info', msg: confSipCli});
                 var msgSipCliHide;
                 if (confSipCli.length == 0 || confSipProxy == 'disable') {
                     msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
@@ -144,7 +146,7 @@ wss.on('connection', function (ws) {
                     msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
                     ws.send(msgSipCliHide);
                 }
-            });
+            //});
     });
 
 

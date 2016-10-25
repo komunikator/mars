@@ -4,16 +4,19 @@ var digest = require('sip/digest');
 var proxy = require('sip/proxy');
 var os = require('os');
 var util = require('util');
-var conf = bus.config.get('sipClients');
 var inviteExpires = bus.config.get('sipProxyInviteExpires') || 60;
 var proxyPort = bus.config.get('sipProxyPort') || 5060;
 var sipProxy = bus.config.get('sipProxy');
+//var conf = bus.config.get('sipClients');
+var conf = sipProxy['sipClients'];
 var contacts = {};
 var realm = os.hostname();
 var lastToSend;
 var registry = {};
 var inviteExpireses = {};
 var fs = require('fs');
+
+//bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: conf});
 
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'sip_proxy', type: 'error', msg: e.toString()});

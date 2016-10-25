@@ -161,6 +161,7 @@
         "tls": {
             "key": "server_localhost.key",
             "crt": "server_localhost.crt"
-        }
+        },
+        "sipClients" : []
     }
 }
