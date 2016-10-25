@@ -7,6 +7,7 @@ var util = require('util');
 var conf = bus.config.get('sipClients');
 var inviteExpires = bus.config.get('sipProxyInviteExpires') || 60;
 var proxyPort = bus.config.get('sipProxyPort') || 5060;
+var sipProxy = bus.config.get('sipProxy');
 var contacts = {};
 var realm = os.hostname();
 var lastToSend;
@@ -86,118 +87,130 @@ if (conf) {
         }
     }
 }
-
-bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
-
-proxy.start({
-    port: proxyPort,
-    logger: {
-        recv: function (m, i) {
-            bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
-        },
-        send: function (m, i) {
-            bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
-        },
-        error: function (e) {
-            bus.emit('message', {category: 'error', type: 'error', msg: e.stack});
-        }
-    },
-    tls: {
-        key: fs.readFileSync(__dirname + '/server_localhost.key'),
-        cert: fs.readFileSync(__dirname + '/server_localhost.crt')
+function stopProxy() {
+    try {
+        sip.stop();
+    } catch (err) {
+        bus.emit('message', {category: 'sip_proxy', type: 'error', msg: err});
     }
-}, function (rq) {
-    if (rq.method === 'REGISTER') {
-        var username = sip.parseUri(rq.headers.to.uri).user;
-        sipDigestRegister(rq, username);
-    } else {
-        if (rq.headers.contact && rq.headers.contact[0].uri) {
-            rq.headers.contact[0].uri = setDefaultDomain(rq.headers.contact[0].uri);
-        }
-        var user = sip.parseUri(rq.uri).user;
-        if (contacts[user] && Array.isArray(contacts[user]) && contacts[user].length > 0) {
-            rq.uri = contacts[user][0].uri;
-            if (rq.method === 'REFER') {
-                rq.headers['refer-to'].params.expires = inviteExpires;
-                if (rq.headers['refer-to'].params.expires && rq.method === 'REFER'){
-                    inviteExpireses[sip.parseUri(rq.headers.to.uri).user+'_'+sip.parseUri(rq.headers['refer-to'].uri).user] = parseInt(rq.headers['refer-to'].params.expires);
-                }
-            }
-            proxy.send(rq);
-        } else {
-            if (rq.method === 'INVITE') {
-                var group = [];
-                var invites = [];
+}
 
-                var cur_expires = rq.headers.expires || inviteExpireses[sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user] || inviteExpireses;
-                var timer = setTimeout(function () {
-                    proxy.send(sip.makeResponse(rq, 486, 'Invite timeout'));
-                    cancelInvite({headers: {to: {uri: ''}}});
-                }, cur_expires * 1000);
-                function cancelInvite(rs) {
-                    var inv_rq = invites.shift();
-                    if (!inv_rq)
-                        return;
-                    if (inv_rq.headers.to.uri == rs.headers.to.uri)
-                        return cancelInvite(rs);
-                    var cnc_rq = sip.copyMessage(inv_rq);
-                    cnc_rq.method = 'CANCEL';
-                    cnc_rq.headers.cseq.method = 'CANCEL';
-                    delete cnc_rq.content;
-                    proxy.send(cnc_rq, function () {
-                        cancelInvite(rs);
-                    });
-                }
-                ;
-                for (var item in registry)
-                    if (user == registry[item].group && contacts[item]) {
-                        group.push(item);
+function startProxy() {
+    bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
+
+    proxy.start({
+        port: proxyPort,
+        logger: {
+            recv: function (m, i) {
+                bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
+            },
+            send: function (m, i) {
+                bus.emit('message', {category: 'sip_proxy', msg: 'RECV from ' + i.protocol + ' ' + i.address + ':' + i.port + '\n' + sip.stringify(m) + '\n'});
+            },
+            error: function (e) {
+                bus.emit('message', {category: 'error', type: 'error', msg: e.stack});
+            }
+        },
+        tls: {
+            key: fs.readFileSync(__dirname + '/' + sipProxy.tls.key),
+            cert: fs.readFileSync(__dirname + '/' + sipProxy.tls.crt)
+        },
+        ws_port: sipProxy.ws.port
+    }, function (rq) {
+        if (rq.method === 'REGISTER') {
+            var username = sip.parseUri(rq.headers.to.uri).user;
+            sipDigestRegister(rq, username);
+        } else {
+            if (rq.headers.contact && rq.headers.contact[0].uri) {
+                rq.headers.contact[0].uri = setDefaultDomain(rq.headers.contact[0].uri);
+            }
+            var user = sip.parseUri(rq.uri).user;
+            if (contacts[user] && Array.isArray(contacts[user]) && contacts[user].length > 0) {
+                rq.uri = contacts[user][0].uri;
+                if (rq.method === 'REFER') {
+                    rq.headers['refer-to'].params.expires = inviteExpires;
+                    if (rq.headers['refer-to'].params.expires && rq.method === 'REFER'){
+                        inviteExpireses[sip.parseUri(rq.headers.to.uri).user+'_'+sip.parseUri(rq.headers['refer-to'].uri).user] = parseInt(rq.headers['refer-to'].params.expires);
                     }
-                if (group.length) {
-                    toDo();
-                    function toDo() {
-                        var item = group.shift();
-                        if (!item)
+                }
+                proxy.send(rq);
+            } else {
+                if (rq.method === 'INVITE') {
+                    var group = [];
+                    var invites = [];
+
+                    var cur_expires = rq.headers.expires || inviteExpireses[sip.parseUri(rq.headers.from.uri).user + '_' + sip.parseUri(rq.headers.to.uri).user] || inviteExpireses;
+                    var timer = setTimeout(function () {
+                        proxy.send(sip.makeResponse(rq, 486, 'Invite timeout'));
+                        cancelInvite({headers: {to: {uri: ''}}});
+                    }, cur_expires * 1000);
+                    function cancelInvite(rs) {
+                        var inv_rq = invites.shift();
+                        if (!inv_rq)
                             return;
-                        var inv_rq = sip.copyMessage(rq);
-                        inv_rq.uri = contacts[item][0].uri;
-                        inv_rq.headers.to.uri = setDefaultUri(item, rq.headers.to.uri);
-                        invites.push(inv_rq);
-                        proxy.send(inv_rq, function (rs) {
-                            inv_rq.headers.to = rs.headers.to;
-                            if (rs.status == 486){
-                                var to_del;
-                                for (var i = 0; i < invites.length; i++){
-                                    if (rs.headers.to.uri == invites[i].headers.to.uri){
-                                        to_del = i;
+                        if (inv_rq.headers.to.uri == rs.headers.to.uri)
+                            return cancelInvite(rs);
+                        var cnc_rq = sip.copyMessage(inv_rq);
+                        cnc_rq.method = 'CANCEL';
+                        cnc_rq.headers.cseq.method = 'CANCEL';
+                        delete cnc_rq.content;
+                        proxy.send(cnc_rq, function () {
+                            cancelInvite(rs);
+                        });
+                    }
+                    ;
+                    for (var item in registry)
+                        if (user == registry[item].group && contacts[item]) {
+                            group.push(item);
+                        }
+                    if (group.length) {
+                        toDo();
+                        function toDo() {
+                            var item = group.shift();
+                            if (!item)
+                                return;
+                            var inv_rq = sip.copyMessage(rq);
+                            inv_rq.uri = contacts[item][0].uri;
+                            inv_rq.headers.to.uri = setDefaultUri(item, rq.headers.to.uri);
+                            invites.push(inv_rq);
+                            proxy.send(inv_rq, function (rs) {
+                                inv_rq.headers.to = rs.headers.to;
+                                if (rs.status == 486){
+                                    var to_del;
+                                    for (var i = 0; i < invites.length; i++){
+                                        if (rs.headers.to.uri == invites[i].headers.to.uri){
+                                            to_del = i;
+                                        }
                                     }
+                                    delete invites[to_del];
                                 }
-                                delete invites[to_del];
-                            }
-                            if (rs.status == 486){
-                                if (invites.length <= 1){
+                                if (rs.status == 486){
+                                    if (invites.length <= 1){
+                                        rs.headers.via.shift();
+                                        proxy.send(rs);
+                                    }
+                                } else if (rs.status != 487) {
                                     rs.headers.via.shift();
                                     proxy.send(rs);
                                 }
-                            } else if (rs.status != 487) {
-                                rs.headers.via.shift();
-                                proxy.send(rs);
-                            }
 
-                            if (rs.status == 200 && rs.headers.cseq.method == 'INVITE') {
-                                clearTimeout(timer);
-                                cancelInvite(rs);
-                            }
-                            toDo()
-                        });
-                    }
+                                if (rs.status == 200 && rs.headers.cseq.method == 'INVITE') {
+                                    clearTimeout(timer);
+                                    cancelInvite(rs);
+                                }
+                                toDo()
+                            });
+                        }
+                    } else
+                        proxy.send(sip.makeResponse(rq, 404, 'Not Found'));
                 } else
                     proxy.send(sip.makeResponse(rq, 404, 'Not Found'));
-            } else
-                proxy.send(sip.makeResponse(rq, 404, 'Not Found'));
+            }
         }
-    }
-});
+    });
+}
+
+startProxy();
 
 bus.on('refresh', function (type) {
     if (type == 'configData') {
@@ -229,5 +242,32 @@ bus.on('refresh', function (type) {
             }
         });
         sendContacts();
+
+        function isChangeSipProxy(newSipProxy) {
+            var isChange = false;
+            if ( sipProxy.ws.port != newSipProxy.ws.port ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.ws.port + ' : ' + newSipProxy.ws.port});
+            } else if ( sipProxy.tls.key != newSipProxy.tls.key ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.tls.key + ' : ' + newSipProxy.tls.key});
+            } else if ( sipProxy.tls.crt != newSipProxy.tls.crt ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipProxy.tls.crt + ' : ' + newSipProxy.tls.crt});
+            }
+            sipProxy = newSipProxy;
+            return isChange;
+        }
+
+        bus.request('sipProxy', {}, function (err, data) {
+            if (err) return false;
+            if ( isChangeSipProxy(data) ) {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Были изменения'});
+                stopProxy();
+                startProxy();
+            } else {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Нет изменений'});
+            }
+        });
     }
 });

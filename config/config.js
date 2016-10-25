@@ -153,5 +153,14 @@
             "backups": 10,
             "category": "sip_proxy"
         }
-    ]
+    ],
+    "sipProxy": {
+        "ws":  {
+            "port": 8506
+        },
+        "tls": {
+            "key": "server_localhost.key",
+            "crt": "server_localhost.crt"
+        }
+    }
 }
