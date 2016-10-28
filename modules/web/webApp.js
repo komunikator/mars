@@ -3,7 +3,8 @@ var Express = require('express'),
         Cookies = require('cookies'),
         gaikan = require('gaikan'),
         router = require('./application/router'),
-        bitrix24 = require('./bitrix24/index');
+        bitrix24 = require('./bitrix24/index'),
+        fs = require('fs');
 
 var app = Express(),
         bus = app.bus = require('../../lib/system/bus'),
@@ -16,7 +17,6 @@ process.on('disconnect', function () {
 
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'http', type: 'error', msg: e.toString()});
-    //console.log(e);
 });
 
 if (log4js)
@@ -42,8 +42,14 @@ app.use(Express.session(session));
 app.set('webPath', bus.config.get("webPath") || '');
 app.set('trustedNet', bus.config.get("trustedNet"));
 
+
 //http server
 var wwwPath = bus.config.get("wwwPath") || process.cwd();
+if ( !fs.existsSync( process.cwd() + '/www' ) &&
+    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
+    wwwPath = process.cwd() + '/node_modules/mars';
+}
+
 app.set('lang', require(wwwPath + '/www/root/lang/ru.js').msg);
 bus.onRequest('lang', function (param, cb) {
     cb(null, app.get('lang') || {});
@@ -79,7 +85,7 @@ app.get('*', function (req, res, next) {
     if (app.get('viewsList').indexOf(req.url.replace(/^\//, '') + '.html') !== -1)
         res.redirect('/auth?referer=' + req.url);
     else
-        res.json(403, {success: false, /*url: req.url,*/ message: 'Access denied, please log in'});
+        res.json(403, {success: false, message: 'Access denied, please log in'});
 });
 
 router.init(app);
@@ -137,9 +143,9 @@ wss.on('connection', function (ws) {
             //bus.request('sipClients', {}, function (err, data) {
                 //confSipCli = data || [];
                 confSipCli = confSipServer['sipClients'];
-                bus.emit('message', {type: 'info', msg: confSipCli});
+                //bus.emit('message', {type: 'info', msg: confSipCli});
                 var msgSipCliHide;
-                if (confSipCli.length == 0 || confSipServer == 'disable') {
+                if ( confSipCli && ("length" in confSipCli) && confSipCli.length == 0 || confSipServer == 'disable') {
                     msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
                     ws.send(msgSipCliHide);
                 } else {

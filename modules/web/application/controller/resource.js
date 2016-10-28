@@ -73,16 +73,19 @@ exports.update = function (req, res) {
         res.end(JSON.stringify({success: false, message: lang.fileExist}));
         return;
     }
-    ;
-    //console.log(path);
+
+    var dir = req.body['name'].split('/')[0];
+	if ( !fs.existsSync(dir) ) {
+	    fs.mkdirSync(dir);
+	}
     fs.writeFile(path, req.body['value'], function (err) {
         if (!err) {
             bus.emit('refresh', req.body['name'].replace(/\/(.*)$/, ''));
-            
+
             if (req.body['name'].replace(/\/(.*)$/, '') == 'config'){
                 bus.config.set('sipClients', JSON.parse(req.body['value']).sipClients);
             }
-            
+
         }
         var result = {success: !err};
         if (err)

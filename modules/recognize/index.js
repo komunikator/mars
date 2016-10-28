@@ -1,6 +1,13 @@
 'use strict';
 
 function recognizer (settings) {
+    settings = settings || {
+        "type": "yandex",
+        "options": {
+            "developer_key": "",
+            "model": "general"
+        }
+    };
     if (settings && settings['type']) {
         switch (settings['type']) {
             case 'yandex':

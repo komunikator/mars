@@ -14,7 +14,16 @@ var lang = {},
 
 function refreshWebAccounts() {
     bus.request('webAccounts', {}, function (err, data) {
-        users = data || [];
+        if (err) {
+            bus.emit('message', {category: 'http', type: 'error', msg: err});
+            return false;
+        }
+        users = data || [
+                {
+                    "username": "admin",
+                    "password": "admin"
+                }
+        ];
     });
 }
 refreshWebAccounts();
@@ -97,7 +106,13 @@ function init(app) {
         res.redirect('/auth?referer=' + req.url);
     });
 
-    var trustedNetCfg = app.get('trustedNet');
+    var trustedNetCfg = app.get('trustedNet') || {
+            "tokenURL": "https://net.trusted.ru/idp/sso/oauth/token",
+            "profileURL": "https://net.trusted.ru/trustedapp/rest/person/profile/get",
+            "redirect_uri": "/auth/trusted",
+            "client_id": "TRUSTED_LOGIN_CLIENT_ID",
+            "client_secret": "TRUSTED_LOGIN_CLIENT_SECRET"
+    };
     app.get('/auth', function (req, res) {
 
         var data = {
@@ -192,7 +207,6 @@ function init(app) {
         req.logout();
         res.redirect('/');
     });
-
 }
 
 module.exports = init;

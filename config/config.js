@@ -154,7 +154,6 @@
             "category": "sip_proxy"
         }
     ],
-    "webAuth": "disable",
     "sipServer": {
         "ws":  {
             "port": 8506
