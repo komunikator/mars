@@ -1,0 +1,11 @@
+{
+  "host": "localhost",
+  "port": 8000,
+  "nedb": "../data/",
+  "auth": {
+    "token": {
+      "secret": "PRSw0hz45x5X1BzrYc8eRnxzTvTiSGZrhEs2JBYP+ruH/qhoMhl+7eNrA5C5Hcxku3WQJGv+jK6hjEZAv9bPgg=="
+    },
+    "local": {}
+  }
+}

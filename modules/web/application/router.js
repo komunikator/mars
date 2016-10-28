@@ -38,7 +38,9 @@ exports.init = function (app)
     keyCheck.init(app.bus);
     listSIP.init(app.bus);
 
+
     /* set controllers */
+
 
     app.get('/dialogData', dialog.read);
     app.get('/makeCall/:msisdn', makeCall.post);

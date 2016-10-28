@@ -1,14 +1,48 @@
-var Express = require('express'),
+var Express = require('feathers'),
         Http = require('http'),
         Cookies = require('cookies'),
         gaikan = require('gaikan'),
         router = require('./application/router'),
-        bitrix24 = require('./bitrix24/index'),
-        fs = require('fs');
+        bitrix24 = require('./bitrix24/index');
 
 var app = Express(),
         bus = app.bus = require('../../lib/system/bus'),
         log4js = require('../../lib/system/logger');
+
+var feathers_db = require('./nedbStore');
+
+var path = require('path');
+var serveStatic = require('feathers').static;
+var favicon = require('serve-favicon');
+var compress = require('compression');
+var cors = require('cors');
+//var feathers = require('feathers');
+var configuration = require('feathers-configuration');
+var hooks = require('feathers-hooks');
+var rest = require('feathers-rest');
+var bodyParser = require('body-parser');
+var socketio = require('feathers-socketio');
+//var io = require('socket.io');
+
+//  app.configure(configuration(path.join(__dirname, '..')));
+
+// app.use(compress())
+//   .options('*', cors())
+//   .use(cors())
+//   .use(favicon( path.join(app.get('public'), 'favicon.ico') ))
+//   .use('/', serveStatic( app.get('public') ))
+//   .use(bodyParser.json())
+//   .use(bodyParser.urlencoded({ extended: true }))
+//   .configure(hooks())
+//   .configure(rest())
+//   .configure(socketio())
+//   .configure(services)
+//   .configure(middleware);
+
+
+
+var cookieParser = require('cookie-parser');
+var connect = require('connect');
 
 process.on('disconnect', function () {
     console.log('parent exited');
@@ -17,39 +51,46 @@ process.on('disconnect', function () {
 
 process.on('uncaughtException', function (e) {
     bus.emit('message', {category: 'http', type: 'error', msg: e.toString()});
+    //console.log(e);
 });
 
 if (log4js)
     app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
 
-app.use(Express.cookieParser());
+//app.use(Express.cookieParser()); - old
+app.use(cookieParser());
 
 var session = bus.config.get("session") || {secret: "secret"};
 
-var sessionStore = new Express.session.MemoryStore();
-var redisCfg = bus.config.get("redis");
-if (redisCfg) {
-    var Session = require('express-session'),
-            RedisStore = require('connect-redis')(Session);
-    sessionStore = new RedisStore(redisCfg);
-    sessionStore.client.on('connect', function () {
-        bus.emit('message', {category: 'http', type: 'info', msg: 'Redis store connected'});//, socket, upgradeHead, cb);
-        //console.log('redis connected');
-    });
-}
-session.store = sessionStore;
-app.use(Express.session(session));
+
+
+/* ---------------- old
+ var sessionStore = new Express.session.MemoryStore();//
+ var sessionStore = new connect.session.MemoryStore();
+ var redisCfg = bus.config.get("redis");
+ if (redisCfg) {
+ var Session = require('express-session'),
+ RedisStore = require('connect-redis')(Session);
+ sessionStore = new RedisStore(redisCfg);
+ sessionStore.client.on('connect', function () {
+ bus.emit('message', {category: 'http', type: 'info', msg: 'Redis store connected'});//, socket, upgradeHead, cb);
+ //console.log('redis connected');
+ });
+ }
+ var MemoryStore = express.session.MemoryStore;
+ session.store = sessionStore;
+ app.use(Express.session(session));*/
+
+var session = require('express-session');
+var sessionStore = new session.MemoryStore();
+app.use(session({
+    secret: 'secret'
+}));
 app.set('webPath', bus.config.get("webPath") || '');
 app.set('trustedNet', bus.config.get("trustedNet"));
 
-
 //http server
 var wwwPath = bus.config.get("wwwPath") || process.cwd();
-if ( !fs.existsSync( process.cwd() + '/www' ) &&
-    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
-    wwwPath = process.cwd() + '/node_modules/mars';
-}
-
 app.set('lang', require(wwwPath + '/www/root/lang/ru.js').msg);
 bus.onRequest('lang', function (param, cb) {
     cb(null, app.get('lang') || {});
@@ -85,10 +126,12 @@ app.get('*', function (req, res, next) {
     if (app.get('viewsList').indexOf(req.url.replace(/^\//, '') + '.html') !== -1)
         res.redirect('/auth?referer=' + req.url);
     else
-        res.json(403, {success: false, message: 'Access denied, please log in'});
+        res.status(status).json(403, {success: false, /*url: req.url,*/ message: 'Access denied, please log in'});
 });
 
 router.init(app);
+
+
 
 var port = process.env.PORT || bus.config.get("webPort") || 8080;
 
@@ -116,15 +159,15 @@ server.on('upgrade', function (req, socket, upgradeHead) {
             return;
 
         socket.end();
-        //console.log(data);
+
         bus.emit('message', {category: 'http', type: 'error', msg: 'Websocket access denied'});
     });
 });
 
-var WebSocketServer = require('ws').Server,
-        wss = new WebSocketServer({server: server});
-
-wss.on('connection', function (ws) {
+var io = require('socket.io')(server);
+//---old for ws
+//wss.on('connection', function (socket) {
+io.on('connection', function (socket) {
     var confSipCli, confSipServer;
     // bus.request('sipClients', {}, function (err, data) {
     //     confSipCli = data || [];
@@ -140,83 +183,107 @@ wss.on('connection', function (ws) {
 
     bus.request('sipServer', {}, function (err, data) {
         confSipServer = data || '';
-            //bus.request('sipClients', {}, function (err, data) {
-                //confSipCli = data || [];
-                confSipCli = confSipServer['sipClients'];
-                //bus.emit('message', {type: 'info', msg: confSipCli});
-                var msgSipCliHide;
-                if ( confSipCli && ("length" in confSipCli) && confSipCli.length == 0 || confSipServer == 'disable') {
-                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
-                    ws.send(msgSipCliHide);
-                } else {
-                    msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
-                    ws.send(msgSipCliHide);
-                }
-            //});
+        bus.request('sipClients', {}, function (err, data) {
+            confSipCli = data || [];
+            var msgSipCliHide;
+            if (confSipCli.length == 0 || confSipServer == 'disable') {
+                msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+                //---old for ws
+                // ws.send(msgSipCliHide);
+                socket.emit('message', msgSipCliHide);
+            } else {
+                msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+                //---old for ws
+                // ws.send(msgSipCliHide);
+                socket.emit('message', msgSipCliHide);
+            }
+        });
     });
 
 
 
     // bus.emit('message', {type: 'info', msg: confSipCli});
-    bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
-    //        bus.emit('updateData', {source: 'statusUA', data: []});
+
+    //---old for ws
+    //bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + wss.clients.length});
+    bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + io.engine.clientsCount});
+
+    //bus.emit('updateData', {source: 'statusUA', data: []});
 
     var timerWs = setTimeout(function () {
-        sendTimeToUser(ws);
-    }, 5000);
+        sendTimeToUser(socket);
+    }, 500);
+
     //["refresh","config"]
     // ws.on('open', function(){
     //     // var confSipCli = bus.config.get('sipClients');
     //     bus.emit('message', {type: 'info', msg: 'confSipCli'});
     //     // if (confSipCli) {
-
     //     // }
     // });
-    ws.on('message', function (message) {
+
+    socket.on('message', function (message) {
         try {
             var args = JSON.parse(message);
             bus.emit.apply(bus, args);
         } catch (e) {
-            //console.log(e);
-            ws.send(JSON.stringify(e.toString()));
+            //---old for ws
+            //ws.send(JSON.stringify(e.toString()));
+            socket.emit(JSON.stringify(e.toString()));
         }
     });
 
-    ws.on('close', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + wss.clients.length});
+    socket.on('close', function () {
+        //---old for ws
+        // bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + wss.clients.length});
+        bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + io.engine.clientsCount});
         clearTimeout(timerWs);
     });
 
-    ws.on('disconnect', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + wss.clients.length});
+    socket.on('disconnect', function () {
+        //---old for ws
+        //bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + wss.clients.length});
+        bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + io.engine.clientsCount});
         clearTimeout(timerWs);
     });
 });
 
-var timerServerTime = setInterval(sendTimeAllUsers, 300000);
+bus.on('cdr', function(data){
+   var newRec =  feathers_db.recCall(app, bus, data);
+   io.emit('new rec', newRec);
+})
+//---old for ws
+//var timerServerTime = setInterval(sendTimeAllUsers, 300000);
+setInterval(sendTimeAllUsers, 30000);
 var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
 
 function sendTimeAllUsers() {
-    wss.clients.forEach(function (ws) {
-        var now = new Date();
-        var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
-        ws.send(msgTime);
-    });
-}
-
-function sendTimeToUser(ws) {
+    //---old for ws
+    // wss.sockets.clients().forEach(function (ws) {
+    //     var now = new Date();
+    //     var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+    //     ws.send(msgTime);
+    // });
     var now = new Date();
     var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
-    ws.send(msgTime);
+    io.emit('message', msgTime);
+}
+
+function sendTimeToUser(socket) {
+    var now = new Date();
+    var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+    socket.emit('message', msgTime);
 }
 
 var onData = function (obj) {
     var controllerPath = './application/controller/',
             dialogController = require(controllerPath + 'dialog'),
             statusUAController = require(controllerPath + 'statusUA');
-            statusSipCliController = require(controllerPath + 'statusSipCli');
+    statusSipCliController = require(controllerPath + 'statusSipCli');
 
-    if (wss.clients.length == 0)
+    //---old for ws
+    //if (wss.clients.length == 0)
+    if (io.engine.clientsCount == 0)
         return;
 
     if (obj.source == 'Dialogs') {
@@ -230,10 +297,11 @@ var onData = function (obj) {
     if (obj.source == 'statusSipCli') {
         obj.data = statusSipCliController.getStoreData(obj.data);
     }
-
-    wss.clients.forEach(function (conn) {
-        conn.send(JSON.stringify({success: true, data: obj}));
-    });
+    // --- old for ws
+    // wss.clients.forEach(function (conn) {
+    //     conn.send(JSON.stringify({success: true, data: obj}));
+    // });
+    io.emit('message', JSON.stringify({success: true, data: obj}));
 };
 bus.on('updateData', onData);
 
@@ -269,3 +337,47 @@ app.get('/startUpdates', function (req, res) {
 app.get('/bitrix24', bitrix24.read);
 
 (require('./logview'))(server, bus);
+
+
+// var app = feathers();
+
+// app.configure(configuration(path.join(__dirname, '..')));
+
+// app.use(compress())
+//         .options('*', cors())
+//         .use(cors())
+//         .use(favicon(path.join(app.get('public'), 'favicon.ico')))
+//         .use('/', serveStatic(app.get('public')))
+//         .use(bodyParser.json())
+//         .use(bodyParser.urlencoded({extended: true}))
+//         .configure(hooks())
+//         .configure(rest())
+//         .configure(socketio())
+//         .configure(services)
+//         .configure(middleware);
+
+
+// app.configure(rest());
+// app.use(bodyParser.json());
+// app.configure(socketio());
+// app.use(bodyParser.urlencoded({extended: true}));
+
+// app.use('/services/registeredCalls', service({
+//   Model: db,
+//   paginate: {
+//     default: 2,
+//     max: 4
+//   }
+// }));
+// console.log(1111);
+// app.service('registeredCalls').create({
+//   text: 'Oh hai!!!',
+//   complete: false
+// }).then(function(message) {
+//   console.log('Created message', message);
+// });
+// console.log(2222);
+
+
+module.exports = app;
+

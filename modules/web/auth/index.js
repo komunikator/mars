@@ -207,6 +207,7 @@ function init(app) {
         req.logout();
         res.redirect('/');
     });
+
 }
 
 module.exports = init;

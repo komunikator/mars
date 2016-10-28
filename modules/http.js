@@ -9,6 +9,5 @@ function init() {
 
     bus.setWorker(worker);
 }
-
 if (!(bus.config.get("web") == "disable"))
  init();

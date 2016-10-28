@@ -355,6 +355,7 @@ function rotationRecords() {
 }
 
 bus.on('cdr', function (data) {
+    
     var dtmfString = '';
     var i = 0,
             len = data.dtmfData ? data.dtmfData.length : 1;

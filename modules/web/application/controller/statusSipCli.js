@@ -22,9 +22,9 @@ exports.getStoreData = function (data) {
         }
     }
     var rec = [null, null, null, null, null, null, null, null, null, null,
-
+    
                 null, null, null, null, null, null, null, null, null, null];
-
+    
 
     //var clients = bus.config.get('sipClients');
     var clients = bus.config.get('sipServer')['sipClients'];
@@ -48,7 +48,7 @@ exports.getStoreData = function (data) {
             // rec[10+i] = row;
         });
     }
-
+        
     return [rec];
 };
 

@@ -81,11 +81,11 @@ exports.update = function (req, res) {
     fs.writeFile(path, req.body['value'], function (err) {
         if (!err) {
             bus.emit('refresh', req.body['name'].replace(/\/(.*)$/, ''));
-
+            
             if (req.body['name'].replace(/\/(.*)$/, '') == 'config'){
                 bus.config.set('sipClients', JSON.parse(req.body['value']).sipClients);
             }
-
+            
         }
         var result = {success: !err};
         if (err)

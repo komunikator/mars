@@ -52,6 +52,13 @@ Ext.application({
     deltaTime: 0,
     socket: {},
     wsLaunch: function () {
+
+        //-----
+        console.log("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+        // = ws://localhost:8000
+        //-----
+
+
         if (!window.WebSocket) {
             console.log('WebSocket: is not available');
         }
@@ -59,16 +66,30 @@ Ext.application({
         if (IVR.getApplication().wsConnect === 'disable') {
             IVR.getApplication().wsConnect = 'expect';
 
-            var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
-            IVR.getApplication().socket = socket;
+            //---old for ws
+           // var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            var socket = IVR.getApplication().socket;
 
-            socket.onmessage = function (event) {
+                //---old for ws 
+                //socket.onmessage = function (event) { 
+                socket.on('message', function (event) {
                 //var incomingMessage = event.data;
                 //console.log(incomingMessage);
 
-                var obj = Ext.JSON.decode(event.data).data;
-                if (Ext.JSON.decode(event.data).source == 'hideSipCli') {
-                    if (Ext.JSON.decode(event.data).data) {
+                //---old for ws
+                //var obj = Ext.JSON.decode(event.data).data;
+                //  if (Ext.JSON.decode(event.data).source == 'hideSipCli') {
+                //      if (Ext.JSON.decode(event.data).data) {
+                //         Ext.getCmp('statusSipClientGrid').hide();
+                //     } else {
+                //         Ext.getCmp('statusSipClientGrid').show();
+                //     }
+                // }
+
+                var obj = Ext.JSON.decode(event).data;
+                if (Ext.JSON.decode(event).source == 'hideSipCli') {
+                    if (Ext.JSON.decode(event).data) {
                         Ext.getCmp('statusSipClientGrid').hide();
                     } else {
                         Ext.getCmp('statusSipClientGrid').show();
@@ -98,8 +119,10 @@ Ext.application({
                         }
                     }
                 } else {
-                    var msg = JSON.parse(event.data);
-
+                    
+                    //---old for ws 
+                    //var msg = JSON.parse(event.data);
+                    var msg = JSON.parse(event);
                     if (msg.source == 'time') {
                         if (msg.data) {
                             var ivr = Ext.getCmp("IVR.view.Viewport");
@@ -150,37 +173,49 @@ Ext.application({
                         }
                     }
                 }
-            };
+            });
 
-            socket.onopen = function () {
+            //---old for ws 
+            //socket.onopen = function () {
+            socket.on( 'message', function (e) {
+                console.log(e);
                 IVR.getApplication().socket = socket;
                 console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
-            };
+            });
 
-            socket.onclose = function (event) {
+            //---old for ws 
+            //socket.onclose = function (event) {
+            socket.on('disconnect', function (event) {
                 if (event.wasClean) {
                     console.log('WebSocket: Соединение закрыто чисто');
                 } else {
                     console.log('WebSocket: Обрыв соединения'); // Например, "убит" процесс сервера
                 }
-                console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason);
+                console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason + "/"+event);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
                 clearInterval(IVR.getApplication().timerClock);
-            };
+            });
 
-            socket.onerror = function (error) {
+            //---old for ws 
+            // socket.onerror = function (error) {
+            socket.on('error', function (error) {
                 console.log("WebSocket: Error " + error.message);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
                 clearInterval(IVR.getApplication().timerClock);
-            };
+            });
 
+            socket.on('new rec', function(data){
+                console.log("new rec in history: " + data);
+            })
             var onsubmit = function () {
                 var outgoingMessage = this.message.value;
-                socket.send(outgoingMessage);
+                //---old for ws 
+                //socket.send(outgoingMessage);
+                socket.emit('message', outgoingMessage);
                 return false;
             };
 
