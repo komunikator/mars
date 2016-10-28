@@ -22,6 +22,7 @@ var hooks = require('feathers-hooks');
 var rest = require('feathers-rest');
 var bodyParser = require('body-parser');
 var socketio = require('feathers-socketio');
+var fs = require('fs');
 //var io = require('socket.io');
 
 //  app.configure(configuration(path.join(__dirname, '..')));
@@ -91,6 +92,11 @@ app.set('trustedNet', bus.config.get("trustedNet"));
 
 //http server
 var wwwPath = bus.config.get("wwwPath") || process.cwd();
+if ( !fs.existsSync( process.cwd() + '/www' ) &&
+    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
+    wwwPath = process.cwd() + '/node_modules/mars';
+}
+
 app.set('lang', require(wwwPath + '/www/root/lang/ru.js').msg);
 bus.onRequest('lang', function (param, cb) {
     cb(null, app.get('lang') || {});
@@ -134,6 +140,10 @@ router.init(app);
 
 
 var port = process.env.PORT || bus.config.get("webPort") || 8080;
+if ( !fs.existsSync( process.cwd() + '/www' ) &&
+    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
+    wwwPath = process.cwd() + '/node_modules/mars';
+}
 
 var server = Http.createServer(app).listen(port, function () {
     bus.emit('message', {category: 'server', type: 'info', msg: 'Web server start on port ' + this.address().port});
@@ -160,7 +170,7 @@ server.on('upgrade', function (req, socket, upgradeHead) {
 
         socket.end();
 
-        bus.emit('message', {category: 'http', type: 'error', msg: 'Websocket access denied'});
+        //bus.emit('message', {category: 'http', type: 'error', msg: 'Websocket access denied'});
     });
 });
 
