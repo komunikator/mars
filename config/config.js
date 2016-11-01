@@ -162,11 +162,6 @@
             "key": "server_localhost.key",
             "crt": "server_localhost.crt"
         },
-        "sipClients" : [
-            {
-                "user": "1",
-                "password": "1"
-            }
-        ]
+        "sipClients" : []
     }
 }
