@@ -13,7 +13,7 @@ exports.init = function (_bus) {
     bus = _bus;
 };
 
-exports.getStoreData = function (data) {
+exports.getStoreData = function (data, clients) {
     if (data){
         try {
             data = JSON.parse(data);
@@ -22,14 +22,15 @@ exports.getStoreData = function (data) {
         }
     }
     var rec = [null, null, null, null, null, null, null, null, null, null,
-    
+
                 null, null, null, null, null, null, null, null, null, null];
-    
+
 
     //var clients = bus.config.get('sipClients');
-    var clients = bus.config.get('sipServer')['sipClients'];
+    //var clients = bus.config.get('sipServer')['sipClients'];
+    var clients = clients || [];
 
-    if (clients){
+    if (clients) {
          clients.forEach(function (row, i) {
             rec[i] = 0;
             rec[10+i] = row.user;
@@ -48,13 +49,20 @@ exports.getStoreData = function (data) {
             // rec[10+i] = row;
         });
     }
-        
     return [rec];
 };
 
 exports.read = function (req, res) {
-    bus.request('getStatusSipCliList', {}, function (err, data) {
-        res.send({success: true, data: exports.getStoreData(JSON.stringify(data))});
+    bus.request('getStatusSipCliList', {}, function (errSipList, sipList) {
+        if (errSipList) return false;
+        if (sipList) {
+            bus.request('sipServer', {}, function (errSipServer, sipServer) {
+                if (errSipServer) return false;
+                var clients = sipServer['sipClients'];
+                res.send({success: true, data: exports.getStoreData(JSON.stringify(sipList), clients)});
+            });
+        } else {
+            return false;
+        }
     });
 };
-
