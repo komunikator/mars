@@ -101,7 +101,7 @@ function stopProxy() {
 function startProxy() {
     bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
 
-    proxy.start({
+    var options = {
         port: proxyPort,
         logger: {
             recv: function (m, i) {
@@ -113,13 +113,21 @@ function startProxy() {
             error: function (e) {
                 bus.emit('message', {category: 'error', type: 'error', msg: e.stack});
             }
-        },
-        tls: {
+        }
+    };
+
+    if ( ("tls" in sipServer) && ("key" in sipServer.tls) && sipServer.tls.key
+      && ("crt" in sipServer.tls) && sipServer.tls.crt ) {
+        options['tls'] = {
             key: fs.readFileSync(__dirname + '/' + sipServer.tls.key),
             cert: fs.readFileSync(__dirname + '/' + sipServer.tls.crt)
-        },
-        ws_port: sipServer.ws.port
-    }, function (rq) {
+        };
+    }
+    if ( ("ws" in sipServer) && ("port" in sipServer.ws) ) {
+        options['ws_port'] = sipServer.ws.port;
+    }
+
+    proxy.start(options, function (rq) {
         if (rq.method === 'REGISTER') {
             var username = sip.parseUri(rq.headers.to.uri).user;
             sipDigestRegister(rq, username);
