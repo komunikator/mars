@@ -38,7 +38,7 @@ function sendContacts() {
 
 function setDefaultDomain(uri) {
     var tmp_uri = sip.parseUri(uri);
-    tmp_uri.host = require("ip").address();
+    tmp_uri.host = bus.config.get('hostIp');
     tmp_uri.port = proxyPort;
     return sip.stringifyUri(tmp_uri);
 }
@@ -99,7 +99,7 @@ function stopProxy() {
 }
 
 function startProxy() {
-    bus.emit('message', {msg: 'sip_proxy started:' + require("ip").address()});
+    bus.emit('message', {msg: 'sip_proxy started:' + bus.config.get('hostIp')});
 
     var options = {
         port: proxyPort,
@@ -221,7 +221,19 @@ function startProxy() {
     });
 }
 
-startProxy();
+if ( !bus.config.get('hostIp')  ) {
+    bus.request('hostIp', {}, function (err, data) {
+        if (err) return false;
+        if (data) {
+            bus.config.set('hostIp', data);
+        } else {
+            bus.config.set( 'hostIp', require('ip').address() );
+        }
+        startProxy();
+    });
+} else {
+    startProxy();
+}
 
 bus.on('refresh', function (type) {
     if (type == 'configData') {
