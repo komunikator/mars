@@ -1,4 +1,4 @@
-var Express = require('feathers'),
+var Express = require('express'),
         Http = require('http'),
         Cookies = require('cookies'),
         gaikan = require('gaikan'),
@@ -21,16 +21,29 @@ process.on('uncaughtException', function (e) {
     //console.log(e);
 });
 
-if (log4js)
-    app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
+//if (log4js)
+//    app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
 
 app.use(cookieParser());
-var session = bus.config.get("session") || {secret: "secret"};
-var session = require('express-session');
-var sessionStore = new session.MemoryStore();
-app.use(session({
-    secret: 'secret'
-}));
+
+var sessionStore;
+var Session = require('express-session');
+var redisCfg = bus.config.get("redis");
+if (redisCfg) {
+    var RedisStore = require('connect-redis')(Session);
+    sessionStore = new RedisStore(redisCfg);
+    sessionStore.client.on('connect', function () {
+        bus.emit('message', {category: 'http', type: 'info', msg: 'Redis store connected'});//, socket, upgradeHead, cb);
+        //console.log('redis connected');
+    });
+} else {
+	var session = bus.config.get("session") || {secret: "secret"};
+	var MemoryStore = require('session-memory-store')(Session);
+	sessionStore = new MemoryStore(session);
+}
+session.store = sessionStore;
+
+app.use(Session(session));
 app.set('webPath', bus.config.get("webPath") || '');
 app.set('trustedNet', bus.config.get("trustedNet"));
 
@@ -76,12 +89,10 @@ app.get('*', function (req, res, next) {
     if (app.get('viewsList').indexOf(req.url.replace(/^\//, '') + '.html') !== -1)
         res.redirect('/auth?referer=' + req.url);
     else
-        res.status(status).json(403, {success: false, /*url: req.url,*/ message: 'Access denied, please log in'});
+        res.status(403).json(403, {success: false, /*url: req.url,*/ message: 'Access denied, please log in'});
 });
 
 router.init(app);
-
-
 
 var port = process.env.PORT || bus.config.get("webPort") || 8080;
 if ( !fs.existsSync( process.cwd() + '/www' ) &&
@@ -98,8 +109,12 @@ server.on('upgrade', function (req, socket, upgradeHead) {
     if (bus.config.get("webAuth") === "disable")
         return;
     var cookies = new Cookies(req);
-    var sessionID = cookies.get(session.key || 'connect.sid').replace(/^s%3A(.+)\..+/, "$1");
+    var sessionID = cookies.get('connect.sid').replace(/^s%3A(.+)\..+/, "$1");
+
     sessionStore.get(sessionID, function (err, data) {
+    	if (err) {
+    		bus.emit('message', {category: 'server', type: 'trace', msg: 'sessionStore.get: ' + err});
+    	}
         var instanceAuth = app.get('instanceAuth');
         if (data && instanceAuth && instanceAuth.call(data)) {
             return;
@@ -107,6 +122,7 @@ server.on('upgrade', function (req, socket, upgradeHead) {
 
         if (data && data.passport && data.passport.user !== undefined)
             return;
+        socket.end();
     });
 });
 
