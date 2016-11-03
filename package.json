@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "license": "GPL-3.0",
   "description": "MARS - Multi-channel Automatic Response System (Мультиканальная система обработки запросов)",
   "scripts": {
@@ -28,13 +28,6 @@
     "express": "^4.0.0",
     "express-session": "1.14.1",
     "fast-csv": ">= 0.5.1",
-    "feathers": "2.0.1",
-    "feathers-configuration": "0.3.1",
-    "feathers-hooks": "1.5.7",
-    "feathers-levelup": "1.1.1",
-    "feathers-nedb": "2.5.1",
-    "feathers-rest": "1.4.4",
-    "feathers-socketio": "1.4.1",
     "formidable": ">= 1.0.15",
     "fs-extra": "0.30.0",
     "gaikan": "^2.0.2",
