@@ -7,7 +7,6 @@ var Express = require('express'),
 var app = Express(),
         bus = app.bus = require('../../lib/system/bus'),
         log4js = require('../../lib/system/logger');
-var feathers_db = require('./nedbStore');
 var fs = require('fs');
 var cookieParser = require('cookie-parser');
 
@@ -168,10 +167,6 @@ io.on('connection', function (socket) {
     });
 });
 
-bus.on('cdr', function(data){
-   var newRec =  feathers_db.recCall(app, bus, data);
-   io.emit('new rec', newRec);
-})
 setInterval(sendTimeAllUsers, 30000);
 var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
 
