@@ -168,7 +168,7 @@ server.on('upgrade', function (req, socket, upgradeHead) {
         if (data && data.passport && data.passport.user !== undefined)
             return;
 
-        socket.end();
+        //socket.end();
 
         //bus.emit('message', {category: 'http', type: 'error', msg: 'Websocket access denied'});
     });

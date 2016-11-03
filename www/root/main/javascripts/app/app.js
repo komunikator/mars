@@ -68,11 +68,11 @@ Ext.application({
 
             //---old for ws
            // var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
-            IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath, { "transports": ["websocket", "polling"] });
             var socket = IVR.getApplication().socket;
 
-                //---old for ws 
-                //socket.onmessage = function (event) { 
+                //---old for ws
+                //socket.onmessage = function (event) {
                 socket.on('message', function (event) {
                 //var incomingMessage = event.data;
                 //console.log(incomingMessage);
@@ -119,8 +119,8 @@ Ext.application({
                         }
                     }
                 } else {
-                    
-                    //---old for ws 
+
+                    //---old for ws
                     //var msg = JSON.parse(event.data);
                     var msg = JSON.parse(event);
                     if (msg.source == 'time') {
@@ -175,7 +175,7 @@ Ext.application({
                 }
             });
 
-            //---old for ws 
+            //---old for ws
             //socket.onopen = function () {
             socket.on( 'message', function (e) {
                 console.log(e);
@@ -185,7 +185,7 @@ Ext.application({
                 refreshAllData();
             });
 
-            //---old for ws 
+            //---old for ws
             //socket.onclose = function (event) {
             socket.on('disconnect', function (event) {
                 if (event.wasClean) {
@@ -199,7 +199,7 @@ Ext.application({
                 clearInterval(IVR.getApplication().timerClock);
             });
 
-            //---old for ws 
+            //---old for ws
             // socket.onerror = function (error) {
             socket.on('error', function (error) {
                 console.log("WebSocket: Error " + error.message);
@@ -213,7 +213,7 @@ Ext.application({
             })
             var onsubmit = function () {
                 var outgoingMessage = this.message.value;
-                //---old for ws 
+                //---old for ws
                 //socket.send(outgoingMessage);
                 socket.emit('message', outgoingMessage);
                 return false;
