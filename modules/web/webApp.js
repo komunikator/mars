@@ -234,6 +234,4 @@ app.get('/startUpdates', function (req, res) {
     render(req, res, 'startUpdates');
 });
 
-(require('./logview'))(server, bus);
-
 module.exports = app;
