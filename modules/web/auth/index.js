@@ -5,8 +5,7 @@ var bus = require('../../../lib/system/bus'),
         LocalStrategy = require('passport-local').Strategy,
         flash = require('connect-flash'),
         request = require('request'),
-        url = require("url"),
-        bitrix24 = require('../bitrix24/index');
+        url = require("url");
 
 
 var lang = {},
@@ -98,7 +97,6 @@ function init(app) {
 
 
     app.get('/', function (req, res, next) {
-        bitrix24.auth(req);
         //return res.status(200).json({session: req.session});
         if (req.isAuthenticated()) {
             return res.render('index', {webPath: app.get('webPath'), username: req.user.username});
