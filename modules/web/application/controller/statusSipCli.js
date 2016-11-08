@@ -58,7 +58,10 @@ exports.read = function (req, res) {
         if (sipList) {
             bus.request('sipServer', {}, function (errSipServer, sipServer) {
                 if (errSipServer) return false;
-                var clients = sipServer['sipClients'];
+                var clients = [];
+                if ( (sipServer) && sipServer['sipClients'] ) {
+                    clients = sipServer['sipClients'];
+                }
                 res.send({success: true, data: exports.getStoreData(JSON.stringify(sipList), clients)});
             });
         } else {
