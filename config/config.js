@@ -155,6 +155,7 @@
         }
     ],
     "sipServer": {
+        "sipServerPort": "5060",
         "ws":  {
             "port": 8506
         },

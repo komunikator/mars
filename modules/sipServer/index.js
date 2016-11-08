@@ -5,10 +5,10 @@ var proxy = require('sip/proxy');
 var os = require('os');
 var util = require('util');
 var inviteExpires = bus.config.get('sipServerInviteExpires') || 60;
-var proxyPort = bus.config.get('sipServerPort') || 5060;
-var sipServer = bus.config.get('sipServer');
+var sipServer = bus.config.get('sipServer') || {};
+var proxyPort = sipServer['sipServerPort'] || 5060;
 //var conf = bus.config.get('sipClients');
-var conf = sipServer['sipClients'];
+var conf = sipServer['sipClients'] || [];
 var contacts = {};
 var realm = os.hostname();
 var lastToSend;
@@ -268,13 +268,13 @@ bus.on('refresh', function (type) {
 
         function isChangeSipServer(newSipServer) {
             var isChange = false;
-            if ( sipServer.ws.port != newSipServer.ws.port ) {
+            if ( (sipServer['ws']) && (sipServer['ws']['port']) && ( sipServer.ws.port != newSipServer.ws.port ) ) {
                 isChange = true;
                 //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.ws.port + ' : ' + newSipServer.ws.port});
-            } else if ( sipServer.tls.key != newSipServer.tls.key ) {
+            } else if ( (sipServer['tls']) && (sipServer['tls']['key']) && ( sipServer.tls.key != newSipServer.tls.key ) ) {
                 isChange = true;
                 //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.key + ' : ' + newSipServer.tls.key});
-            } else if ( sipServer.tls.crt != newSipServer.tls.crt ) {
+            } else if ( (sipServer['crt']) && (sipServer['tls']['crt']) && ( sipServer.tls.crt != newSipServer.tls.crt ) ) {
                 isChange = true;
                 //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.crt + ' : ' + newSipServer.tls.crt});
             }
