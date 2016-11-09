@@ -192,7 +192,7 @@ function init(app) {
                 res.redirect('/auth');
         });
 
-    app.post('/auth', passport.authenticate('local', {failureRedirect: '/auth', failureFlash: true}),
+    app.post('/auth', passport.authenticate('local', {failureRedirect: '/auth?referer=/', failureFlash: true}),
             function (req, res) {
                 if (req.query['referer'] != 'undefined' && req.query['referer'] != undefined) {
                     res.redirect(req.query['referer']);
