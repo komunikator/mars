@@ -116,9 +116,22 @@ Ext.define('IVR.view.menu.Tree', {
                             if (buttonValue == 'yes') {
                                 IVR.getApplication().socket.send( JSON.stringify(["restartApp"]) );
 
-                                setTimeout(function() {
-                                    IVR.getApplication().wsLaunch();
-                                }, 5000);
+                                Ext.MessageBox.wait(lang['restartWait'], lang['restart']);
+
+                                setInterval(function() {
+                                    var request = new XMLHttpRequest();
+                                    var url = window.location;
+                                    request.onreadystatechange = function () {
+                                        if (request.readyState === 4 && request.status === 200) {
+                                            console.log('Перезагружаем страницу');
+                                            window.location.reload();
+                                        } else {
+                                            console.log('Сервер не доступен');
+                                        }
+                                    }
+                                    request.open('GET', window.location);
+                                    request.send();
+                                }, 2000);
                             }
                         },
                         icon : Ext.Msg.QUESTION
