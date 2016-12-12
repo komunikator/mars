@@ -7,14 +7,14 @@ var editData = null;
 
 window.onload = function () {
 
-    $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
+    $.get("//" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
     $('#button-login-ok').on('click', function () {
         $('#user-login-form').hide();
         $('#user-status-form').show();
     });
 
     $('#refresh-button').on('click', function () {
-        $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
+        $.get("//" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
     });
 
 };
@@ -113,7 +113,7 @@ function recordSipConnection(response) {
         method: 'put',
         data: response.data[0],
         success: function (response) {
-            $.get("http://" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
+            $.get("//" + hostname + ":" + port + "/resourceData/settings", displaySipTable);
         }
     });
     idSipRecord = null;

@@ -130,7 +130,7 @@ function myAlert(header, text) {
 }
 
 function getAccountsList() {
-    $.get("http://" + hostname + ":" + port + "/resourceData/settings", function (returnedData) {
+    $.get("//" + hostname + ":" + port + "/resourceData/settings", function (returnedData) {
         if (returnedData && returnedData.data && returnedData.data[0] && returnedData.data[0].value) {
             if (jQuery.parseJSON(returnedData.data[0].value).sipAccounts) {
                 cur_acc_list = jQuery.parseJSON(returnedData.data[0].value).sipAccounts;
@@ -571,7 +571,7 @@ function createConnections() {
         var tmp_id = $(this).parent().attr("id").substr(5);
         var del_index = tmp_id;
         $("#conn_" + del_index).remove();
-        // if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) { 
+        // if ($("#current_connections > ul").height() < document.documentElement.clientHeight/1.82) {
         //     $("#current_connections").css("overflow-y","hidden");
         // }else{
         //     $("#current_connections").css("overflow-y","scroll");
@@ -591,7 +591,7 @@ function createConnections() {
                     method: 'put',
                     data: response.data[0],
                     success: function (response) {
-                        $.get("http://" + hostname + ":" + port + "/resourceData/settings", function () {
+                        $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
                             var next_ind = parseInt(del_index) + 1;
                             var iterator = $("#conn_" + next_ind);
                             while (tmp_id != cur_acc_list.length) {
@@ -956,7 +956,7 @@ function newSipConnection(response) {
         method: 'put',
         data: response.data[0],
         success: function (response) {
-            $.get("http://" + hostname + ":" + port + "/resourceData/settings", function () {
+            $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
                 $("#provider_choose > ul > .active_item").removeClass("active_item");
                 $("#enter_login_password > div > form").trigger('reset');
             });
@@ -1070,7 +1070,7 @@ function done_handler() {
                         method: 'put',
                         data: response.data[0],
                         success: function (response) {
-                            $.get("http://" + hostname + ":" + port + "/resourceData/settings", function () {
+                            $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
                                 $("#speech_recognize > ul > .active_item").removeClass("active_item");
                                 $("#voice_choose > div > form").trigger('reset');
                             });
@@ -1149,7 +1149,7 @@ function done_handler() {
                                 method: 'put',
                                 data: response.data[0],
                                 success: function (response) {
-                                    $.get("http://" + hostname + ":" + port + "/resourceData/settings", function () {
+                                    $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
                                         var next_ind = parseInt(del_index) + 1;
                                         var iterator = $("#conn_" + next_ind);
                                         while (tmp_id != cur_acc_list.length) {
