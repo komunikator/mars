@@ -17,12 +17,7 @@ function refreshWebAccounts() {
             bus.emit('message', {category: 'http', type: 'error', msg: err});
             return false;
         }
-        users = data || [
-                {
-                    "username": "admin",
-                    "password": "admin"
-                }
-        ];
+        users = data;
     });
 }
 refreshWebAccounts();
