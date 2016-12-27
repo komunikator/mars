@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "1.4.17",
+  "version": "1.4.18",
   "license": "GPL-3.0",
   "description": "MARS - Multi-channel Automatic Response System (Мультиканальная система обработки запросов)",
   "scripts": {
