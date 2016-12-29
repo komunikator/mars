@@ -23,7 +23,7 @@ process.on('uncaughtException', function (e) {
 //    app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
 
 app.use(cookieParser());
-
+/*
 var sessionStore;
 var Session = require('express-session');
 var redisCfg = bus.config.get("redis");
@@ -42,6 +42,11 @@ if (redisCfg) {
 session.store = sessionStore;
 
 app.use(Session(session));
+*/
+
+var session = bus.config.get("session") || {name: 'connect.sid', keys: ['6b97cdfc-5904-4614-b606-fe11351ba2e9', 'e5f5a3d0-facd-498e-afb0-8ae8385a629c']};
+app.use(require('cookie-session')(session));
+
 app.set('webPath', bus.config.get("webPath") || '');
 app.set('trustedNet', bus.config.get("trustedNet"));
 
@@ -107,24 +112,26 @@ server.on('upgrade', function (req, socket, upgradeHead) {
     if (bus.config.get("webAuth") === "disable")
         return;
     var cookies = new Cookies(req);
-    var sessionID = cookies.get('connect.sid').replace(/^s%3A(.+)\..+/, "$1");
+    var sessionCookie = cookies.get(session.name);
+    var data = {};
+    try {
+        data = JSON.parse(new Buffer(sessionCookie, 'base64').toString('utf8'));
+    } catch(e){
+        bus.emit('message', {category: 'server', type: 'error', msg: e.toString()});
+    }
+	
+    var instanceAuth = app.get('instanceAuth');
+    if (data && instanceAuth && instanceAuth.call(data)) {
+        return;
+    }
 
-    sessionStore.get(sessionID, function (err, data) {
-    	if (err) {
-    		bus.emit('message', {category: 'server', type: 'trace', msg: 'sessionStore.get: ' + err});
-    	}
-        var instanceAuth = app.get('instanceAuth');
-        if (data && instanceAuth && instanceAuth.call(data)) {
-            return;
-        }
-
-        if (data && data.passport && data.passport.user !== undefined)
-            return;
-        socket.end();
-    });
+    if (data && data.passport && data.passport.user !== undefined)
+        return;
+    socket.end();
 });
 
 var io = require('socket.io')(server);
+io.set('transports', ['websocket']); 
 io.on('connection', function (socket) {
     var confSipCli, confSipServer;
     bus.request('sipServer', {}, function (err, data) {
@@ -141,7 +148,8 @@ io.on('connection', function (socket) {
             }
         });
     });
-    bus.emit('message', {type: 'info', msg: 'Web User connected. Total web connections: ' + io.engine.clientsCount});
+    var clientIp = socket.request.connection.remoteAddress;
+    bus.emit('message', {type: 'info', msg: 'Web User connected [' +  clientIp + ']. Total web connections: ' + Object.keys(io.sockets.connected).length});
     var timerWs = setTimeout(function () {
         sendTimeToUser(socket);
     }, 500);
@@ -156,12 +164,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('close', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + io.engine.clientsCount});
+        bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + Object.keys(io.sockets.connected).length});
         clearTimeout(timerWs);
     });
 
     socket.on('disconnect', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + io.engine.clientsCount});
+        bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + Object.keys(io.sockets.connected).length});
         clearTimeout(timerWs);
     });
 });

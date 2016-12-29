@@ -68,7 +68,7 @@ Ext.application({
 
             //---old for ws
            // var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
-            IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath, { "transports": ["websocket", "polling"] });
+            IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath, { "transports": ["websocket"] });
             var socket = IVR.getApplication().socket;
 
                 //---old for ws
