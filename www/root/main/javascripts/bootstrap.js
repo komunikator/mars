@@ -192,3 +192,27 @@ Ext.ClassManager.addNameAliasMappings({
     "proxy.pagingmemory"
   ]
 });
+
+Ext.ux.timeRender = function (input) {
+    var
+            hoursString = '00',
+            minutesString = '00',
+            secondsString = '00',
+            hours = 0,
+            minutes = 0,
+            seconds = 0;
+
+    hours = Math.floor(input / (60 * 60));
+    input = input % (60 * 60);
+
+    minutes = Math.floor(input / 60);
+    input = input % 60;
+
+    seconds = input;
+
+    hoursString = hours.toString();
+    minutesString = (minutes >= 10) ? minutes.toString() : (hours ? '0' + minutes.toString() : minutes.toString());
+    secondsString = (seconds >= 10) ? seconds.toString() : ((minutes || hours) ? '0' + seconds.toString() : seconds.toString());
+    return ((hours) ? hoursString + ' ' + lang['hour'] + ' ' : '') + (hours || minutes ? minutesString + ' ' + lang['minute'] + ' ' : '') + secondsString + ' ' + lang['second'];
+};
+

@@ -124,7 +124,7 @@ Ext.define('IVR.view.dialogs.List', {
                 dataIndex: 'duration',
                 style: 'text-align:left', 
                 align: 'right',
-                renderer: IVR.getApplication().timeRender
+                renderer: Ext.ux.timeRender
             },
             {
                 text: lang.script,

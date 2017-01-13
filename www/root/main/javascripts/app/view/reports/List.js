@@ -263,7 +263,7 @@ Ext.define('IVR.view.reports.List', {
             {flex: 1, text: lang['script'], dataIndex: 'script', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             //{flex: 1, text: lang['step'], dataIndex: 'step', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
             {flex: 1, text: lang['findings'], dataIndex: 'data', xfilter: {xtype: 'searchfield', store: self.emptyStore()}},
-            {flex: 1, text: lang['duration'], dataIndex: 'duration', xfilter: {xtype: 'searchfield', store: self.emptyStore()}, align: 'right', style: 'text-align:left', renderer: IVR.getApplication().timeRender},
+            {flex: 1, text: lang['duration'], dataIndex: 'duration', xfilter: {xtype: 'searchfield', store: self.emptyStore()}, align: 'right', style: 'text-align:left', renderer: Ext.ux.timeRender},
             {flex: 1, text: lang['status'], dataIndex: 'status', xfilter: {
                     xtype: 'combo',
                     editable: false,
