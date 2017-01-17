@@ -39,7 +39,7 @@ lang = {
     callFailed: 'Ошибка',
     ended: 'Завершен',
     callsCount: 'Повторных звонков',
-    rejectTime: 'Прекратить обзвон',
+    rejectTime: 'Прекратить обзвон в',
     incoming: 'входящий',
     outgoing: 'исходящий',
     script: 'Сценарий',
