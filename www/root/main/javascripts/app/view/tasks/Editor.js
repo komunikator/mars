@@ -450,6 +450,45 @@ Ext.define('IVR.view.tasks.Editor', {
                                             }
                                         },
                                         {
+                                            xtype: 'textfield',
+                                            fieldLabel: lang.callsCount,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'callsCount',
+                                            itemId: 'callsCount',
+                                            value: '0',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            fieldLabel: lang.rejectTime,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            itemId: 'rejectTime',
+                                            width: 170,
+                                            name: 'rejectTime',
+                                            xtype: 'timefield',
+                                            format: 'H:i',
+                                            altFormats: 'H:i',
+                                            increment: 30,
+                                            listeners: {
+                                                change: function () {
+                                                    // if (!this.isValid())
+                                                    //     return;
+                                                    // var rejectTime = this.ownerCt.getComponent('rejectTime');
+                                                    // var time = this.getRawValue();
+                                                    // if (time) {
+                                                    //     time = time.replace(/^(\d{2})\:(\d{2})$/, '$2 $1');
+                                                    //     rejectTime.setValue(
+                                                    //             rejectTime.getValue().replace(/^\s*\S+\s+\S+(\s+\S+\s+\S+\s+\S+\s*)$/, time + '$1')
+                                                    //             );
+                                                    // }
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
                                             xtype: 'container',
                                             layout: 'hbox',
                                             items: [

@@ -38,6 +38,8 @@ lang = {
     cancelled: 'Отменен',
     callFailed: 'Ошибка',
     ended: 'Завершен',
+    callsCount: 'Повторных звонков',
+    rejectTime: 'Прекратить обзвон',
     incoming: 'входящий',
     outgoing: 'исходящий',
     script: 'Сценарий',
