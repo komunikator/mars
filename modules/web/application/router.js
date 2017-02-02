@@ -19,6 +19,7 @@ exports.init = function (app)
             updates = require('./controller/updates'),
             startUpdates = require('./controller/startUpdates'),
             statusSipCli = require('./controller/statusSipCli'),
+            getTTS = require('./controller/getTTS'),
             keyCheck = require('./controller/keyCheck'),
             listSIP = require('./controller/listSIP');
 
@@ -35,12 +36,14 @@ exports.init = function (app)
     updates.init(app.bus);
     startUpdates.init(app.bus);
     statusSipCli.init(app.bus);
+    getTTS.init(app.bus);
     keyCheck.init(app.bus);
     listSIP.init(app.bus);
 
 
     /* set controllers */
 
+    app.get('/getTTS', getTTS.get);
 
     app.get('/dialogData', dialog.read);
     app.get('/makeCall/:msisdn', makeCall.post);

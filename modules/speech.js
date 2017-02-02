@@ -57,4 +57,16 @@ bus.on('tts', function (data) {
     } else
         data.cb(file_name);
 })
+
+
+bus.onRequest('getTTS', function (param, cb) {
+    param.cb = function(data){
+        if (!data) {
+            return cb('error');  
+        }  
+        cb(null,data)
+    };
+    bus.emit('tts', param);
+});
+
 require('require-dir')('speech')
