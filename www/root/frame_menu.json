@@ -1,0 +1,74 @@
+[{
+        "text": "sett_master",
+        "iconCls": "icon_menu_diag_sett_master",
+        "enabled": true,
+        "id": "settingsMaster",
+        "leaf": true
+    },
+    {
+        "text": "tasks",
+        "iconCls": "file",
+        "id": "tasksEditor",
+        "leaf": true,
+        "enabled": false
+    },
+    {
+        "text": "active_calls",
+        "iconCls": "icon_menu_diag_monitor",
+        "enabled": true,
+        "id": "dialogsList",
+        "leaf": true
+    },
+    {
+        "text": "scripts",
+        "iconCls": "script",
+        "id": "scriptsEditor",
+        "leaf": true,
+        "enabled": true
+    },
+    {
+        "text": "collection",
+        "iconCls": "file",
+        "expanded": "true",
+        "leaf": false,
+        "children": [{
+                "text": "media",
+                "iconCls": "sound",
+                "id": "mediaTree",
+                "leaf": true,
+                "enabled": true
+            },
+            {
+                "text": "targets",
+                "iconCls": "list",
+                "id": "targetsEditor",
+                "leaf": true,
+                "enabled": true
+            }
+        ]
+    },
+    {
+        "text": "settings",
+        "iconCls": "icon_wrench",
+        "enabled": true,
+        "id": "settingsEditor",
+        "leaf": true,
+        "enabled": true
+    },
+    {
+        "text": "reports",
+        "iconCls": "icon_menu_diag_system",
+        "enabled": true,
+        "id": "reportsList",
+        "leaf": true,
+        "enabled": true
+    },
+    {
+        "text": "upgrade",
+        "iconCls": "icon_disconnect",
+        "enabled": true,
+        "id": "upgrade",
+        "leaf": true,
+        "enabled": false
+    }
+]
