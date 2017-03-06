@@ -441,7 +441,7 @@ function inIframe() {
 }
 
 function getUserName() {
-    if (!inIframe()) {
+    if (inIframe()) {
         return "";
     } else {
         return lang.user + ': <b>' + window['_username'] + '</b>';
