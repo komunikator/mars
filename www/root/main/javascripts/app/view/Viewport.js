@@ -7,8 +7,7 @@ Ext.define('IVR.view.Viewport', {
     title: lang.mainTitle,
     style: "padding: 5px;",
     hidden: true,
-    items: [
-        {
+    items: [{
             xtype: 'container',
             region: 'north',
             layout: {
@@ -19,15 +18,13 @@ Ext.define('IVR.view.Viewport', {
                 background: 'url(' + _webPath + '/main/images/layout-browser-hd-bg-gray.gif) repeat-x scroll center center'
             },
             //height: 24,
-            items: [
-                {
+            items: [{
                     xtype: 'panel',
                     style: 'margin: 2px;',
                     border: true,
                     frame: true,
                     width: 192,
-                    items: [
-                        {
+                    items: [{
                             id: 'webSocket',
                             xtype: 'button',
                             style: {
@@ -39,10 +36,10 @@ Ext.define('IVR.view.Viewport', {
                                 'background-color': 'none'
                             },
                             tooltip: lang['connect'],
-                            handler: function () {
+                            handler: function() {
                                 this.connect();
                             },
-                            connect: function () {
+                            connect: function() {
                                 var app = IVR.getApplication();
 
                                 if (app.wsConnect === 'disable') {
@@ -62,7 +59,7 @@ Ext.define('IVR.view.Viewport', {
                                     }
                                 }
                             },
-                            updateStatus: function () {
+                            updateStatus: function() {
                                 var ivr = Ext.getCmp("IVR.view.Viewport");
                                 var items = ivr.items.items[0].items.items[0].items.items;
                                 var btn;
@@ -101,11 +98,10 @@ Ext.define('IVR.view.Viewport', {
                                         btn.timerConnection();
                                         btn.addClass('ws-disable');
                                         break;
-                                }
-                                ;
+                                };
                             },
                             timer: undefined,
-                            timerConnection: function () {
+                            timerConnection: function() {
                                 var time = 30000;
                                 var ivr = Ext.getCmp("IVR.view.Viewport");
                                 var items = ivr.items.items[0].items.items[0].items.items;
@@ -115,14 +111,14 @@ Ext.define('IVR.view.Viewport', {
 
                                     if (id == 'webSocket') {
                                         clearTimeout(items[key].timer);
-                                        items[key].timer = setTimeout(function () {
+                                        items[key].timer = setTimeout(function() {
                                             items[key].connect(this);
                                         }, time);
                                         return;
                                     }
                                 }
                             },
-                            timerDelete: function () {
+                            timerDelete: function() {
                                 var ivr = Ext.getCmp("IVR.view.Viewport");
                                 var items = ivr.items.items[0].items.items[0].items.items;
 
@@ -165,7 +161,7 @@ Ext.define('IVR.view.Viewport', {
                     //flex: 1,
                     width: 216,
                     disableSelection: true,
-                    renderer: function (value, metadata, record, rowIndex, colIndex, store) {
+                    renderer: function(value, metadata, record, rowIndex, colIndex, store) {
                         //var new_value = '<b>' + colIndex + '</b>';
                         var status;
                         switch (value) {
@@ -189,70 +185,69 @@ Ext.define('IVR.view.Viewport', {
                                 metadata.style = "background-color:white !important";
                                 //new_value = '';
                                 break;
-                        }
-                        ;
+                        };
                         metadata.style += ';color:white;';
                         if (status)
-                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11) ] + ' ' + status + '"';
-                        return '';//new_value;
+                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11)] + ' ' + status + '"';
+                        return ''; //new_value;
                     },
-                    onRefresh: function (grid, cb) {
+                    onRefresh: function(grid, cb) {
                         Ext.Ajax.request({
                             url: _webPath + '/statusUA',
                             method: 'get',
-                            success: function (response, o) {
+                            success: function(response, o) {
                                 var resObj = Ext.decode(response.responseText);
                                 if (resObj && resObj.success) {
                                     //Ext.getCmp('statusUAGrid')
                                     grid.store.loadData(resObj.data);
                                     if (cb)
                                         cb(resObj.data);
-                                }
-                                else
+                                } else
                                     Ext.showError(resObj.message || lang.error);
 
                             },
-                            failure: function (response, o) {
+                            failure: function(response, o) {
                                 Ext.showError(response.responseText);
                             }
                         });
                     },
                     listeners: {
-                        afterrender: function () {
+                        afterrender: function() {
                             var columns = [];
                             var l = 10;
                             while (l--)
-                                columns.push({dataIndex: 'field' + (l + 1), align: 'center', renderer: this.renderer, width: 20});
+                                columns.push({ dataIndex: 'field' + (l + 1), align: 'center', renderer: this.renderer, width: 20 });
                             columns.reverse();
                             this.reconfigure(undefined, columns);
-                            this.onRefresh(this, function (data) {
+                            this.onRefresh(this, function(data) {
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
-                                }
-                                else
-                                    //Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                } else
+                                //Ext.getCmp('menuTree').showPanel('settingsMaster');
                                     window.location.href = '/wizard';
                             });
                         }
                     },
                     columns: [
-                        {dataIndex: 'field1'}
+                        { dataIndex: 'field1' }
                     ],
-                    store: [[
+                    store: [
+                        [
                             null, null, null, null, null, null, null, null, null, null, //status
-                            null, null, null, null, null, null, null, null, null, null//name
-                        ]],
+                            null, null, null, null, null, null, null, null, null, null //name
+                        ]
+                    ],
                     title: lang['registerStatus'],
                     tools: [{
-                            //type: 'refresh',
-                            xtype: 'button',
-                            iconCls: 'button-refresh',
-                            tooltip: lang['refresh'],
-                            handler: function () {
-                                this.ownerCt.ownerCt.onRefresh(this.ownerCt.ownerCt);
-                            }
-                        }]
+                        //type: 'refresh',
+                        xtype: 'button',
+                        iconCls: 'button-refresh',
+                        tooltip: lang['refresh'],
+                        handler: function() {
+                            this.ownerCt.ownerCt.onRefresh(this.ownerCt.ownerCt);
+                        }
+                    }]
                 },
                 {
                     xtype: 'grid',
@@ -264,7 +259,7 @@ Ext.define('IVR.view.Viewport', {
                     hideHeaders: true,
                     width: 216,
                     disableSelection: true,
-                    renderer: function (value, metadata, record, rowIndex, colIndex, store) {
+                    renderer: function(value, metadata, record, rowIndex, colIndex, store) {
                         var status;
                         switch (value) {
                             case 1:
@@ -279,47 +274,44 @@ Ext.define('IVR.view.Viewport', {
                                 metadata.style = "background-color:white !important";
                                 //new_value = '';
                                 break;
-                        }
-                        ;
+                        };
                         metadata.style += ';color:white;';
                         if (status)
-                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11) ] + ' ' + status + '"';
-                        return '';//new_value;
+                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11)] + ' ' + status + '"';
+                        return ''; //new_value;
                     },
-                    onRefresh: function (grid, cb) {
+                    onRefresh: function(grid, cb) {
                         Ext.Ajax.request({
                             url: _webPath + '/statusSipCli',
                             method: 'get',
-                            success: function (response, o) {
+                            success: function(response, o) {
                                 var resObj = Ext.decode(response.responseText);
                                 if (resObj && resObj.success) {
                                     grid.store.loadData(resObj.data);
                                     if (cb)
                                         cb(resObj.data);
-                                }
-                                else
+                                } else
                                     Ext.showError(resObj.message || lang.error);
 
                             },
-                            failure: function (response, o) {
+                            failure: function(response, o) {
                                 Ext.showError(response.responseText);
                             }
                         });
                     },
                     listeners: {
-                        afterrender: function () {
+                        afterrender: function() {
                             var columns = [];
                             var l = 10;
                             while (l--)
-                                columns.push({dataIndex: 'field' + (l + 1), align: 'center', renderer: this.renderer, width: 20});
+                                columns.push({ dataIndex: 'field' + (l + 1), align: 'center', renderer: this.renderer, width: 20 });
                             columns.reverse();
                             this.reconfigure(undefined, columns);
-                            this.onRefresh(this, function (data) {
+                            this.onRefresh(this, function(data) {
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
-                                }
-                                else {
+                                } else {
                                     //Ext.getCmp('menuTree').showPanel('settingsMaster');
                                     //window.location.href = '/wizard';
                                 }
@@ -327,22 +319,24 @@ Ext.define('IVR.view.Viewport', {
                         }
                     },
                     columns: [
-                        {dataIndex: 'field1'}
+                        { dataIndex: 'field1' }
                     ],
-                    store: [[
+                    store: [
+                        [
                             null, null, null, null, null, null, null, null, null, null, //status
-                            null, null, null, null, null, null, null, null, null, null//name
-                        ]],
+                            null, null, null, null, null, null, null, null, null, null //name
+                        ]
+                    ],
                     title: lang['sip_clients_title'],
                     tools: [{
-                            //type: 'refresh',
-                            xtype: 'button',
-                            iconCls: 'button-refresh',
-                            tooltip: lang['refresh'],
-                            handler: function () {
-                                this.ownerCt.ownerCt.onRefresh(this.ownerCt.ownerCt);
-                            }
-                        }]
+                        //type: 'refresh',
+                        xtype: 'button',
+                        iconCls: 'button-refresh',
+                        tooltip: lang['refresh'],
+                        handler: function() {
+                            this.ownerCt.ownerCt.onRefresh(this.ownerCt.ownerCt);
+                        }
+                    }]
                 },
                 {
                     xtype: 'container',
@@ -353,10 +347,9 @@ Ext.define('IVR.view.Viewport', {
                     border: false,
                     bodyStyle: 'background:transparent;',
                     style: 'margin: 5px;',
-                    items: [
-                        {
+                    items: [{
                             xtype: 'displayfield',
-                            value: lang.user + ': <b>' + window['_username'] + '</b>',
+                            value: getUserName(),
                         },
                         {
                             xtype: 'displayfield',
@@ -372,7 +365,7 @@ Ext.define('IVR.view.Viewport', {
                         }
                     ],
                     listeners: {
-                        afterrender: function () {
+                        afterrender: function() {
                             Ext.Ajax.request({
                                 url: _webPath + '/updates',
                                 method: 'GET',
@@ -381,14 +374,15 @@ Ext.define('IVR.view.Viewport', {
                                     var ver = JSON.parse(response.responseText);
                                     var vers = ver.data.current;
                                     Ext.getCmp('product-version').setValue(lang.VERSION + ': <b>' + vers + '</b>');
-                                },                           
+                                },
                                 failure: function(response) {
                                     console.log("Something terrible happened!!!");
                                 }
                             });
                         }
                     }
-                }],
+                }
+            ],
             margins: '0 0 4 0'
         }, {
             layout: 'border',
@@ -404,7 +398,8 @@ Ext.define('IVR.view.Viewport', {
                 region: 'center',
                 height: '30%',
                 autoScroll: true,
-                xtype: 'menuTree'}
+                xtype: 'menuTree'
+            }
         },
         {
             // This is the main content center region that will contain each example layout panel.
@@ -417,21 +412,38 @@ Ext.define('IVR.view.Viewport', {
             activeItem: 0,
             border: false,
             deferredRender: true,
-            layoutConfig: {deferredRender: true}/*,
-             items: [
-             {
-             id: 'start-panel',
-             autoScroll: true,
-             title: '',
-             layout: 'fit',
-             bodyStyle: 'padding:25px',
-             contentEl: 'start-div'  // pull existing content from the page
-             }
-             ]*/
-        }]
+            layoutConfig: { deferredRender: true }
+            /*,
+                         items: [
+                         {
+                         id: 'start-panel',
+                         autoScroll: true,
+                         title: '',
+                         layout: 'fit',
+                         bodyStyle: 'padding:25px',
+                         contentEl: 'start-div'  // pull existing content from the page
+                         }
+                         ]*/
+        }
+    ]
 });
 
 function checkXtypeExist(xtype) {
     return Ext.ClassManager.getNameByAlias('widget.' + xtype) != '';
+};
+
+function inIframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }
-;
+
+function getUserName() {
+    if (!inIframe()) {
+        return "";
+    } else {
+        return lang.user + ': <b>' + window['_username'] + '</b>';
+    }
+}
