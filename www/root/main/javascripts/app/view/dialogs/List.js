@@ -16,32 +16,30 @@ Ext.define('IVR.view.dialogs.List', {
     },
     store: 'Dialogs',
     iconCls: 'icon_menu_diag_monitor',
+
     onTimer: function () {
         var store = Ext.getStore('Dialogs');
-        store.each(function (record, idx) {
+        store.each(function(record, idx) {
             var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
             var serverTime = new Date(IVR.getApplication().serverTime - diff);
             var startTime = new Date(record.data.gdate);
-            var diffMs = Math.floor(Math.abs(serverTime - startTime));
-            /*
-             function num(val) {
-             val = Math.floor(val);
-             return val < 10 ? '0' + val : val;
-             }
-             
-             function getTime(ms) {
-             var sec = ms / 1000
-             , hours = sec / 3600
-             , minutes = sec / 60 % 60
-             , seconds = sec % 60;
-             return num(hours) + ":" + num(minutes) + ":" + num(seconds);
-             }
-             ;
-             
-             var timeCall = getTime(diffMs);
-             */
-            
-            record.set('duration', Math.floor(diffMs / 1000));
+            var diffMs = Math.floor( Math.abs(serverTime - startTime) );
+
+            function num(val){
+                val = Math.floor(val);
+                return val < 10 ? '0' + val : val;
+            }
+
+            function getTime(ms) {
+                var sec     = ms  / 1000
+                  , hours   = sec / 3600
+                  , minutes = sec / 60 % 60
+                  , seconds = sec % 60;
+                return num(hours) + ":" + num(minutes) + ":" + num(seconds);
+            };
+
+            var timeCall = getTime(diffMs);
+            record.set('duration', timeCall);
             record.commit();
         });
     },
@@ -101,7 +99,7 @@ Ext.define('IVR.view.dialogs.List', {
                 flex: 1,
                 dataIndex: 'service_contact'
             },
-            /*
+             /*
              {
              text: lang.operator_contact,
              flex: 1,
@@ -121,10 +119,7 @@ Ext.define('IVR.view.dialogs.List', {
             {
                 text: lang.duration,
                 flex: 1,
-                dataIndex: 'duration',
-                style: 'text-align:left', 
-                align: 'right',
-                renderer: Ext.ux.timeRender
+                dataIndex: 'duration'
             },
             {
                 text: lang.script,
@@ -136,21 +131,47 @@ Ext.define('IVR.view.dialogs.List', {
                 flex: 1,
                 dataIndex: 'data'
             }
-            /*
-             {
-             text: lang.rtp_local,
-             flex: 1,
-             dataIndex: 'rtp_local'
-             },
-             {
-             text: lang.rtp_remote,
-             flex: 1,
-             dataIndex: 'rtp_remote'
-             }*/
         ];
+
+
+		if (inIframe()){
+			this.columns.push({
+                text: lang.intercept_call,
+                xtype:'actioncolumn',
+                width: 120,
+                items: [{
+                    icon: 'main/images/ivr/phone.png',
+                    tooltip: lang.intercept_call,
+                    handler: function(value, metaData, record, row, col, store, gridView) {
+                        if (store && store.internalId) {
+                            IVR.getApplication().socket.send( JSON.stringify(["callPickUp", {sessionID: store.internalId}]) );
+                        }
+                    }
+                },
+                {
+                    icon: 'main/images/ivr/cancel.png',
+                    tooltip: lang.end_call,
+                    handler: function(value, metaData, record, row, col, store, gridView) {
+                        if (store && store.internalId) {
+                            IVR.getApplication().socket.send( JSON.stringify(["callTerminated", {sessionID: store.internalId} ]));
+                        }
+                    }
+                }
+                ]
+            });
+		}
 
         //parent
         //this.callParent(arguments);
         this.callParent([config]);
     }
 });
+
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
