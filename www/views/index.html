@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MARS</title>
-        <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/bootstrap.css">
-        <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/css/ext.custom.css">
-        <link rel="shortcut icon" href="!{root.webPath}/main/favicon.ico" type="image/x-icon">
-        <link rel="apple-touch-icon" href="!{root.webPath}/main/apple-touch-icon.png">
-        <script type="text/javascript">_webPath = '!{root.webPath}';_username = '!{root.username}';</script>
-        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/ext-all.js"></script>
-        <script type="text/javascript" src="!{root.webPath}/main/javascripts/bootstrap.js"></script>
-        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/locale/ext-lang-ru.js"></script>
-        <script type="text/javascript" src="!{root.webPath}/lang/ru.js"></script>
-        <script type="text/javascript" src="!{root.webPath}/main/javascripts/app/app.js"></script>
-        <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/codemirror/lib/codemirror.js"></script>
-    </head>
-    <body>
-        <script src="/socket.io/socket.io.js"></script>
-        <iframe id="exportframe" name="exportframe" class="x-hidden"></iframe>
-        <form id="exportform" method="get" target="exportframe">
-            <input id="excelconfig" type="hidden" name="config" value=""></form>
-        <div id="main"></div>
-        <img src="!{root.webPath}/main/images/preloader.gif" alt="Preloader" class="preloader" id="preloader">
-        <script>Ext.onReady(function(){document.getElementById("preloader").style.display = "none";})</script>
-    </body>
+
+<head>
+    <title>MARS</title>
+    <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="!{root.webPath}/main/stylesheets/css/ext.custom.css">
+    <link rel="shortcut icon" href="!{root.webPath}/main/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="!{root.webPath}/main/apple-touch-icon.png">
+    <script type="text/javascript">
+        _webPath = '!{root.webPath}';
+        _username = '!{root.username}';
+    </script>
+    <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/ext-all.js"></script>
+    <script type="text/javascript" src="!{root.webPath}/main/javascripts/bootstrap.js"></script>
+    <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/ext/locale/ext-lang-ru.js"></script>
+    <script type="text/javascript" src="!{root.webPath}/lang/ru.js"></script>
+    <script type="text/javascript" src="!{root.webPath}/main/javascripts/app/app.js"></script>
+    <script type="text/javascript" src="!{root.webPath}/main/javascripts/lib/codemirror/lib/codemirror.js"></script>
+</head>
+
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <iframe id="exportframe" name="exportframe" class="x-hidden"></iframe>
+    <form id="exportform" method="get" target="exportframe">
+        <input id="excelconfig" type="hidden" name="config" value=""></form>
+    <div id="main"></div>
+    <img src="!{root.webPath}/main/images/preloader.gif" alt="Preloader" class="preloader" id="preloader">
+    <script>
+        Ext.onReady(function() {
+            document.getElementById("preloader").style.display = "none";
+        })
+    </script>
+    <script data-skip-moving="true">
+        (function(w, d, u, b) {
+            s = d.createElement('script');
+            r = (Date.now() / 1000 | 0);
+            s.async = 1;
+            s.src = u + '?' + r;
+            h = d.getElementsByTagName('script')[0];
+            h.parentNode.insertBefore(s, h);
+        })(window, document, 'https://cdn.bitrix24.ru/b1917943/crm/site_button/loader_2_b1sug6.js');
+    </script>
+</body>
+
 </html>
