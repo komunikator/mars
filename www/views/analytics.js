@@ -1,6 +1,22 @@
+function getTrackID() {
+    if (inIframe()) {
+        return 'UA-8058363-18';
+    } else {
+        return 'UA-8058363-19';
+    }
+}
+
+function inIframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
 var analytics = {
     apiVersion: '1',
-    trackID: 'UA-8058363-18',
+    trackID: getTrackID(),
     clientID: null,
     userID: null,
     appName: 'MARS',
