@@ -148,7 +148,7 @@ io.on('connection', function (socket) {
             }
         });
     });
-    var clientIp = socket.request.connection.remoteAddress;
+    var clientIp = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
     bus.emit('message', {type: 'info', msg: 'Web User connected [' +  clientIp + ']. Total web connections: ' + Object.keys(io.sockets.connected).length});
     var timerWs = setTimeout(function () {
         sendTimeToUser(socket);
