@@ -24,7 +24,7 @@ exports.src = {
                         var time = res[0].gdate.replace(/^(\d{4})\.(\d{2})\.(\d{2}) (\d{2}\:\d{2})\:\d{2}/, '$4 $3.$2.$1');
                         return abonent + 'Последний раз вы звонили в ' + time;
                     },
-                        next : {play: {file:'media/uchet/Ваш_код_.wav;<pin>',
+                        next : {play: {file:'media/uchet/Ваш_код_.wav',
                             next: { mark: 'Главное меню',
                                 play: {file: 'media/uchet/Введите_номер_лицевого_счёта_для_учёта_электроэнергии.wav;'
                                     + 'media/uchet/По_окончании_ввода_нажмите_клавишу_#.wav;'
