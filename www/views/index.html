@@ -26,9 +26,11 @@
         <input id="excelconfig" type="hidden" name="config" value=""></form>
     <div id="main"></div>
     <img src="!{root.webPath}/main/images/preloader.gif" alt="Preloader" class="preloader" id="preloader">
+    <a href="https://github.com/komunikator/mars/issues" id="github_issues" style="display: none; height: 20px; position: fixed; left: 20px; bottom:15px; max-height: calc( 100vh - 20px ); line-height: 20px; color: #555"><img src="!{root.webPath}/main/images/github.png" /> Возникли проблемы?</a>
     <script>
         Ext.onReady(function() {
             document.getElementById("preloader").style.display = "none";
+            document.getElementById("github_issues").style.display = "block";
         })
     </script>
     <script data-skip-moving="true">
