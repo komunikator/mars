@@ -362,6 +362,10 @@ Ext.define('IVR.view.Viewport', {
                                 marginRight: '5px',
                                 paddingTop: '0px'
                             }
+                        },
+                        {
+                            xtype: 'displayfield',
+                            value: '<a href="http://mars.kloud.one" target = "_blank" style="text-decoration: none; color: #333;"><img src="main/images/docs.png">Документация </a>',
                         }
                     ],
                     listeners: {
