@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "1.4.34",
+  "version": "1.4.35",
   "license": "GPL-3.0",
   "description": "MARS - Multi-channel Automatic Response System (Мультиканальная система обработки запросов)",
   "scripts": {
@@ -31,6 +31,7 @@
     "formidable": ">= 1.0.15",
     "fs-extra": "0.30.0",
     "gaikan": "^2.0.2",
+    "gmail-send": "^1.2.7",
     "google-speech": ">= 0.0.4",
     "ip": "^1.1.0",
     "ivona-node": "0.2.0",
