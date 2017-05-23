@@ -31,8 +31,7 @@ Ext.application({
         'targets.Grid',
         'media.Tree'
     ],
-    controllers: [
-    ],
+    controllers: [],
     stores: [
         'Menu',
         //'Scripts',
@@ -41,17 +40,17 @@ Ext.application({
         'Settings',
         'Media',
         'Reports',
-                //'EventsList',
-                //'ScriptsList',
-                //'TasksList',
-                //'SettingsList'
+        //'EventsList',
+        //'ScriptsList',
+        //'TasksList',
+        //'SettingsList'
     ],
     wsConnect: 'disable',
     timerClock: null,
     serverTime: 0,
     deltaTime: 0,
     socket: {},
-    wsLaunch: function () {
+    wsLaunch: function() {
 
         //-----
         console.log("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
@@ -67,13 +66,13 @@ Ext.application({
             IVR.getApplication().wsConnect = 'expect';
 
             //---old for ws
-           // var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+            // var socket = new WebSocket("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
             IVR.getApplication().socket = io("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath, { "transports": ["websocket"] });
             var socket = IVR.getApplication().socket;
 
-                //---old for ws
-                //socket.onmessage = function (event) {
-                socket.on('message', function (event) {
+            //---old for ws
+            //socket.onmessage = function (event) {
+            socket.on('message', function(event) {
                 //var incomingMessage = event.data;
                 //console.log(incomingMessage);
 
@@ -153,8 +152,7 @@ Ext.application({
                                 var strData = dd + '.' + mm + '.' + yy + ' ' + hh + ':' + min + ':' + sec + '';
 
                                 return strData;
-                            }
-                            ;
+                            };
 
                             IVR.getApplication().serverTime = msg.data;
                             IVR.getApplication().deltaTime = IVR.getApplication().serverTime - new Date().getTime();
@@ -177,8 +175,8 @@ Ext.application({
 
             //---old for ws
             //socket.onopen = function () {
-            socket.on( 'message', function (e) {
-                console.log(e);
+            socket.on('message', function(e) {
+                // console.log(e);
                 IVR.getApplication().socket = socket;
                 console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
@@ -187,13 +185,13 @@ Ext.application({
 
             //---old for ws
             //socket.onclose = function (event) {
-            socket.on('disconnect', function (event) {
+            socket.on('disconnect', function(event) {
                 if (event.wasClean) {
                     console.log('WebSocket: Соединение закрыто чисто');
                 } else {
                     console.log('WebSocket: Обрыв соединения'); // Например, "убит" процесс сервера
                 }
-                console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason + "/"+event);
+                console.log('WebSocket: Код: ' + event.code + ' причина: ' + event.reason + "/" + event);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
                 clearInterval(IVR.getApplication().timerClock);
@@ -201,17 +199,17 @@ Ext.application({
 
             //---old for ws
             // socket.onerror = function (error) {
-            socket.on('error', function (error) {
+            socket.on('error', function(error) {
                 console.log("WebSocket: Error " + error.message);
                 IVR.getApplication().wsConnect = 'disable';
                 refreshStatusConnect();
                 clearInterval(IVR.getApplication().timerClock);
             });
 
-            socket.on('new rec', function(data){
+            socket.on('new rec', function(data) {
                 console.log("new rec in history: " + data);
             })
-            var onsubmit = function () {
+            var onsubmit = function() {
                 var outgoingMessage = this.message.value;
                 //---old for ws
                 //socket.send(outgoingMessage);
@@ -273,7 +271,7 @@ Ext.application({
 
         }
     },
-    launch: function () {
+    launch: function() {
         var app = IVR.getApplication();
         app.wsLaunch();
 
@@ -281,8 +279,10 @@ Ext.application({
             override: 'Ext.view.AbstractView',
             // Force load mask target to be an inner DOM Element of a owner panel instead of current view
             // in order to fix load mask positioning when scrolling
-            onRender: function () {
-                var me = this, targetEl, cfg, mask = me.loadMask, owner = me.ownerCt;
+            onRender: function() {
+                var me = this,
+                    targetEl, cfg, mask = me.loadMask,
+                    owner = me.ownerCt;
 
                 if ((mask) && (owner)) {
                     targetEl = owner.getEl();
@@ -302,7 +302,7 @@ Ext.application({
         Ext.create('IVR.lib.form.field.VTypes').init();
         Ext.override(Ext.form.field.Base, {
             showClear: false,
-            afterRender: function () {
+            afterRender: function() {
                 if (this.showClear && this.xtype != 'checkbox1' && this.xtype != 'radio') {
                     if (Ext.isEmpty(this.inputCell))
                         this.__clearDiv = this.bodyEl.insertHtml('beforeEnd', '<div class="x-clear"></div>', true);
@@ -313,12 +313,12 @@ Ext.application({
                     this.__clearDiv.on('click', this.clearField, this);
                 }
             },
-            onChange: function () {
+            onChange: function() {
                 this.callParent(arguments);
                 if (!Ext.isEmpty(this.__clearDiv))
                     this.__clearDiv.setVisible(!Ext.isEmpty(this.getValue()));
             },
-            clearField: function () {
+            clearField: function() {
                 this.setValue(null);
                 this.clearInvalid();
                 this.focus();

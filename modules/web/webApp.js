@@ -1,21 +1,21 @@
 var Express = require('express'),
-        Http = require('http'),
-        Cookies = require('cookies'),
-        gaikan = require('gaikan'),
-        router = require('./application/router');
+    Http = require('http'),
+    Cookies = require('cookies'),
+    gaikan = require('gaikan'),
+    router = require('./application/router');
 var app = Express(),
-        bus = app.bus = require('../../lib/system/bus'),
-        log4js = require('../../lib/system/logger');
+    bus = app.bus = require('../../lib/system/bus'),
+    log4js = require('../../lib/system/logger');
 var fs = require('fs');
 var cookieParser = require('cookie-parser');
 
-process.on('disconnect', function () {
+process.on('disconnect', function() {
     console.log('parent exited');
     process.exit();
 });
 
-process.on('uncaughtException', function (e) {
-    bus.emit('message', {category: 'http', type: 'error', msg: e.toString()});
+process.on('uncaughtException', function(e) {
+    bus.emit('message', { category: 'http', type: 'error', msg: e.toString() });
     //console.log(e);
 });
 
@@ -44,7 +44,7 @@ session.store = sessionStore;
 app.use(Session(session));
 */
 
-var session = bus.config.get("session") || {name: 'connect.sid', keys: ['6b97cdfc-5904-4614-b606-fe11351ba2e9', 'e5f5a3d0-facd-498e-afb0-8ae8385a629c']};
+var session = bus.config.get("session") || { name: 'connect.sid', keys: ['6b97cdfc-5904-4614-b606-fe11351ba2e9', 'e5f5a3d0-facd-498e-afb0-8ae8385a629c'] };
 app.use(require('cookie-session')(session));
 
 app.set('webPath', bus.config.get("webPath") || '');
@@ -52,13 +52,13 @@ app.set('trustedNet', bus.config.get("trustedNet"));
 
 //http server
 var wwwPath = bus.config.get("wwwPath") || process.cwd();
-if ( !fs.existsSync( process.cwd() + '/www' ) &&
-    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
+if (!fs.existsSync(process.cwd() + '/www') &&
+    fs.existsSync(process.cwd() + '/node_modules/mars')) {
     wwwPath = process.cwd() + '/node_modules/mars';
 }
 
 app.set('lang', require(wwwPath + '/www/root/lang/ru.js').msg);
-bus.onRequest('lang', function (param, cb) {
+bus.onRequest('lang', function(param, cb) {
     cb(null, app.get('lang') || {});
 });
 app.use(require('body-parser')());
@@ -78,7 +78,7 @@ try {
     console.log(e);
 }
 
-app.get('*', function (req, res, next) {
+app.get('*', function(req, res, next) {
     if (bus.config.get("webAuth") === "disable")
         return next();
     else
@@ -92,23 +92,23 @@ app.get('*', function (req, res, next) {
     if (app.get('viewsList').indexOf(req.url.replace(/^\//, '') + '.html') !== -1)
         res.redirect('/auth?referer=' + req.url);
     else
-        res.status(403).json(403, {success: false, /*url: req.url,*/ message: 'Access denied, please log in'});
+        res.status(403).json(403, { success: false, /*url: req.url,*/ message: 'Access denied, please log in' });
 });
 
 router.init(app);
 
 var port = process.env.PORT || bus.config.get("webPort") || 8080;
-if ( !fs.existsSync( process.cwd() + '/www' ) &&
-    fs.existsSync( process.cwd() + '/node_modules/mars') ) {
+if (!fs.existsSync(process.cwd() + '/www') &&
+    fs.existsSync(process.cwd() + '/node_modules/mars')) {
     wwwPath = process.cwd() + '/node_modules/mars';
 }
 
-var server = Http.createServer(app).listen(port, function () {
-    bus.emit('message', {category: 'server', type: 'info', msg: 'Web server start on port ' + this.address().port});
-    bus.emit('startWebServer', {port: this.address().port});
+var server = Http.createServer(app).listen(port, function() {
+    bus.emit('message', { category: 'server', type: 'info', msg: 'Web server start on port ' + this.address().port });
+    bus.emit('startWebServer', { port: this.address().port });
 });
 
-server.on('upgrade', function (req, socket, upgradeHead) {
+server.on('upgrade', function(req, socket, upgradeHead) {
     if (bus.config.get("webAuth") === "disable")
         return;
     var cookies = new Cookies(req);
@@ -116,10 +116,10 @@ server.on('upgrade', function (req, socket, upgradeHead) {
     var data = {};
     try {
         data = JSON.parse(new Buffer(sessionCookie, 'base64').toString('utf8'));
-    } catch(e){
-        bus.emit('message', {category: 'server', type: 'error', msg: e.toString()});
+    } catch (e) {
+        bus.emit('message', { category: 'server', type: 'error', msg: e.toString() });
     }
-	
+
     var instanceAuth = app.get('instanceAuth');
     if (data && instanceAuth && instanceAuth.call(data)) {
         return;
@@ -131,30 +131,30 @@ server.on('upgrade', function (req, socket, upgradeHead) {
 });
 
 var io = require('socket.io')(server);
-io.set('transports', ['websocket']); 
-io.on('connection', function (socket) {
+io.set('transports', ['websocket']);
+io.on('connection', function(socket) {
     var confSipCli, confSipServer;
-    bus.request('sipServer', {}, function (err, data) {
+    bus.request('sipServer', {}, function(err, data) {
         confSipServer = data || '';
-        bus.request('sipClients', {}, function (err, data) {
+        bus.request('sipClients', {}, function(err, data) {
             confSipCli = data || [];
             var msgSipCliHide;
             if (confSipCli.length == 0 || confSipServer == 'disable') {
-                msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: true});
+                msgSipCliHide = JSON.stringify({ source: 'hideSipCli', data: true });
                 socket.emit('message', msgSipCliHide);
             } else {
-                msgSipCliHide = JSON.stringify({source: 'hideSipCli', data: false});
+                msgSipCliHide = JSON.stringify({ source: 'hideSipCli', data: false });
                 socket.emit('message', msgSipCliHide);
             }
         });
     });
     var clientIp = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
-    bus.emit('message', {type: 'info', msg: 'Web User connected [' +  clientIp + ']. Total web connections: ' + Object.keys(io.sockets.connected).length});
-    var timerWs = setTimeout(function () {
+    bus.emit('message', { type: 'info', msg: 'Web User connected [' + clientIp + ']. Total web connections: ' + Object.keys(io.sockets.connected).length });
+    var timerWs = setTimeout(function() {
         sendTimeToUser(socket);
     }, 500);
 
-    socket.on('message', function (message) {
+    socket.on('message', function(message) {
         try {
             var args = JSON.parse(message);
             bus.emit.apply(bus, args);
@@ -163,13 +163,13 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('close', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User close. Total web connections: ' + Object.keys(io.sockets.connected).length});
+    socket.on('close', function() {
+        bus.emit('message', { type: 'info', msg: 'Web User close. Total web connections: ' + Object.keys(io.sockets.connected).length });
         clearTimeout(timerWs);
     });
 
-    socket.on('disconnect', function () {
-        bus.emit('message', {type: 'info', msg: 'Web User disconnected. Total web connections: ' + Object.keys(io.sockets.connected).length});
+    socket.on('disconnect', function() {
+        bus.emit('message', { type: 'info', msg: 'Web User disconnected. Total web connections: ' + Object.keys(io.sockets.connected).length });
         clearTimeout(timerWs);
     });
 });
@@ -179,20 +179,21 @@ var diff = new Date().getTimezoneOffset() * 60 * 1000 * (-1);
 
 function sendTimeAllUsers() {
     var now = new Date();
-    var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+    var msgTime = JSON.stringify({ source: 'time', data: now.getTime() + diff });
     io.emit('message', msgTime);
 }
 
 function sendTimeToUser(socket) {
     var now = new Date();
-    var msgTime = JSON.stringify({source: 'time', data: now.getTime() + diff});
+    var msgTime = JSON.stringify({ source: 'time', data: now.getTime() + diff });
     socket.emit('message', msgTime);
 }
 
-var onData = function (obj) {
+var onData = function(obj) {
+    // bus.emit('message', obj);
     var controllerPath = './application/controller/',
-            dialogController = require(controllerPath + 'dialog'),
-            statusUAController = require(controllerPath + 'statusUA');
+        dialogController = require(controllerPath + 'dialog'),
+        statusUAController = require(controllerPath + 'statusUA');
     statusSipCliController = require(controllerPath + 'statusSipCli');
 
     if (io.engine.clientsCount == 0)
@@ -209,7 +210,7 @@ var onData = function (obj) {
     if (obj.source == 'statusSipCli') {
         obj.data = statusSipCliController.getStoreData(obj.data);
     }
-    io.emit('message', JSON.stringify({success: true, data: obj}));
+    io.emit('message', JSON.stringify({ success: true, data: obj }));
 };
 bus.on('updateData', onData);
 
@@ -217,28 +218,28 @@ app.use("/rec", Express.static('./rec'));
 app.use("/media", Express.static('./media'));
 
 function render(req, res, name) {
-    res.render(name, {webPath: app.get('webPath'), username: req.user && req.user.username});
+    res.render(name, { webPath: app.get('webPath'), username: req.user && req.user.username });
 }
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     render(req, res, 'index');
 });
-app.get('/reports', function (req, res) {
+app.get('/reports', function(req, res) {
     render(req, res, 'reports');
 });
-app.get('/manager', function (req, res) {
+app.get('/manager', function(req, res) {
     render(req, res, 'manager');
 });
-app.get('/media', function (req, res) {
+app.get('/media', function(req, res) {
     render(req, res, 'media');
 });
-app.get('/scripts', function (req, res) {
+app.get('/scripts', function(req, res) {
     render(req, res, 'scripts');
 });
-app.get('/updates', function (req, res) {
+app.get('/updates', function(req, res) {
     render(req, res, 'updates');
 });
-app.get('/startUpdates', function (req, res) {
+app.get('/startUpdates', function(req, res) {
     render(req, res, 'startUpdates');
 });
 

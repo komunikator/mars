@@ -1,6 +1,6 @@
 var hostname = window.location.hostname;
 var port = window.location.port;
-var cur_acc_list = [];
+var cur_acc_list = {};
 var cur_speech_recognize;
 var cur_speech_sintez;
 var ivona_sett;
@@ -12,8 +12,7 @@ try {
     window.parent.location.host;
 } catch (e) {
     isInIframe = false;
-}
-;
+};
 //
 
 function init_master() {
@@ -97,8 +96,7 @@ $(document).ready(function () {
     })
 });
 
-function getUrlVars()
-{
+function getUrlVars(){
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for (var i = 0; i < hashes.length; i++)
@@ -113,8 +111,7 @@ function getUrlVars()
 var lang = getUrlVars()["lang"];
 (lang == 'ru') ? docss("ru.css") : (lang == 'en') ? docss("en.css") : docss("ru.css");
 
-function docss(name)
-{
+function docss(name){
     var st = document.createElement("link");
     st.setAttribute("rel", "stylesheet");
     st.setAttribute("href", "css/" + name);
@@ -160,11 +157,12 @@ function getAccountsList() {
 
 function createConnections() {
     var img_src, img_alt;
-    for (var i = 0; i < cur_acc_list.length; i++) {
+    for (var i in cur_acc_list) {
         img_src = getImgSipConnection(cur_acc_list[i].host);
         img_alt = getNameProvConnection(cur_acc_list[i].host);
-        if (!cur_acc_list[i].domain)
+        if (!cur_acc_list[i].domain){ 
             cur_acc_list[i].domain = "";
+        }
         if (cur_acc_list[i].disable == 1) {
             if (img_src && img_alt) {
                 $("#current_connections > .collection").append(
@@ -410,8 +408,7 @@ function createConnections() {
                 $("#voice_choose").show();
             } else {
                 myAlert("Внимание", "Вы не выбрали ни один из представленных сервисов");
-            }
-            ;
+            };
         }
     });
 
@@ -576,13 +573,13 @@ function createConnections() {
         // }else{
         //     $("#current_connections").css("overflow-y","scroll");
         // }
-        cur_acc_list.splice(del_index, 1);
+        delete cur_acc_list[del_index];
         $.ajax({
             url: '/resourceData/settings',
             method: 'get',
             success: function (response) {
                 var data = jQuery.parseJSON(response.data[0].value);
-                data.sipAccounts.splice(del_index, 1);
+                delete data.sipAccounts[del_index];
                 response.data[0].create = false;
                 response.data[0].name = 'config/config';
                 response.data[0].value = JSON.stringify(data, null, 4);
@@ -591,15 +588,15 @@ function createConnections() {
                     method: 'put',
                     data: response.data[0],
                     success: function (response) {
-                        $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
-                            var next_ind = parseInt(del_index) + 1;
-                            var iterator = $("#conn_" + next_ind);
-                            while (tmp_id != cur_acc_list.length) {
-                                iterator.attr("id", "conn_" + tmp_id);
-                                iterator = iterator.next();
-                                tmp_id++;
-                            }
-                        });
+                        // $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
+                            // var next_ind = parseInt(del_index) + 1;
+                            // var iterator = $("#conn_" + next_ind);
+                            // while (tmp_id != cur_acc_list.length) {
+                            //     iterator.attr("id", "conn_" + tmp_id);
+                            //     iterator = iterator.next();
+                            //     tmp_id++;
+                            // }
+                        // });
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         myAlert(textStatus, errorThrown);
@@ -885,8 +882,7 @@ function createConnections() {
             $("#sintez_fields").show();
         } else {
             $("#sintez_fields").hide();
-        }
-        ;
+        };
     });
 
     $("#page_1").on('click', function () {
@@ -941,10 +937,9 @@ function newSipConnection(response) {
     };
     if (domain) {
         sipAccount['domain'] = domain;
-    }
-    ;
-    cur_acc_list[cur_acc_list.length] = sipAccount;
-    var idSipRecord = cur_acc_list.length - 1;
+    };
+    cur_acc_list[Object.keys(cur_acc_list).length] = sipAccount;
+    var idSipRecord = Object.keys(cur_acc_list).length - 1;
     data.sipAccounts[idSipRecord] = sipAccount;
     response.data[0].create = false;
     response.data[0].name = 'config/config';
@@ -1110,7 +1105,7 @@ function done_handler() {
                 var prov_img = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("src");
                 var prov_url = $("#provider_choose > ul > li.collection-item.active_item > div > img").attr("url");
                 $("#current_connections > .collection").append(
-                        '<li id="conn_' + cur_acc_list.length + '" class="collection-item with_del valign-wrapper">' +
+                        '<li id="conn_' + Object.keys(cur_acc_list).length + '" class="collection-item with_del valign-wrapper">' +
                         '<div class="click_area valign-wrapper">' +
                         '<div class="povider_logo_cont">' +
                         '<img src="' + prov_img + '" alt="' + prov_name + '" class="provider_logo">' +
@@ -1134,13 +1129,15 @@ function done_handler() {
                     var tmp_id = $(this).parent().attr("id").substr(5);
                     var del_index = tmp_id;
                     $("#conn_" + del_index).remove();
-                    cur_acc_list.splice(del_index, 1);
+                    delete cur_acc_list[del_index];
+                    // cur_acc_list.splice(del_index, 1);
                     $.ajax({
                         url: '/resourceData/settings',
                         method: 'get',
                         success: function (response) {
                             var data = jQuery.parseJSON(response.data[0].value);
-                            data.sipAccounts.splice(del_index, 1);
+                            // data.sipAccounts.splice(del_index, 1);
+                            delete data.sipAccounts[del_index];
                             response.data[0].create = false;
                             response.data[0].name = 'config/config';
                             response.data[0].value = JSON.stringify(data, null, 4);
@@ -1149,17 +1146,17 @@ function done_handler() {
                                 method: 'put',
                                 data: response.data[0],
                                 success: function (response) {
-                                    $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
-                                        var next_ind = parseInt(del_index) + 1;
-                                        var iterator = $("#conn_" + next_ind);
-                                        while (tmp_id != cur_acc_list.length) {
-                                            console.log(iterator.next().attr("id"));
-                                            iterator.attr("id", "conn_" + tmp_id);
-                                            iterator = iterator.next();
-                                            tmp_id++;
-                                        }
+                                    // $.get("//" + hostname + ":" + port + "/resourceData/settings", function () {
+                                    //     // var next_ind = parseInt(del_index) + 1;
+                                    //     // var iterator = $("#conn_" + next_ind);
+                                    //     // while (tmp_id != cur_acc_list.length) {
+                                    //     //     // console.log(iterator.next().attr("id"));
+                                    //     //     iterator.attr("id", "conn_" + tmp_id);
+                                    //     //     iterator = iterator.next();
+                                    //     //     tmp_id++;
+                                    //     // }
 
-                                    });
+                                    // });
                                 },
                                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                                     myAlert(textStatus, errorThrown);

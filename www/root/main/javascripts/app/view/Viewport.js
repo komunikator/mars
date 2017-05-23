@@ -196,7 +196,9 @@ Ext.define('IVR.view.Viewport', {
                             url: _webPath + '/statusUA',
                             method: 'get',
                             success: function(response, o) {
+                                
                                 var resObj = Ext.decode(response.responseText);
+                                
                                 if (resObj && resObj.success) {
                                     //Ext.getCmp('statusUAGrid')
                                     grid.store.loadData(resObj.data);
@@ -220,6 +222,7 @@ Ext.define('IVR.view.Viewport', {
                             columns.reverse();
                             this.reconfigure(undefined, columns);
                             this.onRefresh(this, function(data) {
+                                
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');

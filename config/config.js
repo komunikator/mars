@@ -11,8 +11,7 @@
         "redirect_uri": ""
     },
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
-    "webAccounts": [
-        {
+    "webAccounts": [{
             "username": "admin",
             "password": "admin"
         },
@@ -46,8 +45,8 @@
             "model": "general"
         }
     },
-    "sipAccounts": [
-        {
+    "sipAccounts": {
+        "5894475a0e5216d64426d524": {
             "host": "193.201.229.35",
             "expires": 60,
             "user": "xxxxxxxx",
@@ -55,14 +54,13 @@
             "domain": "multifon.ru",
             "disable": 1
         }
-    ],
+    },
     "levels": {
         "[all]": "trace",
         "http": "error"
     },
     "replaceConsole": "false",
-    "appenders": [
-        {
+    "appenders": [{
             "type": "console",
             "category": [
                 "console",
@@ -156,13 +154,13 @@
     ],
     "sipServer": {
         "sipServerPort": "5060",
-        "ws":  {
+        "ws": {
             "port": 8506
         },
         "tls": {
             "key": "server_localhost.key",
             "crt": "server_localhost.crt"
         },
-        "sipClients" : []
+        "sipClients": []
     }
 }
