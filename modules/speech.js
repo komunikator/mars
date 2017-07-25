@@ -1,6 +1,7 @@
 var bus = require('../lib/system/bus'),
         config = bus.config,
         audioCodec = config.get("audioCodec"),
+        md5 = require("./md5"),
         fs = require('fs');
 
 function wavEncode(data, file_name, cb) {
@@ -42,6 +43,11 @@ bus.on('tts', function (data) {
     {
         tmp = tmp.substring(0, 121);
     }
+    var type = data.type || "yandex";
+    var voice = data.voice || "jane";
+    tmp += '-' + type;
+    tmp += '-' + voice;
+    tmp = md5(tmp);
     var file_name = 'media/temp/' + tmp + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
     if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
