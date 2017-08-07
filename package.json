@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "license": "GPL-3.0",
   "description": "MARS - Multi-channel Automatic Response System (Мультиканальная система обработки запросов)",
   "scripts": {
@@ -61,6 +61,7 @@
     "wav": "1.0.1",
     "ws": "1.1.1",
     "xml2js": "~0.4.9",
-    "yandex-speech": "0.0.12"
+    "yandex-speech": "0.0.12",
+    "node-webrtc": "https://github.com/aeadigt/node-webrtc"
   }
 }
