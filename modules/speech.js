@@ -50,7 +50,7 @@ bus.on('tts', function (data) {
     tmp = md5(tmp);
     var file_name = 'media/temp/' + tmp + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
-    if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/rtp/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
+    if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/media/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
     {
         function ttsDone() {
             wavEncode(data, file_name + '.tmp', function () {
