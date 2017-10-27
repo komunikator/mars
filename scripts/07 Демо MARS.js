@@ -3,29 +3,8 @@ exports.src = {
     recOn: true,
         mark: 'Начало',
             play: { file: 'media/Добро_пожаловать_в демонстрацию_системы_MARS.wav',
-                next: { request: {source: 'reportData', query: function (self) {
-                        var gdateS = require('dateformat')((function (self) {
-                            var d = new Date();
-                            d.setDate(d.getDate() - 30);//- 30 days
-                            return d;
-                        })(), "yyyy.mm.dd") + ' 00:00';
-                        var gdateE = require('dateformat')((function (self) {
-                            var d = new Date();
-                            d.setDate(d.getDate() + 1);
-                            return d;
-                        })(), "yyyy.mm.dd") + ' 00:00';
-                    return {search: JSON.stringify({gdate: gdateS+'|'+gdateE, msisdn: self.caller}), start: 0, limit: 1, page: 1, sort: JSON.stringify([{property: 'gdate', direction: 'DESC'}])}
-                },
-                    next:{ttsPlay: {text: function (self) {
-                        var abonent = (self.session.params && self.session.params[0])?'Уважаемый ' + self.session.params[0]+'! ':'';
-                        var res = self.requestRes && self.requestRes.items || [];
-                        if (!res.length)
-                            return abonent + 'Вы позвонили впервые';
-                        var time = res[0].gdate.replace(/^(\d{4})\.(\d{2})\.(\d{2}) (\d{2}\:\d{2})\:\d{2}/, '$4 $3.$2.$1');
-                        return abonent + 'Последний раз вы звонили в ' + time;
-                    },
-                        next : {play: {file:'media/uchet/Ваш_код_.wav',
-                            next: { mark: 'Главное меню',
+                            next: { 
+                                mark: 'Главное меню',
                                 play: {file: 'media/uchet/Введите_номер_лицевого_счёта_для_учёта_электроэнергии.wav;'
                                     + 'media/uchet/По_окончании_ввода_нажмите_клавишу_#.wav;'
                                     + 'media/uchet/Или_произнесите_последовательно_каждую_цифру.wav;'
@@ -114,12 +93,6 @@ exports.src = {
                                                     }
                                                       }
                                   }
-                                      }
-                               }
-                                   }
-                         }
-                                 }
-                      }
                   },
                       dtmfOn: {'^1$': {goto : 'Главное меню'}}
 }
