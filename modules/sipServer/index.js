@@ -53,14 +53,23 @@ function startProxy() {
 
     if (server) {
         server.removeListener('updateRegistryList', sendContacts);
+
+        server.registry.remove('*', (err, data) => {
+            settings.accounts = registry;
+
+            server = new nodeSipServer.SipServer(settings);
+            server.on('updateRegistryList', sendContacts);
+        
+            sendContacts();
+        });
+    } else {
+        settings.accounts = registry;
+        
+        server = new nodeSipServer.SipServer(settings);
+        server.on('updateRegistryList', sendContacts);
+    
+        sendContacts();
     }
-
-    settings.accounts = registry;
-
-    server = new nodeSipServer.SipServer(settings);
-    server.on('updateRegistryList', sendContacts);
-
-    sendContacts();
 }
 
 startProxy();
@@ -68,6 +77,8 @@ startProxy();
 // ************* Обновление списка подключенных контактов *************
 async function sendContacts() {
     let registeredAccounts = JSON.stringify(await getRegisteredAccounts());
+
+    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: registeredAccounts });
 
     if (lastToSend != registeredAccounts) {
         bus.emit('setSipClients', registeredAccounts);
@@ -79,6 +90,8 @@ function getAccount(name) {
     return new Promise((resolve) => {
         server.registry.get('sip:contact:' + name + ':*', (err, data) => {
             if (data) {
+                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: '_______length = ' + data.length });
+
                 if (data.length && data[data.length - 1] 
                     && ('contact' in data[data.length - 1])) {
                     return resolve(data[data.length - 1].contact.uri);
@@ -92,6 +105,8 @@ function getAccount(name) {
 }
 
 async function getRegisteredAccounts() {
+    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'getRegisteredAccounts' });
+
     let accounts = [];
     for (let key in server.accounts) {
         let account = await getAccount(key);
@@ -127,6 +142,19 @@ bus.on('refresh', function (type) {
                     }
                 }
 
+                for (var item in registry) {
+                    delete registry[item];
+                }
+
+                bus.emit('setSipClients', JSON.stringify([]));
+
+                // ************* Удаляем всех ранее подключенных клиентов *************
+                if (server) {
+                    server.registry.remove('*', (err, data) => {
+                        process.nextTick(sendContacts);
+                    });
+                }
+
                 for (var i = 0; i < data.length; i++) {
                     if (!registry[data[i].user]) {
 
@@ -141,7 +169,7 @@ bus.on('refresh', function (type) {
                 }
             }
         });
-        sendContacts();
+        // sendContacts();
 
         function isChangeSipServer(newSipServer) {
             var isChange = false;
