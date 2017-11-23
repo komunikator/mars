@@ -1,3 +1,193 @@
+
+// ************* Подгрузка модулей *************
+let bus = require('../../lib/system/bus');
+let os = require('os');
+let util = require('util');
+let inviteExpires = bus.config.get('sipServerInviteExpires') || 60;
+let sipServer = bus.config.get('sipServer') || {};
+let proxyPort = sipServer['sipServerPort'] || 5060;
+let conf = sipServer['sipClients'] || [];
+let realm = os.hostname();
+let lastToSend;
+let registry = {};
+let inviteExpireses = {};
+let fs = require('fs');
+let nodeSipServer = require('node_sip_server');
+let settings = {
+    accounts: { }
+};
+let server;
+
+// ************* Неотловленные ошибки *************
+process.on('uncaughtException', function (e) {
+    bus.emit('message', {category: 'sip_proxy', type: 'error', msg: e.toString()});
+});
+
+// ************* Подгрузка списка аккаунтов *************
+if (conf) {
+    for (var i = 0; i < conf.length; i++) {
+        registry[conf[i].user] = {password: conf[i].password};
+        if (conf[i].group) {
+            registry[conf[i].user].group = conf[i].group;
+        }
+    }
+}
+
+// if ( !bus.config.get('hostIp')  ) {
+//     bus.request('hostIp', {}, function (err, data) {
+//         if (err) return false;
+//         if (data) {
+//             bus.config.set('hostIp', data);
+//         } else {
+//             bus.config.set( 'hostIp', require('ip').address() );
+//         }
+//         startProxy();
+//     });
+// } else {
+//     startProxy();
+// }
+
+// ************* Запуск сервера *************
+function startProxy() {
+    bus.emit('message', {msg: 'sip_proxy started:' + bus.config.get('hostIp')});
+
+    if (server) {
+        server.removeListener('updateRegistryList', sendContacts);
+    }
+
+    settings.accounts = registry;
+
+    server = new nodeSipServer.SipServer(settings);
+    server.on('updateRegistryList', sendContacts);
+
+    sendContacts();
+}
+
+startProxy();
+
+// ************* Обновление списка подключенных контактов *************
+async function sendContacts() {
+    let registeredAccounts = JSON.stringify(await getRegisteredAccounts());
+
+    if (lastToSend != registeredAccounts) {
+        bus.emit('setSipClients', registeredAccounts);
+    }
+    lastToSend = registeredAccounts;
+}
+
+function getAccount(name) {
+    return new Promise((resolve) => {
+        server.registry.get('sip:contact:' + name + ':*', (err, data) => {
+            if (data) {
+                if (data.length && data[data.length - 1] 
+                    && ('contact' in data[data.length - 1])) {
+                    return resolve(data[data.length - 1].contact.uri);
+                } else {
+                    return resolve(0);
+                }
+            }
+            resolve(0);
+        });
+    });
+}
+
+async function getRegisteredAccounts() {
+    let accounts = [];
+    for (let key in server.accounts) {
+        let account = await getAccount(key);
+        if (account) {
+            accounts.push( account.replace('sip:', '') );
+        }
+    }
+    return accounts;
+}
+
+// ************* Остановка сервера *************
+function stopProxy() {
+    try {
+        server.stop();
+    } catch (err) {
+        bus.emit('message', {category: 'sip_proxy', type: 'error', msg: err.stack});
+    }
+}
+
+// ************* Подписаться на обнволения *************
+bus.on('refresh', function (type) {
+    if (type == 'configData') {
+        bus.request('sipClients', {}, function (err, data) {
+            if (data) {
+                var tmp = [];
+                for (var i = 0; i < data.length; i++) {
+                    tmp[i] = data[i].user;
+                }
+
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].group && tmp.indexOf(data[i].group) == -1) {
+                        tmp.push(data[i].group);
+                    }
+                }
+
+                for (var i = 0; i < data.length; i++) {
+                    if (!registry[data[i].user]) {
+
+                        registry[data[i].user] = {password: data[i].password}
+                    } else {
+                        for (var item in registry) {
+                            if (tmp.indexOf(item) + 1 == 0) {
+                                delete registry[item];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        sendContacts();
+
+        function isChangeSipServer(newSipServer) {
+            var isChange = false;
+            if ( (sipServer['ws']) && (sipServer['ws']['port']) && ( sipServer.ws.port != newSipServer.ws.port ) ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.ws.port + ' : ' + newSipServer.ws.port});
+            } else if ( (sipServer['tls']) && (sipServer['tls']['key']) && ( sipServer.tls.key != newSipServer.tls.key ) ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.key + ' : ' + newSipServer.tls.key});
+            } else if ( (sipServer['crt']) && (sipServer['tls']['crt']) && ( sipServer.tls.crt != newSipServer.tls.crt ) ) {
+                isChange = true;
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.tls.crt + ' : ' + newSipServer.tls.crt});
+            }
+            sipServer = newSipServer;
+            return isChange;
+        }
+
+        bus.request('sipServer', {}, function (err, data) {
+            if (err) return false;
+            if ( isChangeSipServer(data) ) {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Были изменения'});
+                stopProxy();
+                startProxy();
+            } else {
+                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Нет изменений'});
+            }
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////// Оригинал
+/*
 var bus = require('../../lib/system/bus');
 var sip = require('sip');
 var digest = require('sip/digest');
@@ -29,7 +219,10 @@ function sendContacts() {
             toSendContacts.push(item + '@' + sip.parseUri(contacts[item][0].uri).host + ':' + sip.parseUri(contacts[item][0].uri).port);
         }
     }
-    ;
+
+    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: toSendContacts});
+    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: lastToSend});
+
     if (lastToSend != toSendContacts) {
         bus.emit('setSipClients', JSON.stringify(toSendContacts));
     }
@@ -294,3 +487,4 @@ bus.on('refresh', function (type) {
         });
     }
 });
+*/
