@@ -48,24 +48,18 @@ if (conf) {
 // }
 
 // ************* Запуск сервера *************
-function startProxy() {
-    bus.emit('message', {msg: 'sip_proxy started:' + bus.config.get('hostIp')});
+function startProxy(data) {
+    // bus.emit('message', {msg: 'sip_proxy started:' + bus.config.get('hostIp')});
 
     if (server) {
-        server.removeListener('updateRegistryList', sendContacts);
-
-        server.registry.remove('*', (err, data) => {
-            settings.accounts = registry;
-
-            server = new nodeSipServer.SipServer(settings);
-            server.on('updateRegistryList', sendContacts);
-        
-            sendContacts();
-        });
+        bus.emit('message', {msg: 'sip_proxy started'});
+        server.ProxyStart(data);
     } else {
         settings.accounts = registry;
-        
+
         server = new nodeSipServer.SipServer(settings);
+
+        server.ProxyStart(sipServer);
         server.on('updateRegistryList', sendContacts);
     
         sendContacts();
@@ -78,7 +72,7 @@ startProxy();
 async function sendContacts() {
     let registeredAccounts = JSON.stringify(await getRegisteredAccounts());
 
-    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: registeredAccounts });
+    // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: registeredAccounts });
 
     if (lastToSend != registeredAccounts) {
         bus.emit('setSipClients', registeredAccounts);
@@ -90,8 +84,6 @@ function getAccount(name) {
     return new Promise((resolve) => {
         server.registry.get('sip:contact:' + name + ':*', (err, data) => {
             if (data) {
-                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: '_______length = ' + data.length });
-
                 if (data.length && data[data.length - 1] 
                     && ('contact' in data[data.length - 1])) {
                     return resolve(data[data.length - 1].contact.uri);
@@ -105,7 +97,7 @@ function getAccount(name) {
 }
 
 async function getRegisteredAccounts() {
-    bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'getRegisteredAccounts' });
+    // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'getRegisteredAccounts' });
 
     let accounts = [];
     for (let key in server.accounts) {
@@ -120,7 +112,9 @@ async function getRegisteredAccounts() {
 // ************* Остановка сервера *************
 function stopProxy() {
     try {
-        server.stop();
+        if (server && server.stop) {
+            server.stop();
+        }
     } catch (err) {
         bus.emit('message', {category: 'sip_proxy', type: 'error', msg: err.stack});
     }
@@ -173,7 +167,9 @@ bus.on('refresh', function (type) {
 
         function isChangeSipServer(newSipServer) {
             var isChange = false;
-            if ( (sipServer['ws']) && (sipServer['ws']['port']) && ( sipServer.ws.port != newSipServer.ws.port ) ) {
+            if ( sipServer['sipServerPort'] && (sipServer['sipServerPort'] != newSipServer['sipServerPort']) ) {
+                isChange = true;
+            } else if ( (sipServer['ws']) && (sipServer['ws']['port']) && ( sipServer.ws.port != newSipServer.ws.port ) ) {
                 isChange = true;
                 //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: sipServer.ws.port + ' : ' + newSipServer.ws.port});
             } else if ( (sipServer['tls']) && (sipServer['tls']['key']) && ( sipServer.tls.key != newSipServer.tls.key ) ) {
@@ -190,11 +186,19 @@ bus.on('refresh', function (type) {
         bus.request('sipServer', {}, function (err, data) {
             if (err) return false;
             if ( isChangeSipServer(data) ) {
-                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Были изменения'});
-                stopProxy();
-                startProxy();
+                // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Были изменения'});
+                bus.emit('setSipClients', JSON.stringify([]));
+
+                // ************* Удаляем всех ранее подключенных клиентов *************
+                if (server) {
+                    server.registry.remove('*');
+                    process.nextTick(sendContacts);
+
+                    stopProxy();
+                    startProxy(data);
+                }
             } else {
-                //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Нет изменений'});
+                // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'Нет изменений'});
             }
         });
     }
