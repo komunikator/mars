@@ -15,7 +15,7 @@ process.on('disconnect', function() {
 });
 
 process.on('uncaughtException', function(e) {
-    bus.emit('message', { category: 'http', type: 'error', msg: e.toString() });
+    bus.emit('message', { category: 'http', type: 'error', msg: e.stack });
     //console.log(e);
 });
 
@@ -189,7 +189,7 @@ function sendTimeToUser(socket) {
     socket.emit('message', msgTime);
 }
 
-var onData = function(obj) {
+var onData = async function(obj) {
     // bus.emit('message', obj);
     var controllerPath = './application/controller/',
         dialogController = require(controllerPath + 'dialog'),
@@ -208,7 +208,7 @@ var onData = function(obj) {
     }
 
     if (obj.source == 'statusSipCli') {
-        obj.data = statusSipCliController.getStoreData(obj.data);
+        obj.data = await statusSipCliController.getStoreData(obj.data);
     }
     io.emit('message', JSON.stringify({ success: true, data: obj }));
 };

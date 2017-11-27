@@ -13,7 +13,21 @@ exports.init = function (_bus) {
     bus = _bus;
 };
 
-exports.getStoreData = function (data, clients) {
+function getSipClients() {
+    return new Promise((resolve) => {
+        bus.request('sipClients', {}, function (err, data) {
+            if (err) return resolve([]);
+            if (data) {
+                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: '333' });
+                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: data });
+                return resolve(data);
+            }
+            return resolve([]);
+        });
+    });
+}
+
+exports.getStoreData = async function (data, clients) {
     if (data){
         try {
             data = JSON.parse(data);
@@ -26,9 +40,7 @@ exports.getStoreData = function (data, clients) {
                 null, null, null, null, null, null, null, null, null, null];
 
 
-    //var clients = bus.config.get('sipClients');
-    //var clients = bus.config.get('sipServer')['sipClients'];
-    var clients = clients || [];
+    var clients = clients || await getSipClients();
 
     if (clients) {
          clients.forEach(function (row, i) {
@@ -49,6 +61,7 @@ exports.getStoreData = function (data, clients) {
             // rec[10+i] = row;
         });
     }
+    //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: rec });
     return [rec];
 };
 
@@ -56,13 +69,10 @@ exports.read = function (req, res) {
     bus.request('getStatusSipCliList', {}, function (errSipList, sipList) {
         if (errSipList) return false;
         if (sipList) {
-            bus.request('sipServer', {}, function (errSipServer, sipServer) {
+            // bus.request('sipServer', {}, function (errSipServer, sipServer) {
+            bus.request('sipClients', {}, async function (errSipServer, clients) {
                 if (errSipServer) return false;
-                var clients = [];
-                if ( (sipServer) && sipServer['sipClients'] ) {
-                    clients = sipServer['sipClients'];
-                }
-                res.send({success: true, data: exports.getStoreData(JSON.stringify(sipList), clients)});
+                res.send({success: true, data: await exports.getStoreData(JSON.stringify(sipList), clients)});
             });
         } else {
             return false;

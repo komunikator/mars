@@ -33,19 +33,19 @@ if (conf) {
     }
 }
 
-// if ( !bus.config.get('hostIp')  ) {
-//     bus.request('hostIp', {}, function (err, data) {
-//         if (err) return false;
-//         if (data) {
-//             bus.config.set('hostIp', data);
-//         } else {
-//             bus.config.set( 'hostIp', require('ip').address() );
-//         }
-//         startProxy();
-//     });
-// } else {
-//     startProxy();
-// }
+if ( !bus.config.get('hostIp')  ) {
+    bus.request('hostIp', {}, function (err, data) {
+        if (err) return false;
+        if (data) {
+            bus.config.set('hostIp', data);
+        } else {
+            bus.config.set( 'hostIp', require('ip').address() );
+        }
+        startProxy();
+    });
+} else {
+    startProxy();
+}
 
 // ************* Запуск сервера *************
 function startProxy(data) {
@@ -66,8 +66,6 @@ function startProxy(data) {
     }
 }
 
-startProxy();
-
 // ************* Обновление списка подключенных контактов *************
 async function sendContacts() {
     let registeredAccounts = JSON.stringify(await getRegisteredAccounts());
@@ -86,6 +84,8 @@ function getAccount(name) {
             if (data) {
                 if (data.length && data[data.length - 1] 
                     && ('contact' in data[data.length - 1])) {
+                    // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: 'data.length == ' + data.length });
+                    // bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: data[data.length - 1].expires });
                     return resolve(data[data.length - 1].contact.uri);
                 } else {
                     return resolve(0);
@@ -104,6 +104,8 @@ async function getRegisteredAccounts() {
         let account = await getAccount(key);
         if (account) {
             accounts.push( account.replace('sip:', '') );
+        } else {
+            accounts.push(key);
         }
     }
     return accounts;
@@ -119,6 +121,28 @@ function stopProxy() {
         bus.emit('message', {category: 'sip_proxy', type: 'error', msg: err.stack});
     }
 }
+
+// ************* Очистить список аккаунтов *************
+
+function clearRegistryList() {
+    for (var item in registry) {
+        delete registry[item];
+    }
+
+    // bus.emit('setSipClients', JSON.stringify([]));
+
+    // ************* Удаляем всех ранее подключенных клиентов *************
+    // if (server) {
+    //     bus.emit('message', {category: 'sip_proxy', type: 'error', msg: 'Очищаем список аккаунтов'});
+        
+    //     server.registry.remove('*', (err, data) => {
+    //         process.nextTick(sendContacts);
+    //     });
+    // }
+}
+
+
+//setInterval(sendContacts, 1000);
 
 // ************* Подписаться на обнволения *************
 bus.on('refresh', function (type) {
@@ -136,18 +160,7 @@ bus.on('refresh', function (type) {
                     }
                 }
 
-                for (var item in registry) {
-                    delete registry[item];
-                }
-
-                bus.emit('setSipClients', JSON.stringify([]));
-
-                // ************* Удаляем всех ранее подключенных клиентов *************
-                if (server) {
-                    server.registry.remove('*', (err, data) => {
-                        process.nextTick(sendContacts);
-                    });
-                }
+                clearRegistryList();
 
                 for (var i = 0; i < data.length; i++) {
                     if (!registry[data[i].user]) {
@@ -163,7 +176,6 @@ bus.on('refresh', function (type) {
                 }
             }
         });
-        // sendContacts();
 
         function isChangeSipServer(newSipServer) {
             var isChange = false;
