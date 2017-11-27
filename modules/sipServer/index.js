@@ -174,6 +174,8 @@ bus.on('refresh', function (type) {
                         }
                     }
                 }
+
+                sendContacts();
             }
         });
 
