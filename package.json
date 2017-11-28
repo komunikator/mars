@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.54",
+  "version": "2.0.55",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -8,7 +8,8 @@
   "description": "MARS - Multi-channel Automatic Response System (Мультиканальная система обработки запросов)",
   "scripts": {
     "start": "node mars.js",
-    "install": "node ./.bin/hookscopy"
+    "install": "node ./.bin/hookscopy",
+    "test": "mocha --timeout 10000"
   },
   "main": "mars",
   "repository": {
@@ -67,5 +68,9 @@
     "xml2js": "~0.4.9",
     "yandex-speech": "0.0.12",
     "node_sip_server": "https://github.com/aeadigt/node_sip_server"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1",
+    "sip.js": "git+https://github.com/aeadigt/sipjs_alice.git"
   }
 }

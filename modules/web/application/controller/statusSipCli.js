@@ -18,8 +18,6 @@ function getSipClients() {
         bus.request('sipClients', {}, function (err, data) {
             if (err) return resolve([]);
             if (data) {
-                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: '333' });
-                bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: data });
                 return resolve(data);
             }
             return resolve([]);
