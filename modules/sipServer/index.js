@@ -1,4 +1,3 @@
-
 // ************* Подгрузка модулей *************
 let bus = require('../../lib/system/bus');
 let os = require('os');
@@ -20,7 +19,7 @@ let server;
 
 // ************* Неотловленные ошибки *************
 process.on('uncaughtException', function (e) {
-    bus.emit('message', {category: 'sip_proxy', type: 'error', msg: e.toString()});
+    bus.emit('message', {category: 'sip_proxy', type: 'error', msg: e.stack});
 });
 
 // ************* Подгрузка списка аккаунтов *************
