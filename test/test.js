@@ -27,6 +27,7 @@ describe('Call Tests PCM FILES', () => {
     let g711 = new (require('../lib/media/G711').G711)();
     let player_1 = require("../lib/media/player");
     let file = 'node_modules/sip.js/9086308497.wav.in';
+    let hostIp = '172.17.3.33';
     const Speaker = require('speaker');
     const speaker = new Speaker({
         channels: 1,
@@ -54,13 +55,13 @@ describe('Call Tests PCM FILES', () => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
-                uri: 'sip:1@172.17.3.33',
+                uri: 'sip:1@' + hostIp,
                 user: '1',
                 password: '1',
-                //wsServers: ['ws://172.17.3.33:8506'],
-                wsServers: ['udp://172.17.3.33:5060'],
-                //wsServers: ['tcp://172.17.3.33:5060'],
-                //wsServers: ['tls://172.17.3.33:5061'],
+                // wsServers: ['ws://' + hostIp + ':8506'],
+                wsServers: ['udp://' + hostIp + ':5060'],
+                // wsServers: ['tcp://' + hostIp + ':5060'],
+                // wsServers: ['tls://' + hostIp + ':5061'],
                 register: true,
                 //mediaHandlerFactory: SIP.WebRTC.MediaHandler.defaultFactory,
                 mediaHandlerFactory: SIP.RTC.MediaHandler.defaultFactory,
@@ -84,7 +85,7 @@ describe('Call Tests PCM FILES', () => {
                     }
                 };
 
-                let session = ua1.invite('sip:alice@172.17.3.33', options);
+                let session = ua1.invite('sip:alice@' + hostIp, options);
 
                 // ****** Воспроизведение входящего потока ****** //
                 var remoteStream = session.getRemoteStreams();
@@ -169,13 +170,13 @@ describe('Call Tests PCM FILES', () => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
-                uri: 'sip:1@172.17.3.33',
+                uri: 'sip:1@' + hostIp,
                 user: '1',
                 password: '1',
-                wsServers: ['ws://172.17.3.33:8506'],
-                // wsServers: ['udp://172.17.3.33:5060'],
-                //wsServers: ['tcp://172.17.3.33:5060'],
-                //wsServers: ['tls://172.17.3.33:5061'],
+                wsServers: ['ws://' + hostIp + ':8506'],
+                // wsServers: ['udp://' + hostIp + ':5060'],
+                //wsServers: ['tcp://' + hostIp + ':5060'],
+                //wsServers: ['tls://' + hostIp + ':5061'],
                 register: true,
                 //mediaHandlerFactory: SIP.WebRTC.MediaHandler.defaultFactory,
                 mediaHandlerFactory: SIP.RTC.MediaHandler.defaultFactory,
@@ -199,7 +200,7 @@ describe('Call Tests PCM FILES', () => {
                     }
                 };
 
-                let session = ua1.invite('sip:alice@172.17.3.33', options);
+                let session = ua1.invite('sip:alice@' + hostIp, options);
 
                 // ****** Воспроизведение входящего потока ****** //
                 var remoteStream = session.getRemoteStreams();
@@ -283,13 +284,13 @@ describe('Call Tests PCM FILES', () => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
-                uri: 'sip:1@172.17.3.33',
+                uri: 'sip:1@' + hostIp,
                 user: '1',
                 password: '1',
-                //wsServers: ['ws://172.17.3.33:8506'],
-                // wsServers: ['udp://172.17.3.33:5060'],
-                wsServers: ['tcp://172.17.3.33:5060'],
-                //wsServers: ['tls://172.17.3.33:5061'],
+                //wsServers: ['ws://' + hostIp + ':8506'],
+                // wsServers: ['udp://' + hostIp + ':5060'],
+                wsServers: ['tcp://' + hostIp + ':5060'],
+                //wsServers: ['tls://' + hostIp + ':5061'],
                 register: true,
                 //mediaHandlerFactory: SIP.WebRTC.MediaHandler.defaultFactory,
                 mediaHandlerFactory: SIP.RTC.MediaHandler.defaultFactory,
@@ -313,7 +314,7 @@ describe('Call Tests PCM FILES', () => {
                     }
                 };
 
-                let session = ua1.invite('sip:alice@172.17.3.33', options);
+                let session = ua1.invite('sip:alice@' + hostIp, options);
 
                 // ****** Воспроизведение входящего потока ****** //
                 var remoteStream = session.getRemoteStreams();
@@ -398,13 +399,13 @@ describe('Call Tests PCM FILES', () => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
-                uri: 'sip:1@172.17.3.33',
+                uri: 'sip:1@' + hostIp,
                 user: '1',
                 password: '1',
-                //wsServers: ['ws://172.17.3.33:8506'],
-                // wsServers: ['udp://172.17.3.33:5060'],
-                // wsServers: ['tcp://172.17.3.33:5060'],
-                wsServers: ['tls://172.17.3.33:5061'],
+                //wsServers: ['ws://' + hostIp + ':8506'],
+                // wsServers: ['udp://' + hostIp + ':5060'],
+                // wsServers: ['tcp://' + hostIp + ':5060'],
+                wsServers: ['tls://' + hostIp + ':5061'],
                 register: true,
                 //mediaHandlerFactory: SIP.WebRTC.MediaHandler.defaultFactory,
                 mediaHandlerFactory: SIP.RTC.MediaHandler.defaultFactory,
@@ -428,7 +429,7 @@ describe('Call Tests PCM FILES', () => {
                     }
                 };
 
-                let session = ua1.invite('sip:alice@172.17.3.33', options);
+                let session = ua1.invite('sip:alice@' + hostIp, options);
 
                 // ****** Воспроизведение входящего потока ****** //
                 var remoteStream = session.getRemoteStreams();
