@@ -48,7 +48,7 @@
     },
     "sipAccounts": {
         "5894475a0e5216d64426d524": {
-            "host": "172.17.3.33",
+            "host": "127.0.0.1",
             "expires": 60,
             "user": "alice",
             "password": "alice",

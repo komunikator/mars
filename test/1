@@ -1,0 +1,1 @@
+exports.src = {"active":"true","script":"24 Тест MARS и SIPJS","onEvent":"on_call[5894475a0e5216d64426d524]","startTime_time":"10:00","startTime_date":"","startTime":"00 10 * * *","callsCount":"0","target":"","sipAccountID":""}

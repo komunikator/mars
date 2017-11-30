@@ -9,6 +9,10 @@ describe('Call Tests PCM FILES', () => {
         fs.copyFileSync('test/config.json', 'config/config.js'); 
     }
 
+    function copyTestTask() {
+        fs.copyFileSync('test/1', 'tasks/1.js'); 
+    }
+
     function deleteConfigMars() {
         fs.unlinkSync('config/config.js'); 
     }
@@ -21,13 +25,14 @@ describe('Call Tests PCM FILES', () => {
         deleteConfigMars();
     }
     copyConfigMarsTest();
+    copyTestTask();
 
     let mars = require('../mars.js');
     let SIP = require('sip.js');
     let g711 = new (require('../lib/media/G711').G711)();
     let player_1 = require("../lib/media/player");
     let file = 'node_modules/sip.js/9086308497.wav.in';
-    let hostIp = '172.17.3.33';
+    let hostIp = '127.0.0.1';
     const Speaker = require('speaker');
     const speaker = new Speaker({
         channels: 1,
@@ -101,7 +106,7 @@ describe('Call Tests PCM FILES', () => {
 
                         if (totalLength > 500) {
                             // console.log(remoteBuffers.length);
-                            speaker.write(remoteBuffers);
+                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -216,7 +221,7 @@ describe('Call Tests PCM FILES', () => {
 
                         if (totalLength > 500) {
                             // console.log(remoteBuffers.length);
-                            speaker.write(remoteBuffers);
+                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -330,7 +335,7 @@ describe('Call Tests PCM FILES', () => {
 
                         if (totalLength > 500) {
                             // console.log(remoteBuffers.length);
-                            speaker.write(remoteBuffers);
+                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -445,7 +450,7 @@ describe('Call Tests PCM FILES', () => {
 
                         if (totalLength > 500) {
                             // console.log(remoteBuffers.length);
-                            speaker.write(remoteBuffers);
+                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -512,12 +517,20 @@ describe('Revert config mars', () => {
             fs.unlinkSync('config/config.js'); 
         }
 
+        function deleteTestTasks() {
+            fs.unlinkSync('tasks/1.js');
+        }
+
         function renameConfigMars() {
             fs.renameSync('config/config_mars.js', 'config/config.js'); 
         }
 
         if ( fs.existsSync('config/config.js') ) {
             deleteConfigMarsTest();
+        }
+
+        if ( fs.existsSync('tasks/1.js') ) {
+            deleteTestTasks();
         }
         
         renameConfigMars();
