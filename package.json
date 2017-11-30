@@ -67,7 +67,7 @@
     "ws": "1.1.1",
     "xml2js": "~0.4.9",
     "yandex-speech": "0.0.12",
-    "node_sip_server": "https://github.com/aeadigt/node_sip_server"
+    "node_sip_server": "https://github.com/komunikator/sip_server"
   },
   "devDependencies": {
     "mocha": "^4.0.1",
