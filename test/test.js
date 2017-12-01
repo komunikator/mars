@@ -1,4 +1,16 @@
 let fs = require('fs');
+let mars;
+
+// ********************** Общие функции **************************
+function startMars() {
+    mars = require('child_process').fork('mars.js', {silent: true, execPath: 'node'});
+}
+
+function stopMars() {
+    if (mars) {
+        mars.kill('SIGHUP');
+    }
+}
 
 describe('Call Tests PCM FILES', () => {
     function renameConfigMars() {
@@ -27,14 +39,13 @@ describe('Call Tests PCM FILES', () => {
     copyConfigMarsTest();
     copyTestTask();
 
-    let mars = require('../mars.js');
     let SIP = require('sip_client');
     let g711 = new (require('../lib/media/G711').G711)();
     let player_1 = require("../lib/media/player");
     let file = 'test/entrance_data.wav';
     let hostIp = '127.0.0.1';
 
-    // ********************** Общие функции **************************
+    // ********************** Общие функции для группы тестов **************************
     function convertoUlawToPcmu(buffer) {
         var l = buffer.length;
         var buf = new Int16Array(l);
@@ -47,7 +58,7 @@ describe('Call Tests PCM FILES', () => {
     }
 
     it('Call MARS <- UDP', (done) => {
-        // let mars = require('../mars.js');
+        startMars();
 
         setTimeout(() => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
@@ -160,9 +171,12 @@ describe('Call Tests PCM FILES', () => {
 
 
     it('Call MARS <- WS', (done) => {
-        // let mars = require('../mars.js');
+        stopMars();
+        setTimeout(() => {
+            startMars();
+        }, 1000);
 
-        // setTimeout(() => {
+        setTimeout(() => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
@@ -267,14 +281,17 @@ describe('Call Tests PCM FILES', () => {
                     });
                 }, 1000);
             });
-        // }, 2000);
+        }, 2000);
     }).timeout(70000);
 
 
     it('Call MARS <- TCP', (done) => {
-        // let mars = require('../mars.js');
+        stopMars();
+        setTimeout(() => {
+            startMars();
+        }, 1000);
 
-        // setTimeout(() => {
+        setTimeout(() => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
@@ -379,15 +396,18 @@ describe('Call Tests PCM FILES', () => {
                     });
                 }, 1000);
             });
-        // }, 2000);
+        }, 2000);
     }).timeout(70000);
     
 
 
     it('Call MARS <- TLS', (done) => {
-        // let mars = require('../mars.js');
+        stopMars();
+        setTimeout(() => {
+            startMars();
+        }, 1000);
 
-        // setTimeout(() => {
+        setTimeout(() => {
             // Тестовый звонок на марс для отладки rtc канала на Марсе
             // ********************** 1 **************************
             let ua1 = new SIP.UA({
@@ -492,11 +512,13 @@ describe('Call Tests PCM FILES', () => {
                     });
                 }, 1000);
             });
-        // }, 2000);
+        }, 2000);
     }).timeout(70000);
 });
 
 describe('Revert config mars', () => {
+    stopMars();
+
     it('Revert config mars', (done) => {
         function deleteConfigMarsTest() {
             fs.unlinkSync('config/config.js'); 
