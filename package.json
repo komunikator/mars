@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.60",
+  "version": "2.0.61",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -49,7 +49,7 @@
     "nedb": "1.8.0",
     "node-schedule": ">= 0.1.13",
     "node-uuid": "^1.4.2",
-    "node-webrtc": "https://github.com/komunikator/node-webrtc",
+    "node-webrtc": "git+https://github.com/komunikator/node-webrtc.git",
     "nstore": ">= 0.5.2",
     "passport": "0.2.0",
     "passport-local": "1.0.0",
@@ -59,6 +59,7 @@
     "serve-favicon": "2.3.0",
     "session-memory-store": "^0.2.2",
     "sip": "0.0.3",
+    "sip_server": "git+https://github.com/komunikator/sip_server.git",
     "socket.io": "1.4.8",
     "url": "^0.11.0",
     "uuid": "^2.0.1",
@@ -66,8 +67,7 @@
     "wav": "1.0.1",
     "ws": "1.1.1",
     "xml2js": "~0.4.9",
-    "yandex-speech": "0.0.12",
-    "node_sip_server": "https://github.com/komunikator/sip_server"
+    "yandex-speech": "0.0.12"
   },
   "devDependencies": {
     "mocha": "^4.0.1",

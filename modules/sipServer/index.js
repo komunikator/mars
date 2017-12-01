@@ -11,7 +11,7 @@ let lastToSend;
 let registry = {};
 let inviteExpireses = {};
 let fs = require('fs');
-let nodeSipServer = require('node_sip_server');
+let nodeSipServer = require('sip_server');
 let settings = {
     accounts: { }
 };

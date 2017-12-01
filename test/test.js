@@ -10,7 +10,7 @@ describe('Call Tests PCM FILES', () => {
     }
 
     function copyTestTask() {
-        fs.copyFileSync('test/1', 'tasks/1.js'); 
+        fs.copyFileSync('test/task1', 'tasks/1.js'); 
     }
 
     function deleteConfigMars() {
@@ -28,18 +28,11 @@ describe('Call Tests PCM FILES', () => {
     copyTestTask();
 
     let mars = require('../mars.js');
-    let SIP = require('sip.js');
+    let SIP = require('sip_client');
     let g711 = new (require('../lib/media/G711').G711)();
     let player_1 = require("../lib/media/player");
-    let file = 'node_modules/sip.js/9086308497.wav.in';
+    let file = 'test/entrance_data.wav';
     let hostIp = '127.0.0.1';
-    const Speaker = require('speaker');
-    const speaker = new Speaker({
-        channels: 1,
-        bitDepth: 16,         
-        signed: true,         
-        sampleRate: 8000,
-    });
 
     // ********************** Общие функции **************************
     function convertoUlawToPcmu(buffer) {
@@ -105,8 +98,6 @@ describe('Call Tests PCM FILES', () => {
                         remoteBuffers = Buffer.concat([remoteBuffers, data], totalLength);
 
                         if (totalLength > 500) {
-                            // console.log(remoteBuffers.length);
-                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -220,8 +211,6 @@ describe('Call Tests PCM FILES', () => {
                         remoteBuffers = Buffer.concat([remoteBuffers, data], totalLength);
 
                         if (totalLength > 500) {
-                            // console.log(remoteBuffers.length);
-                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -334,8 +323,6 @@ describe('Call Tests PCM FILES', () => {
                         remoteBuffers = Buffer.concat([remoteBuffers, data], totalLength);
 
                         if (totalLength > 500) {
-                            // console.log(remoteBuffers.length);
-                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
@@ -449,8 +436,6 @@ describe('Call Tests PCM FILES', () => {
                         remoteBuffers = Buffer.concat([remoteBuffers, data], totalLength);
 
                         if (totalLength > 500) {
-                            // console.log(remoteBuffers.length);
-                            // speaker.write(remoteBuffers);
                             remoteBuffers = null;
                         }
                     } else {
