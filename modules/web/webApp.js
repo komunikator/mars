@@ -23,6 +23,9 @@ process.on('uncaughtException', function(e) {
 //    app.use(log4js.connectLogger(log4js.getLogger('http'), {level: 'auto'}));
 
 app.use(cookieParser());
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 /*
 var sessionStore;
 var Session = require('express-session');
