@@ -3,7 +3,6 @@
     "audioCodec": "PCMU",
     "stunServer": "stun.sipnet.ru:3478",
     "dataStorageDays": 100,
-    "webAuth": "disable",
     "bitrix24": {
         "portal_link": "",
         "client_id": "",
