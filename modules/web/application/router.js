@@ -54,6 +54,20 @@ exports.init = function (app)
         res.send({success: true});
     });
 
+    app.all('/b24/:id', function (req, res) {
+        let request = {
+            headers:  req.headers      || '',
+            path:     req.path         || '',
+            protocol: req.protocol     || '',
+            query:    req.query        || '',
+            body:     req.body         || '',
+            id:       req.params['id'] || ''
+        };
+        app.bus.emit('b24.message.incoming', request);
+        res.send({ success: true });
+    });
+
+
     //scripts
     app.get('/scriptData/:id', script.read);
     app.get('/scriptData', script.read);
