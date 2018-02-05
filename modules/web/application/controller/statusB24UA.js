@@ -31,7 +31,12 @@ exports.getStoreData = async function() {
     ];
 
     Object.keys(data).forEach(function(row, i) {
-        rec[i] = data[row].disable || 1;
+        rec[i] = 1;
+
+        if ('disable' in data[row].auth) {
+            rec[i] = !data[row].auth.disable >>> 0;
+        }
+
         rec[(1 + '' + i)] = row;
     });
     return [rec];
@@ -42,9 +47,4 @@ exports.read = async function(req, res) {
         success: true, 
         data: await exports.getStoreData() 
     });
-
-    // bus.request('b24accounts', {}, function (errSipServer, clients) {
-    //     if (errSipServer) return false;
-    //     res.send({success: true, data: exports.getStoreData(JSON.stringify(clients))});
-    // });
 };
