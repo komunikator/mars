@@ -57,7 +57,7 @@
     },
     "b24accounts": {
         "test2": {
-            "disable": 0,
+            "disable": 1,
             "clientId": "",
             "clientSecret": "",
             "portalLink": "",
@@ -181,7 +181,7 @@
         }
     ],
     "sipServer": {
-        "sipServerPort": "5070",
+        "sipServerPort": "5060",
         "ws": {
             "port": 8506
         },
