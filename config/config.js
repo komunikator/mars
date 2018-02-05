@@ -53,8 +53,11 @@
             "password": "xxxxxxxx",
             "domain": "multifon.ru",
             "disable": 1
-        },
+        }
+    },
+    "b24accounts": {
         "test1": {
+            "disable": 1,
             "clientId": "",
             "clientSecret": "",
             "portalLink": "",
@@ -178,7 +181,7 @@
         }
     ],
     "sipServer": {
-        "sipServerPort": "5060",
+        "sipServerPort": "5070",
         "ws": {
             "port": 8506
         },
@@ -186,6 +189,19 @@
             "key": "server_localhost.key",
             "crt": "server_localhost.crt"
         },
-        "sipClients": []
+        "sipClients": [
+            {
+            	"user": "1",
+            	"password": "1"
+        	}, 
+            {
+            	"user": "2",
+            	"password": "2"
+        	},
+            {
+                "user": "3",
+                "password": "3"
+            }
+        ]
     }
 }
