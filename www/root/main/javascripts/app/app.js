@@ -53,7 +53,7 @@ Ext.application({
     wsLaunch: function() {
 
         //-----
-        console.log("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
+        // console.log("ws" + (window.location.protocol == "https:" ? "s" : "") + "://" + window.location.hostname + ":" + window.location.port + _webPath);
         // = ws://localhost:8000
         //-----
 
@@ -115,6 +115,9 @@ Ext.application({
                         }
                         if (obj.source == 'statusSipCli') {
                             refreshSipClients(obj);
+                        }
+                        if (obj.source == 'statusB24UA') {
+                            refreshB24UA(obj);
                         }
                     }
                 } else {
@@ -178,7 +181,6 @@ Ext.application({
             socket.on('message', function(e) {
                 // console.log(e);
                 IVR.getApplication().socket = socket;
-                console.log("WebSocket: Open");
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
             });
@@ -222,6 +224,7 @@ Ext.application({
                 refreshStoreDialogs();
                 refreshSipAccounts();
                 refreshSipClients();
+                refreshB24UA();
             }
 
             function refreshStatusConnect() {
@@ -266,6 +269,17 @@ Ext.application({
                     //console.log(obj.data);
                 } else {
                     sipClients.onRefresh(sipClients);
+                }
+            }
+            
+            function refreshB24UA(obj) {
+                var ivr = Ext.getCmp("IVR.view.Viewport");
+                var b24accounts = ivr.items.items[0].items.items[3];
+                if (obj && obj.data) {
+                    b24accounts.store.loadData(obj.data);
+                    //console.log(obj.data);
+                } else {
+                    b24accounts.onRefresh(b24accounts);
                 }
             }
 

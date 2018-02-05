@@ -16,6 +16,7 @@ exports.init = function (app)
             resource = require('./controller/resource'),
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
+            statusB24UA = require('./controller/statusB24UA'),
             updates = require('./controller/updates'),
             startUpdates = require('./controller/startUpdates'),
             statusSipCli = require('./controller/statusSipCli'),
@@ -33,6 +34,7 @@ exports.init = function (app)
     resource.init(app.bus);
     media.init(app.bus);
     statusUA.init(app.bus);
+    statusB24UA.init(app.bus);
     updates.init(app.bus);
     startUpdates.init(app.bus);
     statusSipCli.init(app.bus);
@@ -140,6 +142,7 @@ exports.init = function (app)
     app.get('/updates', updates.read);
     app.get('/startUpdates', startUpdates.read);
     app.get('/statusUA', statusUA.read);
+    app.get('/statusB24UA', statusB24UA.read);
     app.get('/statusSipCli', statusSipCli.read);
     app.get('/listSIP', listSIP.read);
 

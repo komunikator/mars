@@ -159,6 +159,7 @@ lang = {
     refresh_manually: 'Обновлять вручную',
     refresh_every_s: "Каждые {0} секунд",
     refresh_every_m: "Каждую(е) {0} минуту(ы)",
+    b24accounts: "B24 подключения",
     registerStatus: "SIP подключения",
     webSocketStatus: "Соединение с сервером",
     connectedWebSocket: "Соединение установлено",
