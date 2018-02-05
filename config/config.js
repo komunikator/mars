@@ -56,8 +56,8 @@
         }
     },
     "b24accounts": {
-        "test1": {
-            "disable": 1,
+        "test2": {
+            "disable": 0,
             "clientId": "",
             "clientSecret": "",
             "portalLink": "",
