@@ -1,4 +1,4 @@
-exports.src = async function (self) {
+exports.src = async function (self, cb) {
     var promise = new Promise((resolve) => {
         setTimeout( () => {
             return resolve('Ответ на сообщение: ', self.message);
@@ -6,6 +6,5 @@ exports.src = async function (self) {
     });
 
     self.answer = await promise;
-
-    self.sendAnswer(self);
+    cb(self);
 }
