@@ -5,7 +5,7 @@ exports.src = async function (self, cb) {
 
     function getB24tasks() {
         return new Promise((resolve) => {
-            let params = {
+            self.params = {
                 "auth": self.body["auth"]["access_token"],
                 "method": "task.item.list",
                 "ORDER": {
@@ -24,7 +24,7 @@ exports.src = async function (self, cb) {
                 "SELECT": ["TITLE"]
             };
 
-            self.request(self, params, (err, data) => {
+            self.request(self, (err, data) => {
                 if (err) throw err;
                 resolve(data);
             });
@@ -33,8 +33,6 @@ exports.src = async function (self, cb) {
 
     switch(self.message) {
         case 'что горит':
-            console.log('24 B24 Chatbot start request что горит');
-
             try {
                 self.answer = await getB24tasks();
             } catch(err) {
@@ -45,7 +43,6 @@ exports.src = async function (self, cb) {
             break;
 
         default:
-            console.log('24 B24 Chatbot start default');
             self.answer = await new Promise((resolve) => {
                 setTimeout( () => {
                     return resolve(`Стандартный ответ на сообщение: ${self.message}`);
