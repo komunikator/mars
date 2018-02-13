@@ -5,7 +5,24 @@ exports.src = async function (self, cb) {
     switch(self.message) {
         case 'что горит':
             console.log('24 B24 Chatbot start request что горит');
-            let params = {};
+            let params = {
+                "auth": self.body["auth"]["access_token"],
+                "method": "task.item.list",
+                "ORDER": {
+                    "DEADLINE": "desc"
+                },
+                "FILTER": {
+                    "RESPONSIBLE_ID": self.body["data"]["PARAMS"]["FROM_USER_ID"],
+                    "<DEADLINE": "2018-01-30"
+                },
+                "PARAMS": {
+                    "NAV_PARAMS": {
+                        "nPageSize": 1,
+                        "iNumPage": 1
+                    }
+                },
+                "SELECT": ["TITLE"]
+            };
 
             self.request(self, params, (err, data) => {
                 console.log('24 B24 Chatbot callback');
