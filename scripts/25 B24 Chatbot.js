@@ -2,9 +2,9 @@
 // Преждевременно присвоить сформированный ответ в self.answer
 
 exports.src = async function (self, cb) {
-    switch(self.message) {
-        case 'что горит':
-            console.log('24 B24 Chatbot start request что горит');
+
+    function getB24tasks() {
+        return new Promise((resolve) => {
             let params = {
                 "auth": self.body["auth"]["access_token"],
                 "method": "task.item.list",
@@ -25,16 +25,25 @@ exports.src = async function (self, cb) {
             };
 
             self.request(self, params, (err, data) => {
-                console.log('24 B24 Chatbot callback');
-                if (err) {
-                    console.log(err);
-                    self.answer = 'Ошибка при получении тасков';
-                } else {
-                    self.answer = data;
-                }
-                cb(self);
+                if (err) throw err;
+                resolve(data);
             });
+        });
+    }
+
+    switch(self.message) {
+        case 'что горит':
+            console.log('24 B24 Chatbot start request что горит');
+
+            try {
+                self.answer = await getB24tasks();
+            } catch(err) {
+                console.error(err);
+                self.answer = 'Ошибка при получении тасков';
+            }
+            cb(self);
             break;
+
         default:
             console.log('24 B24 Chatbot start default');
             self.answer = await new Promise((resolve) => {
