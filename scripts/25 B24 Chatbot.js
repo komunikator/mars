@@ -1,7 +1,7 @@
-// Для генерации ответа на сообщения вызвать cb(self);
-// Преждевременно присвоить сформированный ответ в self.answer
-
 exports.src = async function (self, cb) {
+
+    // Для генерации ответа на сообщения вызвать cb(self);
+    // Преждевременно присвоить сформированный ответ в self.answer
 
     async function getB24tasks() {
         return new Promise((resolve, reject) => {
