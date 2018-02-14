@@ -3,8 +3,8 @@
 
 exports.src = async function (self, cb) {
 
-    function getB24tasks() {
-        return new Promise((resolve) => {
+    async function getB24tasks() {
+        return new Promise((resolve, reject) => {
             self.params = {
                 "auth": self.body["auth"]["access_token"],
                 "method": "task.item.list",
@@ -25,7 +25,7 @@ exports.src = async function (self, cb) {
             };
 
             self.request(self, (err, data) => {
-                if (err) throw err;
+                if (err) return reject(err);
                 resolve(data);
             });
         });
