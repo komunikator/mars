@@ -276,6 +276,203 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 },
                                                 select:  function () {
+                                                    console.log('select');
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'CODE',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'CODE',
+                                            itemId: 'CODE',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'TYPE',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'TYPE',
+                                            itemId: 'TYPE',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'EVENT_MESSAGE_ADD',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'EVENT_MESSAGE_ADD',
+                                            itemId: 'EVENT_MESSAGE_ADD',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'EVENT_WELCOME_MESSAGE',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'EVENT_WELCOME_MESSAGE',
+                                            itemId: 'EVENT_WELCOME_MESSAGE',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'EVENT_BOT_DELETE',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'EVENT_BOT_DELETE',
+                                            itemId: 'EVENT_BOT_DELETE',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'NAME',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'NAME',
+                                            itemId: 'NAME',
+                                            value: 'NAME',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'LAST_NAME',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'LAST_NAME',
+                                            itemId: 'LAST_NAME',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'COLOR',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'COLOR',
+                                            itemId: 'COLOR',
+                                            value: 'AQUA',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'EMAIL',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'EMAIL',
+                                            itemId: 'EMAIL',
+                                            value: 'myemail@gmail.com',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'PERSONAL_BIRTHDAY',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'PERSONAL_BIRTHDAY',
+                                            itemId: 'PERSONAL_BIRTHDAY',
+                                            value: '2018-01-31',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'WORK_POSITION',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'WORK_POSITION',
+                                            itemId: 'WORK_POSITION',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'PERSONAL_WWW',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'PERSONAL_WWW',
+                                            itemId: 'PERSONAL_WWW',
+                                            value: '',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'PERSONAL_GENDER',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'PERSONAL_GENDER',
+                                            itemId: 'PERSONAL_GENDER',
+                                            value: 'M or F',
+                                            listeners: {
+                                                change: function() {
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'PERSONAL_PHOTO',
+                                            hidden: true,
+                                            afterLabelTextTpl: Ext.requiredLabel,
+                                            name: 'PERSONAL_PHOTO',
+                                            itemId: 'PERSONAL_PHOTO',
+                                            value: 'URL',
+                                            listeners: {
+                                                change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
