@@ -205,8 +205,21 @@ lang = {
     toRestart: 'Перезагрузите для применения изменений',
     confirmRestart: 'Вы действительно хотите перезагрузить?',
     restart: 'Перезагрузка',
-    restartWait: 'Идет перезагрузка, пожалуйста подождите'
-
+    restartWait: 'Идет перезагрузка, пожалуйста подождите',
+    CODE: 'Код приложения',
+    TYPE: 'Тип приложения',
+    EVENT_MESSAGE_ADD: 'URL EVENT_MESSAGE_ADD',
+    EVENT_WELCOME_MESSAGE: 'URL EVENT_WELCOME_MESSAGE',
+    EVENT_BOT_DELETE: 'URL EVENT_BOT_DELETE',
+    NAME: 'Имя',
+    LAST_NAME: 'Фамилия',
+    COLOR: 'Цвет',
+    EMAIL: 'эл. адрес',
+    PERSONAL_BIRTHDAY: 'Дата рождения',
+    WORK_POSITION: 'WORK_POSITION',
+    PERSONAL_WWW: 'Персональный адрес',
+    PERSONAL_GENDER: 'Пол',
+    PERSONAL_PHOTO_URL: 'Ссылка на фотографию'
 };
 
 if (typeof exports !== 'undefined')

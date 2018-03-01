@@ -298,7 +298,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'CODE',
+                                            fieldLabel: lang.CODE,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'CODE',
@@ -312,7 +312,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'TYPE',
+                                            fieldLabel: lang.TYPE,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'TYPE',
@@ -326,7 +326,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'EVENT_MESSAGE_ADD',
+                                            fieldLabel: lang.EVENT_MESSAGE_ADD,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'EVENT_MESSAGE_ADD',
@@ -340,7 +340,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'EVENT_WELCOME_MESSAGE',
+                                            fieldLabel: lang.EVENT_WELCOME_MESSAGE,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'EVENT_WELCOME_MESSAGE',
@@ -354,7 +354,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'EVENT_BOT_DELETE',
+                                            fieldLabel: lang.EVENT_BOT_DELETE,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'EVENT_BOT_DELETE',
@@ -368,7 +368,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'NAME',
+                                            fieldLabel: lang.NAME,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'NAME',
@@ -382,7 +382,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'LAST_NAME',
+                                            fieldLabel: lang.LAST_NAME,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'LAST_NAME',
@@ -396,7 +396,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'COLOR',
+                                            fieldLabel: lang.COLOR,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'COLOR',
@@ -410,7 +410,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'EMAIL',
+                                            fieldLabel: lang.EMAIL,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'EMAIL',
@@ -424,7 +424,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'PERSONAL_BIRTHDAY',
+                                            fieldLabel: lang.PERSONAL_BIRTHDAY,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_BIRTHDAY',
@@ -438,7 +438,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'WORK_POSITION',
+                                            fieldLabel: lang.WORK_POSITION,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'WORK_POSITION',
@@ -452,7 +452,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'PERSONAL_WWW',
+                                            fieldLabel: lang.PERSONAL_WWW,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_WWW',
@@ -466,7 +466,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'PERSONAL_GENDER',
+                                            fieldLabel: lang.PERSONAL_GENDER,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_GENDER',
@@ -480,7 +480,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'PERSONAL_PHOTO_URL',
+                                            fieldLabel: lang.PERSONAL_PHOTO_URL,
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_PHOTO',
