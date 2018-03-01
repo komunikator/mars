@@ -276,7 +276,22 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 },
                                                 select:  function () {
-                                                    console.log('select');
+
+                                                    var onEventValue = this.getRawValue();
+
+                                                    var self = this;
+                                                    function changeVisibleB24fields(action) {
+                                                        for (var i = 1; i < self.ownerCt.items.items.length; i++) {
+                                                            self.ownerCt.items.items[i][action]();
+                                                        }
+                                                    };
+
+                                                    if (onEventValue.indexOf('b24@') + 1) {
+                                                        changeVisibleB24fields('show');
+                                                    } else {
+                                                        changeVisibleB24fields('hide');
+                                                    }
+
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
@@ -358,7 +373,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'NAME',
                                             itemId: 'NAME',
-                                            value: 'NAME',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
@@ -386,7 +401,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'COLOR',
                                             itemId: 'COLOR',
-                                            value: 'AQUA',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
@@ -400,7 +415,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'EMAIL',
                                             itemId: 'EMAIL',
-                                            value: 'myemail@gmail.com',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
@@ -414,7 +429,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_BIRTHDAY',
                                             itemId: 'PERSONAL_BIRTHDAY',
-                                            value: '2018-01-31',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
@@ -456,7 +471,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_GENDER',
                                             itemId: 'PERSONAL_GENDER',
-                                            value: 'M or F',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
@@ -465,12 +480,12 @@ Ext.define('IVR.view.tasks.Editor', {
                                         },
                                         {
                                             xtype: 'textfield',
-                                            fieldLabel: 'PERSONAL_PHOTO',
+                                            fieldLabel: 'PERSONAL_PHOTO_URL',
                                             hidden: true,
                                             afterLabelTextTpl: Ext.requiredLabel,
                                             name: 'PERSONAL_PHOTO',
                                             itemId: 'PERSONAL_PHOTO',
-                                            value: 'URL',
+                                            value: '',
                                             listeners: {
                                                 change: function() {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
