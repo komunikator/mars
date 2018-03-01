@@ -60,27 +60,7 @@
             "disable": 1,
             "clientId": "",
             "clientSecret": "",
-            "portalLink": "",
-            "domain": "http://mysite.com",
-            "type": "b24",
-            "settings": {
-                "CODE": "CODE",
-                "TYPE": "B",
-                "EVENT_MESSAGE_ADD": "",
-                "EVENT_WELCOME_MESSAGE": "",
-                "EVENT_BOT_DELETE": "",
-                "PROPERTIES": {
-                    "NAME": "NAME",
-                    "LAST_NAME": "LAST_NAME",
-                    "COLOR": "AQUA",
-                    "EMAIL": "myemail@gmail.com",
-                    "PERSONAL_BIRTHDAY": "2018-01-31",
-                    "WORK_POSITION": "WORK_POSITION",
-                    "PERSONAL_WWW": "",
-                    "PERSONAL_GENDER": "M",
-                    "PERSONAL_PHOTO": "URL"
-                }
-            }
+            "portalLink": ""
         }
     },
     "levels": {
