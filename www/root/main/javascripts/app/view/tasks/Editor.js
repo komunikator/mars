@@ -1,3 +1,20 @@
+function updateStateB24Fields(data) {
+    var self = data;
+    // console.log(data);
+    var onEventValue = self.getRawValue();
+
+    function changeVisibleB24fields(action) {
+        for (var i = 1; i < self.ownerCt.items.items.length; i++) {
+            self.ownerCt.items.items[i][action]();
+        }
+    };
+
+    if (onEventValue.indexOf('b24@') + 1) {
+        changeVisibleB24fields('show');
+    } else {
+        changeVisibleB24fields('hide');
+    }
+}
 Ext.apply(Ext.form.field.VTypes, {
 //  vtype validation function
     cron: function (val, field) {
@@ -101,6 +118,25 @@ Ext.define('IVR.view.tasks.Editor', {
         } else {
             btnSave.setDisabled(true);
         }
+    },
+    setStateFields: function () {
+        var tasks = Ext.getCmp("IVR.view.tasks.Editor");
+        if ( !tasks.form || !tasks.form.getValues ) {
+            return false;
+        }
+
+        // console.log(tasks.form);
+
+        // console.log(this.ownerCt.getForm().findField('onEvent'));
+
+        // console.log(this);
+        // console.log('setStateFields tasks: ', tasks);
+        // console.log('setStateFields tasks: ', tasks.form);
+
+        // console.log('===============');
+        // console.log(tasks.ownerCt.items.items);
+        // var onEventValue = tasks.getRawValue();
+        // console.log(tasks.ownerCt);
     },
     items: [
         {
@@ -271,27 +307,18 @@ Ext.define('IVR.view.tasks.Editor', {
                                             },
                                             store: Ext.data.StoreManager.lookup('EventsList') ? Ext.data.StoreManager.lookup('EventsList') : Ext.create('IVR.store.EventsList'),
                                             listeners: {
+                                                afterrender: function(e) {
+                                                    var self = e;
+                                                    setTimeout(function() {
+                                                        updateStateB24Fields(self);
+                                                    }.bind(self), 0);
+                                                },
                                                 beforequery: function (qe) {
                                                     delete qe.combo.lastQuery;
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 },
                                                 select:  function () {
-
-                                                    var onEventValue = this.getRawValue();
-
-                                                    var self = this;
-                                                    function changeVisibleB24fields(action) {
-                                                        for (var i = 1; i < self.ownerCt.items.items.length; i++) {
-                                                            self.ownerCt.items.items[i][action]();
-                                                        }
-                                                    };
-
-                                                    if (onEventValue.indexOf('b24@') + 1) {
-                                                        changeVisibleB24fields('show');
-                                                    } else {
-                                                        changeVisibleB24fields('hide');
-                                                    }
-
+                                                    updateStateB24Fields(this);
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
@@ -686,6 +713,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             increment: 30,
                                             listeners: {
                                                 change: function () {
+                                                    // console.log('change');
                                                     // if (!this.isValid())
                                                     //     return;
                                                     // var rejectTime = this.ownerCt.getComponent('rejectTime');
@@ -892,10 +920,29 @@ Ext.define('IVR.view.tasks.Editor', {
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
                 //settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
+
+                // updateStateB24Fields(settingsForm.getForm());
+                var onEventValue = obj.onEvent;
+
+                function changeVisibleB24fields(action) {
+                    for (var i = 1; i < settingsForm.getForm().owner.ownerCt.items.items[0].items.items[1].items.items[0].items.items.length; i++) {
+                        settingsForm.getForm().owner.ownerCt.items.items[0].items.items[1].items.items[0].items.items[i][action]();
+                    }
+                };
+
+                if (onEventValue.indexOf('test2') + 1) {
+                    changeVisibleB24fields('show');
+                } else {
+                    changeVisibleB24fields('hide');
+                }
+
+                Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+
                 var tasks = Ext.getCmp("IVR.view.tasks.Editor");
                 tasks.oldDataForm = JSON.stringify( settingsForm.getForm().getValues() );
                 tasks.form = settingsForm.getForm();
                 tasks.setStateButtonSave();
+                tasks.setStateFields();
             }
             catch (e) {
                 Ext.showError(e.message);
