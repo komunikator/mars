@@ -1,3 +1,6 @@
+function isB24Connect(data) {
+    return data.indexOf('b24@') + 1;
+}
 function updateStateB24Fields(data) {
     var self = data;
     // console.log(data);
@@ -9,7 +12,7 @@ function updateStateB24Fields(data) {
         }
     };
 
-    if (onEventValue.indexOf('b24@') + 1) {
+    if (isB24Connect(onEventValue)) {
         changeVisibleB24fields('show');
     } else {
         changeVisibleB24fields('hide');
@@ -119,25 +122,6 @@ Ext.define('IVR.view.tasks.Editor', {
             btnSave.setDisabled(true);
         }
     },
-    setStateFields: function () {
-        var tasks = Ext.getCmp("IVR.view.tasks.Editor");
-        if ( !tasks.form || !tasks.form.getValues ) {
-            return false;
-        }
-
-        // console.log(tasks.form);
-
-        // console.log(this.ownerCt.getForm().findField('onEvent'));
-
-        // console.log(this);
-        // console.log('setStateFields tasks: ', tasks);
-        // console.log('setStateFields tasks: ', tasks.form);
-
-        // console.log('===============');
-        // console.log(tasks.ownerCt.items.items);
-        // var onEventValue = tasks.getRawValue();
-        // console.log(tasks.ownerCt);
-    },
     items: [
         {
             title: lang['tasks'],
@@ -225,16 +209,151 @@ Ext.define('IVR.view.tasks.Editor', {
                             xtype: 'fieldset',
                             items: [
                                 {
-                                    xtype: 'checkboxfield',
-                                    fieldLabel: lang.active,
-                                    //boxLabel: 'Active',
-                                    name: 'active',
-                                    inputValue: 'true',
-                                    uncheckedValue: 'false',
-                                    handler: function () {
-                                        Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
-                                    }
+                                    xtype: 'container',
+                                    layout: 'hbox',
+                                    style: {
+                                        'margin-bottom': '3px'
+                                    },
+                                    items: [
+                                        {
+                                            xtype: 'checkboxfield',
+                                            fieldLabel: lang.active,
+                                            name: 'active',
+                                            inputValue: 'true',
+                                            uncheckedValue: 'false',
+                                            handler: function () {
+                                                Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                            }
+                                        },
+                                        {
+                                            xtype: 'splitter',
+                                            style: {
+                                                'margin-left': '35px'
+                                            }
+                                        },
+                                        {
+                                            xtype: 'tbtext', 
+                                            id: 'labalStatusB24Connect',
+                                            text: lang.status + ':',
+                                            style: {
+                                                margin: '5px 10px 0 0'
+                                            }
+                                        },
+                                        {
+                                            xtype: 'form',
+                                            frame: true,
+                                            style: 'border:none !important;margin:-4px',
+                                            items: [
+                                                {
+                                                    id: 'statusConnectBot',
+                                                    xtype: 'button',
+                                                    statusConnect: 'disable',
+                                                    style: {
+                                                        height: '22px',
+                                                        width: '20px',
+                                                        float: 'right',
+                                                        margin: '1px 7px 0 0',
+                                                        border: 'none',
+                                                        // 'background-color': 'url(../images/ivr/mini_circle.png)  no-repeat center center !important'
+                                                    },
+                                                    updateStatus: function() {
+                                                        this.removeCls('ws-online');
+                                                        this.removeCls('ws-expect');
+                                                        this.removeCls('ws-disable');
+                                                        this.removeCls('ua-disable');
+
+                                                        // this.addClass('ua-disable');
+                                                        // this.addClass('ws-expect');
+
+                                                        var onEvent = Ext.getCmp('onEvent').getRawValue();
+
+                                                        if (isB24Connect(onEvent)) {
+                                                            this.addClass('ws-expect');
+                                                            this.show();
+                                                            Ext.getCmp('labalStatusB24Connect').show();
+                                                        } else {
+                                                            this.addClass('ua-disable');
+                                                            this.hide();
+                                                            Ext.getCmp('labalStatusB24Connect').hide();
+                                                        }
+
+
+                                                        // Ext.Ajax.request({
+                                                        //     url: _webPath + '/statusB24tasks',
+                                                        //     method: 'get',
+                                                        //     success: function(response) {
+                                                                
+                                                        //         var resObj = Ext.decode(response.responseText);
+                                                                
+                                                        //         if (resObj && resObj.success) {
+                                                        //             console.log(resObj.data);
+                                                        //         } else
+                                                        //             Ext.showError(resObj.message || lang.error);
+                                
+                                                        //     },
+                                                        //     failure: function(response) {
+                                                        //         Ext.showError(response.responseText);
+                                                        //     }
+                                                        // });
+                                                    },
+                                                    listeners: {
+                                                        render: function() {
+                                                            this.addClass('ua-disable');
+                                                        },
+                                                        click: function() {
+                                                            // this.removeCls('ws-online');
+                                                            // this.removeCls('ws-expect');
+                                                            // this.removeCls('ws-disable');
+                                                            // this.removeCls('ua-disable');
+
+                                                            this.addClass('ws-online');
+                                                            // this.addClass('ws-expect');
+                                                            // this.addClass('ws-disable');
+                                                            // this.addClass('ua-disable');
+                                                        }
+                                                    }
+                                                }
+                                                // {
+                                                //     xtype: 'fileuploadfield',
+                                                //     itemId: 'importExcel',
+                                                //     buttonConfig: {
+                                                //         iconCls: 'button-add'
+                                                //     },
+                                                //     buttonOnly: true,
+                                                //     buttonText: '',
+                                                //     name: 'fileData',
+                                                //     allowBlank: false,
+                                                //     align: 'left',
+                                                //     forceSelection: true,
+                                                //     style: {
+                                                //         margin: '2px 0 0 0'
+                                                //     }
+                                                // }
+                                            ]
+                                        }
+                                    ]
                                 },
+
+                                // {
+                                //     xtype: 'tbtext', 
+                                //     text: 'Статус: ',
+                                //     style: {
+                                //         'margin-bottom': '5px',
+                                //         // float: 'right'
+                                //     }
+                                // },
+                                // {
+                                //     xtype: 'button',
+                                //     style: {
+                                //         height: '22px',
+                                //         width: '22px',
+                                //         float: 'right',
+                                //         margin: '3px 7px 0 0',
+                                //         border: 'none',
+                                //         'background-color': 'none'
+                                //     },
+                                //     tooltip: lang['connect']
+                                // },
                                 {
                                     xtype: 'combobox',
                                     afterLabelTextTpl: Ext.requiredLabel,
@@ -296,6 +415,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                             xtype: 'combobox',
                                             fieldLabel: lang.event,
                                             name: 'onEvent',
+                                            id: 'onEvent',
                                             itemId: 'onEvent',
                                             //triggerAction: 'all',
                                             afterLabelTextTpl: Ext.requiredLabel,
@@ -307,11 +427,17 @@ Ext.define('IVR.view.tasks.Editor', {
                                             },
                                             store: Ext.data.StoreManager.lookup('EventsList') ? Ext.data.StoreManager.lookup('EventsList') : Ext.create('IVR.store.EventsList'),
                                             listeners: {
+                                                change: function() {
+                                                    var self = this;
+                                                    setTimeout(function() {
+                                                        updateStateB24Fields(self);
+                                                    }.bind(self), 50);
+                                                },
                                                 afterrender: function(e) {
                                                     var self = e;
                                                     setTimeout(function() {
                                                         updateStateB24Fields(self);
-                                                    }.bind(self), 0);
+                                                    }.bind(self), 50);
                                                 },
                                                 beforequery: function (qe) {
                                                     delete qe.combo.lastQuery;
@@ -918,23 +1044,11 @@ Ext.define('IVR.view.tasks.Editor', {
                     settingsForm.getComponent('tabpanel').setActiveTab(0);
                 else
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
-                //settingsForm.getForm().reset();
+                // settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
 
-                // updateStateB24Fields(settingsForm.getForm());
-                var onEventValue = obj.onEvent;
-
-                function changeVisibleB24fields(action) {
-                    for (var i = 1; i < settingsForm.getForm().owner.ownerCt.items.items[0].items.items[1].items.items[0].items.items.length; i++) {
-                        settingsForm.getForm().owner.ownerCt.items.items[0].items.items[1].items.items[0].items.items[i][action]();
-                    }
-                };
-
-                if (onEventValue.indexOf('test2') + 1) {
-                    changeVisibleB24fields('show');
-                } else {
-                    changeVisibleB24fields('hide');
-                }
+                var statusConnectBot = Ext.getCmp('statusConnectBot');
+                statusConnectBot.updateStatus();
 
                 Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
 
@@ -942,7 +1056,6 @@ Ext.define('IVR.view.tasks.Editor', {
                 tasks.oldDataForm = JSON.stringify( settingsForm.getForm().getValues() );
                 tasks.form = settingsForm.getForm();
                 tasks.setStateButtonSave();
-                tasks.setStateFields();
             }
             catch (e) {
                 Ext.showError(e.message);
