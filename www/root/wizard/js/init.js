@@ -81,6 +81,7 @@ $(document).ready(function () {
                     size++
                 }
             }
+
             for (var i = 0; i < size; i++) {
                 if (data_arr[i] == 0) {
                     $("#conn_" + i + " > div > .indicator").css("color", "gray").text("Отключён");

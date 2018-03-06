@@ -257,6 +257,27 @@ Ext.define('IVR.view.tasks.Editor', {
                                                         border: 'none',
                                                         // 'background-color': 'url(../images/ivr/mini_circle.png)  no-repeat center center !important'
                                                     },
+                                                    register: function() {
+                                                        var onEvent = Ext.getCmp('onEvent').getRawValue();
+
+                                                        if (isB24Connect(onEvent)) {
+                                                            onEvent = onEvent.split('@')[1];
+
+                                                            if (currentNameTask && onEvent) {
+                                                                Ext.Ajax.request({
+                                                                    url: _webPath + '/registerB24tasks/' + currentNameTask + '.js',
+                                                                    method: 'get',
+                                                                    success: (response) => {
+                                                                        console.log('response: ', response);
+                                                                        this.updateStatus();
+                                                                    },
+                                                                    failure: function(response) {
+                                                                        Ext.showError(response.responseText);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    },
                                                     updateStatus: function() {
                                                         this.removeCls('ws-online');
                                                         this.removeCls('ws-expect');
@@ -309,7 +330,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     listeners: {
                                                         click: function() {
                                                             if (!this.botId) {
-                                                                this.updateStatus();
+                                                                this.register();
                                                             }
                                                         }
                                                     }

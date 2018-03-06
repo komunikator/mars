@@ -56,6 +56,25 @@ exports.init = function (app)
         res.send({success: true});
     });
 
+    app.get('/registerB24tasks/:nameTask/', async (req, res) => {
+        let nameTask = req.params['nameTask'];
+
+        app.bus.emit('message', { type: 'info', msg: 'registerB24tasks nameTask: ' +  nameTask });
+
+        if (nameTask) {
+            app.bus.emit('message', { type: 'info', msg: 'Start register' });
+
+            app.bus.request('registerB24Bot', nameTask, function (err, data) {
+                if (err) return res.send({ success: false, error: err });
+                if (data) {
+                    res.send({ success: true, data: data });
+                }
+            });
+        } else {
+            res.send({ success: false });
+        }
+    });
+
     app.get('/statusB24tasks/:nameTask/:onEvent', async (req, res) => {
         let nameTask = req.params['nameTask'];
         let onEvent = req.params['onEvent'];
