@@ -1,3 +1,4 @@
+var currentNameTask;
 function isB24Connect(data) {
     return data.indexOf('b24@') + 1;
 }
@@ -262,98 +263,61 @@ Ext.define('IVR.view.tasks.Editor', {
                                                         this.removeCls('ws-disable');
                                                         this.removeCls('ua-disable');
 
-                                                        // this.addClass('ua-disable');
-                                                        // this.addClass('ws-expect');
-
                                                         var onEvent = Ext.getCmp('onEvent').getRawValue();
 
                                                         if (isB24Connect(onEvent)) {
                                                             this.addClass('ws-expect');
                                                             this.show();
                                                             Ext.getCmp('labalStatusB24Connect').show();
+
+                                                            onEvent = onEvent.split('@')[1];
+
+                                                            if (currentNameTask && onEvent) {
+                                                                Ext.Ajax.request({
+                                                                    url: _webPath + '/statusB24tasks/' + currentNameTask + '.js' + '/' + onEvent,
+                                                                    method: 'get',
+                                                                    success: (response) => {
+                                                                        var resObj = Ext.decode(response.responseText);
+                                                                        if (resObj && resObj.success && resObj.data) {
+                                                                            this.removeCls('ws-online');
+                                                                            this.removeCls('ws-expect');
+                                                                            this.removeCls('ws-disable');
+                                                                            this.removeCls('ua-disable');
+
+                                                                            if (resObj.data.error) {
+                                                                                this.setTooltip(lang.unregistered + ': ' + resObj.data.error);
+                                                                                delete this.botId;
+                                                                                this.addClass('ws-disable');
+                                                                            } else if (resObj.data.botId) {
+                                                                                this.botId = resObj.data.botId;
+                                                                                this.setTooltip(lang.registered + ': ' + resObj.data.botId);
+                                                                                this.addClass('ws-online');
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    failure: function(response) {
+                                                                        Ext.showError(response.responseText);
+                                                                    }
+                                                                });
+                                                            }
                                                         } else {
                                                             this.addClass('ua-disable');
                                                             this.hide();
                                                             Ext.getCmp('labalStatusB24Connect').hide();
                                                         }
-
-
-                                                        // Ext.Ajax.request({
-                                                        //     url: _webPath + '/statusB24tasks',
-                                                        //     method: 'get',
-                                                        //     success: function(response) {
-                                                                
-                                                        //         var resObj = Ext.decode(response.responseText);
-                                                                
-                                                        //         if (resObj && resObj.success) {
-                                                        //             console.log(resObj.data);
-                                                        //         } else
-                                                        //             Ext.showError(resObj.message || lang.error);
-                                
-                                                        //     },
-                                                        //     failure: function(response) {
-                                                        //         Ext.showError(response.responseText);
-                                                        //     }
-                                                        // });
                                                     },
                                                     listeners: {
-                                                        render: function() {
-                                                            this.addClass('ua-disable');
-                                                        },
                                                         click: function() {
-                                                            // this.removeCls('ws-online');
-                                                            // this.removeCls('ws-expect');
-                                                            // this.removeCls('ws-disable');
-                                                            // this.removeCls('ua-disable');
-
-                                                            this.addClass('ws-online');
-                                                            // this.addClass('ws-expect');
-                                                            // this.addClass('ws-disable');
-                                                            // this.addClass('ua-disable');
+                                                            if (!this.botId) {
+                                                                this.updateStatus();
+                                                            }
                                                         }
                                                     }
                                                 }
-                                                // {
-                                                //     xtype: 'fileuploadfield',
-                                                //     itemId: 'importExcel',
-                                                //     buttonConfig: {
-                                                //         iconCls: 'button-add'
-                                                //     },
-                                                //     buttonOnly: true,
-                                                //     buttonText: '',
-                                                //     name: 'fileData',
-                                                //     allowBlank: false,
-                                                //     align: 'left',
-                                                //     forceSelection: true,
-                                                //     style: {
-                                                //         margin: '2px 0 0 0'
-                                                //     }
-                                                // }
                                             ]
                                         }
                                     ]
                                 },
-
-                                // {
-                                //     xtype: 'tbtext', 
-                                //     text: 'Статус: ',
-                                //     style: {
-                                //         'margin-bottom': '5px',
-                                //         // float: 'right'
-                                //     }
-                                // },
-                                // {
-                                //     xtype: 'button',
-                                //     style: {
-                                //         height: '22px',
-                                //         width: '22px',
-                                //         float: 'right',
-                                //         margin: '3px 7px 0 0',
-                                //         border: 'none',
-                                //         'background-color': 'none'
-                                //     },
-                                //     tooltip: lang['connect']
-                                // },
                                 {
                                     xtype: 'combobox',
                                     afterLabelTextTpl: Ext.requiredLabel,
@@ -1019,6 +983,10 @@ Ext.define('IVR.view.tasks.Editor', {
         settingsForm.setDisabled(true);
 
         list.on('selectionchange', function (view, selections, options) {
+            if (selections && selections[0] && selections[0].data && selections[0].data.text) {
+                currentNameTask = selections[0].data.text;
+            }
+
             settingsForm.setDisabled(true);
             if (!selections || !selections[0])
                 return;
@@ -1040,10 +1008,12 @@ Ext.define('IVR.view.tasks.Editor', {
                     obj.script = obj.script.replace(/(\.js)$/, '');
                 if (obj.target)
                     obj.target = obj.target.replace(/(\.js)$/, '');
+
                 if (obj.onEvent)
                     settingsForm.getComponent('tabpanel').setActiveTab(0);
                 else
                     settingsForm.getComponent('tabpanel').setActiveTab(1);
+
                 // settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
 
