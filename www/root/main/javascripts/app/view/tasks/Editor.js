@@ -310,7 +310,7 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                         this.removeCls('ua-disable');
 
                                                                         var resObj = Ext.decode(response.responseText);
-                                                                        console.log(resObj);
+
                                                                         if (resObj && resObj.success && resObj.data) {
                                                                             if (resObj.data.error) {
                                                                                 this.setTooltip(lang.unregistered + ': ' + resObj.data.error);
