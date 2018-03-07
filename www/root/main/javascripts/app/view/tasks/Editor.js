@@ -1,4 +1,5 @@
 var currentNameTask;
+var isActiveCurrentTask;
 function isB24Connect(data) {
     return data.indexOf('b24@') + 1;
 }
@@ -287,6 +288,10 @@ Ext.define('IVR.view.tasks.Editor', {
                                                         var onEvent = Ext.getCmp('onEvent').getRawValue();
 
                                                         if (isB24Connect(onEvent)) {
+                                                            if ( (isActiveCurrentTask == 'false') || (!isActiveCurrentTask) ) {
+                                                                this.setTooltip();
+                                                                return this.addClass('ua-disable');;
+                                                            }
                                                             this.addClass('ws-expect');
                                                             this.show();
                                                             Ext.getCmp('labalStatusB24Connect').show();
@@ -329,8 +334,12 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     },
                                                     listeners: {
                                                         click: function() {
-                                                            if (!this.botId) {
+                                                            console.log(this.botId);
+                                                            console.log(isActiveCurrentTask);
+                                                            if (!this.botId && (isActiveCurrentTask == 'true') ) {
                                                                 this.register();
+                                                            } else {
+                                                                Ext.showInfo(lang['taskNotActive']);
                                                             }
                                                         }
                                                     }
@@ -1037,6 +1046,7 @@ Ext.define('IVR.view.tasks.Editor', {
 
                 // settingsForm.getForm().reset();
                 settingsForm.getForm().setValues(obj);
+                isActiveCurrentTask = obj.active;
 
                 var statusConnectBot = Ext.getCmp('statusConnectBot');
                 statusConnectBot.updateStatus();

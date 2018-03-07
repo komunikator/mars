@@ -16,6 +16,7 @@ lang = {
     onlyDay: 'Число',
     everyWeekday: 'Каждый день недели',
     everyDay: 'Каждый день',
+    taskNotActive: 'Задача не активна',
     active: 'Активный',
     active_calls: 'Активные вызовы',
     settings: 'Настройки',
