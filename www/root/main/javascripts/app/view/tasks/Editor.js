@@ -304,7 +304,13 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                     url: _webPath + '/statusB24tasks/' + currentNameTask + '.js' + '/' + onEvent,
                                                                     method: 'get',
                                                                     success: (response) => {
+                                                                        this.removeCls('ws-online');
+                                                                        this.removeCls('ws-expect');
+                                                                        this.removeCls('ws-disable');
+                                                                        this.removeCls('ua-disable');
+
                                                                         var resObj = Ext.decode(response.responseText);
+                                                                        console.log(resObj);
                                                                         if (resObj && resObj.success && resObj.data) {
                                                                             if (resObj.data.error) {
                                                                                 this.setTooltip(lang.unregistered + ': ' + resObj.data.error);
