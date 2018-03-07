@@ -286,9 +286,11 @@ Ext.define('IVR.view.tasks.Editor', {
 
                                                         var onEvent = Ext.getCmp('onEvent').getRawValue();
 
+                                                        this.setTooltip('');
+
                                                         if (isB24Connect(onEvent)) {
                                                             if ( (isActiveCurrentTask == 'false') || (!isActiveCurrentTask) ) {
-                                                                this.setTooltip();
+                                                                this.setTooltip('');
                                                                 return this.addClass('ua-disable');;
                                                             }
                                                             this.addClass('ws-expect');
@@ -304,11 +306,6 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                     success: (response) => {
                                                                         var resObj = Ext.decode(response.responseText);
                                                                         if (resObj && resObj.success && resObj.data) {
-                                                                            this.removeCls('ws-online');
-                                                                            this.removeCls('ws-expect');
-                                                                            this.removeCls('ws-disable');
-                                                                            this.removeCls('ua-disable');
-
                                                                             if (resObj.data.error) {
                                                                                 this.setTooltip(lang.unregistered + ': ' + resObj.data.error);
                                                                                 delete this.botId;
@@ -318,12 +315,18 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                                 this.setTooltip(lang.registered + ': ' + resObj.data.botId);
                                                                                 this.addClass('ws-online');
                                                                             }
+                                                                        } else {
+                                                                            this.setTooltip(lang.unregistered);
+                                                                            delete this.botId;
+                                                                            this.addClass('ws-disable');
                                                                         }
                                                                     },
                                                                     failure: function(response) {
                                                                         Ext.showError(response.responseText);
                                                                     }
                                                                 });
+                                                            } else {
+                                                                
                                                             }
                                                         } else {
                                                             this.addClass('ua-disable');

@@ -225,6 +225,7 @@ Ext.application({
                 refreshSipAccounts();
                 refreshSipClients();
                 refreshB24UA();
+                refreshStatusTask();
             }
 
             function refreshStatusConnect() {
@@ -272,6 +273,15 @@ Ext.application({
                 }
             }
             
+            function refreshStatusTask() {
+                try {
+                    var statusConnectBot = Ext.getCmp('statusConnectBot');
+                    statusConnectBot.updateStatus();
+                } catch(err) {
+
+                }
+            }
+
             function refreshB24UA(obj) {
                 var ivr = Ext.getCmp("IVR.view.Viewport");
                 var b24accounts = ivr.items.items[0].items.items[3];
