@@ -269,7 +269,6 @@ Ext.define('IVR.view.tasks.Editor', {
                                                                     url: _webPath + '/registerB24tasks/' + currentNameTask + '.js',
                                                                     method: 'get',
                                                                     success: (response) => {
-                                                                        console.log('response: ', response);
                                                                         this.updateStatus();
                                                                     },
                                                                     failure: function(response) {
@@ -334,12 +333,12 @@ Ext.define('IVR.view.tasks.Editor', {
                                                     },
                                                     listeners: {
                                                         click: function() {
-                                                            console.log(this.botId);
-                                                            console.log(isActiveCurrentTask);
                                                             if (!this.botId && (isActiveCurrentTask == 'true') ) {
                                                                 this.register();
-                                                            } else {
+                                                            } else if ( isActiveCurrentTask == 'false' || (!isActiveCurrentTask) ) {
                                                                 Ext.showInfo(lang['taskNotActive']);
+                                                            } else {
+
                                                             }
                                                         }
                                                     }
