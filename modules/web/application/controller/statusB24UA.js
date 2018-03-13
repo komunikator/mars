@@ -35,8 +35,11 @@ exports.getStoreData = async function() {
 
         if ('disable' in data[row].auth) {
             rec[i] = !data[row].auth.disable >>> 0;
-        }
 
+            if (rec[i] && row && data && data[row] && data[row].auth && !data[row].auth.access_token) {
+                rec[i] = 2;
+            }
+        }
         rec[(1 + '' + i)] = row;
     });
     return [rec];
