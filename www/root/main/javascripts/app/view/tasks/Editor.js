@@ -224,6 +224,11 @@ Ext.define('IVR.view.tasks.Editor', {
                                             inputValue: 'true',
                                             uncheckedValue: 'false',
                                             handler: function () {
+                                                var onEvent = Ext.getCmp('onEvent').getRawValue();
+
+                                                if ( !this.checked && isB24Connect(onEvent) ) {
+                                                    Ext.showInfo(lang.warningRemovingChatBot);
+                                                }
                                                 Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                             }
                                         },
