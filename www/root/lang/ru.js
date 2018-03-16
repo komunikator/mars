@@ -25,7 +25,7 @@ lang = {
     date: 'Дата',
     link: 'ссылке',
     warningRemovingChatBot: 'Внимание! При разрегистрации чат-бота, все сообщения будут безвозвратно удалены!',
-    updateRefreshToken: 'Для обновления refresh_token перейдите по ',
+    updateRefreshToken: 'Для авторизации перейдите по ',
     from: 'c',
     to: 'по',
     range: 'Диапазон',
