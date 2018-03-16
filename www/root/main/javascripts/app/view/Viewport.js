@@ -388,9 +388,7 @@ Ext.define('IVR.view.Viewport', {
                             url: _webPath + '/statusB24UA',
                             method: 'get',
                             success: function(response, o) {
-                                
                                 var resObj = Ext.decode(response.responseText);
-                                
                                 if (resObj && resObj.success) {
                                     //Ext.getCmp('statusUAGrid')
                                     grid.store.loadData(resObj.data);
