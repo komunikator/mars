@@ -31,15 +31,35 @@ exports.getStoreData = async function() {
     ];
 
     Object.keys(data).forEach(function(row, i) {
-        rec[i] = 1;
+        if ( data[row] && data[row].auth && ('disable' in data[row].auth) ) {
+            if (data[row].auth.disable == 1) {
+                rec[i] = 0;
+            } else {
+                if (data[row].auth.access_token) {
+                    rec[i] = 1;
+                } else {
+                    rec[i] = 2;
+                }
+            }
+        } else {
+            if (data[row] && data[row].auth && data[row].auth.access_token) {
+                rec[i] = 1;
+            } else {
+                rec[i] = 2;
+            }
+        }
 
+        /*
         if ('disable' in data[row].auth) {
             rec[i] = !data[row].auth.disable >>> 0;
 
+            // Не удалось зарегистрироваться
             if (rec[i] && row && data && data[row] && data[row].auth && !data[row].auth.access_token) {
                 rec[i] = 2;
             }
         }
+        */
+
         rec[(1 + '' + i)] = row;
     });
     return [rec];
