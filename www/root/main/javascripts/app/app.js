@@ -119,6 +119,9 @@ Ext.application({
                         if (obj.source == 'statusB24UA') {
                             refreshB24UA(obj);
                         }
+                        if (obj.source == 'b24accounts') {
+                            showMessageOfferRefreshTokens(obj);
+                        }
                     }
                 } else {
 
@@ -177,9 +180,51 @@ Ext.application({
             });
 
             //---old for ws
-            //socket.onopen = function () {
+            function showMessageOfferRefreshTokens(data) {
+                if (data) {
+                    try {
+                        var accounts = JSON.parse(data.accounts);
+                        for (let key in accounts) {
+                            if (accounts[key] && accounts[key].auth  && (!accounts[key].auth.refresh_token) && 
+                                accounts[key].auth.portalLink && accounts[key].auth.clientId && accounts[key].auth.redirectUri &&
+                                (accounts[key].auth.disable != 1)) {
+                                    Ext.showInfo(`${lang.updateRefreshToken} <a href=${accounts[key].auth.portalLink}/oauth/authorize/?client_id=${accounts[key].auth.clientId}&response_type=code&redirect_uri=${accounts[key].auth.redirectUri} target="_blank"> ${lang.link} </a>`);
+                            }
+                        }
+                    } catch(err) {
+                        return console.log(err);
+                    }
+                } else {
+                    Ext.Ajax.request({
+                        url: _webPath + '/b24accounts',
+                        method: 'get',
+                        success: function(response, o) {
+                            var resObj = Ext.decode(response.responseText);
+
+                            if (resObj && resObj.success) {
+                                if (resObj.data) {
+                                    for (let key in resObj.data) {
+                                        if (resObj.data[key] && resObj.data[key].auth  && (!resObj.data[key].auth.refresh_token) && 
+                                            resObj.data[key].auth.portalLink && resObj.data[key].auth.clientId && resObj.data[key].auth.redirectUri &&
+                                            (resObj.data[key].auth.disable != 1)) {
+                                            Ext.showInfo(`${lang.updateRefreshToken} <a href=${resObj.data[key].auth.portalLink}/oauth/authorize/?client_id=${resObj.data[key].auth.clientId}&response_type=code&redirect_uri=${resObj.data[key].auth.redirectUri} target="_blank"> ${lang.link} </a>`);
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        failure: function(response, o) {
+                            Ext.showError(response.responseText);
+                        }
+                    });
+                }
+            };
+
+            socket.on('connect', function() {
+                showMessageOfferRefreshTokens();
+            });
             socket.on('message', function(e) {
-                // console.log(e);
+                //console.log(e);
                 IVR.getApplication().socket = socket;
                 IVR.getApplication().wsConnect = 'online';
                 refreshAllData();
@@ -272,13 +317,13 @@ Ext.application({
                     sipClients.onRefresh(sipClients);
                 }
             }
-            
+
             function refreshStatusTask() {
                 try {
                     var statusConnectBot = Ext.getCmp('statusConnectBot');
                     statusConnectBot.updateStatus();
                 } catch(err) {
-
+                    //console.log(err);
                 }
             }
 
@@ -287,7 +332,7 @@ Ext.application({
                 var b24accounts = ivr.items.items[0].items.items[3];
                 if (obj && obj.data) {
                     b24accounts.store.loadData(obj.data);
-                    //console.log(obj.data);
+                    console.log(obj.data);
                 } else {
                     b24accounts.onRefresh(b24accounts);
                 }
