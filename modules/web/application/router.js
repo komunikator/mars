@@ -75,6 +75,28 @@ exports.init = function (app)
         }
     });
 
+    app.get('/b24accounts', async (req, res) => {
+        function getB24accounts() {
+            return new Promise((resolve) => {
+                app.bus.request('b24accounts', {}, function (err, data) {
+                    if (err) return resolve([]);
+                    if (data) {
+                        return resolve(data);
+                    }
+                    return resolve([]);
+                });
+            });
+        }
+
+        let b24accounts = await getB24accounts();
+
+        if (b24accounts) {
+            res.send({ success: true, data: b24accounts });
+        } else {
+            res.send({ success: false });
+        }
+    });
+
     app.get('/statusB24tasks/:nameTask/:onEvent', async (req, res) => {
         let nameTask = req.params['nameTask'];
         let onEvent = req.params['onEvent'];
