@@ -7,9 +7,10 @@ exports.src = async function (self, cb) {
         return new Promise((resolve, reject) => {
             //console.log(self);
 
-            self.requestTimeout = 35000;
+            //self.requestTimeout = 35000;
 
             let request = {
+                requestTimeout: 35000,
                 url: self.url,
                 method: 'task.item.list',
                 settings: {
@@ -38,12 +39,23 @@ exports.src = async function (self, cb) {
         });
     }
 
+    self.request({
+        url: self.url,
+        method: 'imbot.message.add',
+        settings: {
+            MESSAGE: 'Идет формирование ответа, пожалуйста подождите.',
+            DIALOG_ID: self.body['data']['PARAMS']['FROM_USER_ID'],
+            access_token: self.body['auth']['access_token']
+        }
+    }, (err, data) => {
+            if (err) return console.log(err);
+        }
+    );
+
     switch(self.message) {
         case 'что горит':
             try {
-                let answer = await getB24tasks();
-                //console.log(answer);
-                //self.answer = await getB24tasks();
+                self.answer = await getB24tasks();
             } catch(err) {
                 console.error(err);
                 self.answer = 'Ошибка при получении тасков';
