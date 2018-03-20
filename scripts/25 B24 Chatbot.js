@@ -5,10 +5,6 @@ exports.src = async function (self, cb) {
 
     async function getB24tasks() {
         return new Promise((resolve, reject) => {
-            //console.log(self);
-
-            //self.requestTimeout = 35000;
-
             let request = {
                 requestTimeout: 35000,
                 url: self.url,
@@ -43,6 +39,7 @@ exports.src = async function (self, cb) {
         url: self.url,
         method: 'imbot.message.add',
         settings: {
+            BOT_ID: self.body.data.BOT[0].BOT_ID,
             MESSAGE: 'Идет формирование ответа, пожалуйста подождите.',
             DIALOG_ID: self.body['data']['PARAMS']['FROM_USER_ID'],
             access_token: self.body['auth']['access_token']
