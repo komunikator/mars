@@ -5,26 +5,33 @@ exports.src = async function (self, cb) {
 
     async function getB24tasks() {
         return new Promise((resolve, reject) => {
-            self.params = {
-                "auth": self.body["auth"]["access_token"],
-                "method": "task.item.list",
-                "ORDER": {
-                    "DEADLINE": "desc"
-                },
-                "FILTER": {
-                    "RESPONSIBLE_ID": self.body["data"]["PARAMS"]["FROM_USER_ID"],
-                    "<DEADLINE": "2018-01-30"
-                },
-                "PARAMS": {
-                    "NAV_PARAMS": {
-                        "nPageSize": 1,
-                        "iNumPage": 1
-                    }
-                },
-                "SELECT": ["TITLE"]
+            //console.log(self);
+
+            self.requestTimeout = 35000;
+
+            let request = {
+                url: self.url,
+                method: 'task.item.list',
+                settings: {
+                    access_token: self.body['auth']['access_token'],
+                    ORDER: {
+                        DEADLINE: 'desc'
+                    },
+                    FILTER: {
+                        RESPONSIBLE_ID: self.body['data']['PARAMS']['FROM_USER_ID'],
+                        '<DEADLINE': '2018-01-30'
+                    },
+                    PARAMS: {
+                        NAV_PARAMS: {
+                            nPageSize: 1,
+                            iNumPage: 1
+                        }
+                    },
+                    SELECT: ['TITLE']
+                }
             };
 
-            self.request(self, (err, data) => {
+            self.request(request, (err, data) => {
                 if (err) return reject(err);
                 resolve(data);
             });
@@ -34,7 +41,9 @@ exports.src = async function (self, cb) {
     switch(self.message) {
         case 'что горит':
             try {
-                self.answer = await getB24tasks();
+                let answer = await getB24tasks();
+                //console.log(answer);
+                //self.answer = await getB24tasks();
             } catch(err) {
                 console.error(err);
                 self.answer = 'Ошибка при получении тасков';
