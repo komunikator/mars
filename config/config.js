@@ -11,7 +11,8 @@
         "redirect_uri": ""
     },
     "repository": "https://raw.githubusercontent.com/komunikator/mars/master/package.json",
-    "webAccounts": [{
+    "webAccounts": [
+        {
             "username": "admin",
             "password": "admin"
         },
@@ -56,11 +57,12 @@
         }
     },
     "b24accounts": {
-        "test2": {
+        "test1": {
             "disable": 1,
-            "clientId": "",
-            "clientSecret": "",
-            "portalLink": ""
+            "clientId": "APP_CLIENT_ID",
+            "clientSecret": "APP_CLIENT_SECRET",
+            "portalLink": "LINK_MY_PORTAL_BITRIX24",
+            "redirectUri": "MY_DOMAIN:PORT"
         }
     },
     "levels": {
@@ -68,7 +70,8 @@
         "http": "error"
     },
     "replaceConsole": "false",
-    "appenders": [{
+    "appenders": [
+        {
             "type": "console",
             "category": [
                 "console",
@@ -171,13 +174,13 @@
         },
         "sipClients": [
             {
-            	"user": "1",
-            	"password": "1"
-        	}, 
+                "user": "1",
+                "password": "1"
+            },
             {
-            	"user": "2",
-            	"password": "2"
-        	},
+                "user": "2",
+                "password": "2"
+            },
             {
                 "user": "3",
                 "password": "3"
