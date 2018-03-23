@@ -332,7 +332,6 @@ Ext.application({
                 var b24accounts = ivr.items.items[0].items.items[3];
                 if (obj && obj.data) {
                     b24accounts.store.loadData(obj.data);
-                    console.log(obj.data);
                 } else {
                     b24accounts.onRefresh(b24accounts);
                 }

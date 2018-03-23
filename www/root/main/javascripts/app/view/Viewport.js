@@ -351,6 +351,7 @@ Ext.define('IVR.view.Viewport', {
                     //bodyStyle: "background-color:transparent !important",
                     hideHeaders: true,
                     //flex: 1,
+                    hidden: true,
                     width: 216,
                     disableSelection: true,
                     renderer: function(value, metadata, record, rowIndex, colIndex, store) {
@@ -392,6 +393,14 @@ Ext.define('IVR.view.Viewport', {
                                 if (resObj && resObj.success) {
                                     //Ext.getCmp('statusUAGrid')
                                     grid.store.loadData(resObj.data);
+
+                                    grid.hide();
+                                    for (var key in resObj.data[0]) {
+                                        if (resObj.data[0][key] != null) {
+                                            grid.show();
+                                        }
+                                    }
+
                                     if (cb)
                                         cb(resObj.data);
                                 } else
@@ -415,9 +424,10 @@ Ext.define('IVR.view.Viewport', {
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
-                                } else
-                                //Ext.getCmp('menuTree').showPanel('settingsMaster');
-                                    window.location.href = '/wizard';
+                                } else {
+                                    //Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                    //window.location.href = '/wizard';
+                                }
                             });
                         }
                     },
