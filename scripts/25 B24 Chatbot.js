@@ -3,6 +3,45 @@ exports.src = async function (self, cb) {
     // Для генерации ответа на сообщения вызвать cb(self);
     // Преждевременно присвоить сформированный ответ в self.answer
 
+    async function getDataDialogflow() {
+        return new Promise((resolve, reject) => {
+            const apiai = require("api.ai");
+
+            const nlp = new apiai({
+                token: "456c6c686bf4437192169ea9dcc2a732",
+                session: "12345"
+            });
+
+            nlp.text('Марс прислал привет', function (error, response) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+    }
+
+    async function getLastMessageChatById() {
+        return new Promise((resolve, reject) => {
+            let request = {
+                requestTimeout: 35000,
+                url: self.url,
+                method: 'im.dialog.messages.get',
+                settings: {
+                    access_token: self.body['auth']['access_token'],
+                    dialog_id: "668"
+
+                }
+            };
+
+            self.request(request, (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            });
+        });
+    }
+
     async function getB24tasks() {
         return new Promise((resolve, reject) => {
             let request = {
@@ -62,7 +101,7 @@ exports.src = async function (self, cb) {
                 settings: {
                     access_token: self.body['auth']['access_token'],
                     BOT_ID: self.body.data.BOT[0].BOT_ID,
-					CHAT_ID: self.body.data.PARAMS.CHAT_ID
+                    CHAT_ID: self.body.data.PARAMS.CHAT_ID
                 }
             };
 
@@ -1620,5 +1659,28 @@ exports.src = async function (self, cb) {
             }
             cb(self);
             break;
+
+
+        case 'Список последних сообщений в чате по id':
+            try {
+                self.answer = await getLastMessageChatById();
+            } catch(err) {
+            }
+            cb(self);
+            break;
+
+       case 'Dialogflow':
+           try {
+               let answer = await getDataDialogflow();
+
+               if (answer && answer.result && answer.result.fulfillment && answer.result.fulfillment.speech) {
+                   answer = answer.result.fulfillment.speech;
+               }
+               self.answer = answer;
+           } catch(err) {
+               self.answer = err;
+           }
+           cb(self);
+           break;
     }
 }
