@@ -17,6 +17,8 @@
     "url": "https://github.com/komunikator/mars"
   },
   "dependencies": {
+    "api.ai": "^1.0.3",
+    "b24_bot_api": "git+https://github.com/komunikator/b24_bot_api",
     "body-parser": "1.0.2",
     "compression": "1.6.2",
     "connect": "3.4.1",
@@ -45,6 +47,7 @@
     "log4js": "^0.6.13",
     "method-override": "1.0.0",
     "mkdirp": ">= 0.5.0",
+    "native-dns": "0.7.0",
     "nconf": ">= 0.6.9",
     "nedb": "1.8.0",
     "node-base64-image": "^1.0.4",
@@ -61,7 +64,6 @@
     "session-memory-store": "^0.2.2",
     "sip": "0.0.3",
     "sip_server": "git+https://github.com/komunikator/sip_server.git",
-    "b24_bot_api": "git+https://github.com/komunikator/b24_bot_api",
     "socket.io": "1.4.8",
     "url": "^0.11.0",
     "uuid": "^2.0.1",
@@ -69,8 +71,7 @@
     "wav": "1.0.1",
     "ws": "1.1.1",
     "xml2js": "~0.4.9",
-    "yandex-speech": "0.0.12",
-    "native-dns": "0.7.0"
+    "yandex-speech": "0.0.12"
   },
   "devDependencies": {
     "mocha": "^4.0.1",
