@@ -122,6 +122,9 @@ Ext.application({
                         if (obj.source == 'b24accounts') {
                             showMessageOfferRefreshTokens(obj);
                         }
+                        if (obj.source == 'statusSMPP') {
+                            refreshSMPP(obj);
+                        }
                     }
                 } else {
 

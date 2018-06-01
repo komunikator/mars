@@ -8,6 +8,6 @@ Ext.define('IVR.model.SipConnection', {
             root: 'data'
         }
     },
-    fields: ['id','name'],
+    fields: ['id','type_connect','name'],
     autoLoad: false
 });

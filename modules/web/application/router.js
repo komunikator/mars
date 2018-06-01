@@ -17,6 +17,7 @@ exports.init = function (app)
             media = require('./controller/media'),
             statusUA = require('./controller/statusUA'),
             statusB24UA = require('./controller/statusB24UA'),
+            statusSMPP = require('./controller/statusSMPP'),
             updates = require('./controller/updates'),
             startUpdates = require('./controller/startUpdates'),
             statusSipCli = require('./controller/statusSipCli'),
@@ -35,6 +36,7 @@ exports.init = function (app)
     media.init(app.bus);
     statusUA.init(app.bus);
     statusB24UA.init(app.bus);
+    statusSMPP.init(app.bus);
     updates.init(app.bus);
     startUpdates.init(app.bus);
     statusSipCli.init(app.bus);
@@ -50,6 +52,7 @@ exports.init = function (app)
     app.get('/dialogData', dialog.read);
     app.get('/makeCall/:msisdn', makeCall.post);
     app.get('/makeCall/:sipAccountID/:msisdn/:script', makeCall.post);
+    //app.get('/sendSMS/:smppID/:msisdn/:script', statusSMPP.post);
 
     app.get('/refresh/:store', function (req, res) {
         app.bus.emit('refresh', req.params['store']);
@@ -213,6 +216,7 @@ exports.init = function (app)
     app.get('/startUpdates', startUpdates.read);
     app.get('/statusUA', statusUA.read);
     app.get('/statusB24UA', statusB24UA.read);
+    app.get('/statusSMPP', statusSMPP.read);
     app.get('/statusSipCli', statusSipCli.read);
     app.get('/listSIP', listSIP.read);
 

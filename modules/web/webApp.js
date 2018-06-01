@@ -199,6 +199,7 @@ var onData = async function(obj) {
         statusUAController = require(controllerPath + 'statusUA'),
         statusSipCliController = require(controllerPath + 'statusSipCli'),
         statusB24UA = require(controllerPath + 'statusB24UA');
+        statusSMPP = require(controllerPath + 'statusSMPP');
 
     if (io.engine.clientsCount == 0)
         return;
@@ -216,6 +217,9 @@ var onData = async function(obj) {
     }
     if (obj.source == 'statusB24UA') {
         obj.data = await statusB24UA.getStoreData(obj.data);
+    }
+    if (obj.source == 'statusSMPP') {
+        obj.data = await statusSMPP.getStoreData(obj.data);
     }
     io.emit('message', JSON.stringify({ success: true, data: obj }));
 };

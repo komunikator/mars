@@ -981,9 +981,26 @@ Ext.define('IVR.view.tasks.Editor', {
                                                 },
                                                 select:  function () {
                                                     Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
+                                                },
+                                                change: function (fld) {
+                                                    var type_connect = this.ownerCt.getComponent('type_connect');
+                                                    for (var i = 0; i < this.store.getCount(); i++) {
+                                                        if(this.store.getAt(i).get('id') == fld.value) {
+                                                            type_connect.setValue(this.store.getAt(i).get('type_connect'));
+                                                        }
+                                                    }
+
+                                                    Ext.getCmp("IVR.view.tasks.Editor").setStateButtonSave();
                                                 }
                                             }
-
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: 'type_connect',
+                                            name: 'type_connect',
+                                            itemId: 'type_connect',
+                                            editable: false,
+                                            hidden: true,
                                         }
                                     ]
 

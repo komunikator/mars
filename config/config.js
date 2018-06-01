@@ -65,9 +65,29 @@
             "redirectUri": "MY_DOMAIN:PORT"
         }
     },
+    "SMPP": {
+        "SMPP_server_1": {
+            "host": "0.0.0.0",
+            "port": 80,
+            "connection_type": "trx",
+            "System_ID": "xxxx",
+            "password": "yyyy",
+            "sms_send_limit": 5,
+            "disable": 1
+        }
+    },
+    "SMPP_connections": {
+        "connect_1": {
+            "input": "number1",
+            "output": "number2",
+            "smpp_out": "SMPP_server_1",
+            "disable": 1
+        }
+    },
     "levels": {
         "[all]": "trace",
-        "http": "error"
+        "http": "error",
+        "smsc": "trace"
     },
     "replaceConsole": "false",
     "appenders": [
@@ -82,7 +102,9 @@
                 "error",
                 "http",
                 "rotation",
-                "sip_proxy"
+                "sip_proxy",
+                "smsc",
+                "sms"
             ]
         },
         {
@@ -161,6 +183,27 @@
             "maxLogSize": 1048576,
             "backups": 10,
             "category": "sip_proxy"
+        },
+        {
+            "type": "file",
+            "filename": "logs/smsc.log",
+            "maxLogSize": 1048576,
+            "backups": 10,
+            "category": "smsc"
+        },
+        {
+            "type": "file",
+            "filename": "logs/sms.log",
+            "maxLogSize": 1048576,
+            "backups": 10,
+            "category": "sms"
+        },
+        {
+            "type": "file",
+            "filename": "logs/smpp.log",
+            "maxLogSize": 1048576,
+            "backups": 10,
+            "category": "smpp"
         }
     ],
     "sipServer": {
