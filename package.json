@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.127",
+  "version": "2.0.128",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -39,6 +39,7 @@
     "gaikan": "^2.0.2",
     "gmail-send": "^1.2.7",
     "google-speech": ">= 0.0.4",
+    "gsm": ">=0.1.4",
     "ip": "^1.1.0",
     "ivona-node": "0.2.0",
     "json-stringify-safe": "^5.0.1",
@@ -64,6 +65,7 @@
     "session-memory-store": "^0.2.2",
     "sip": "0.0.3",
     "sip_server": "git+https://github.com/komunikator/sip_server.git",
+    "smpp": ">=0.3.1",
     "socket.io": "1.4.8",
     "url": "^0.11.0",
     "uuid": "^2.0.1",
@@ -71,9 +73,7 @@
     "wav": "1.0.1",
     "ws": "5.2.0",
     "xml2js": "~0.4.9",
-    "yandex-speech": "0.0.12",
-    "smpp": ">=0.3.1",
-    "gsm": ">=0.1.4"
+    "yandex-speech": "0.0.12"
   },
   "devDependencies": {
     "mocha": "^4.0.1",
