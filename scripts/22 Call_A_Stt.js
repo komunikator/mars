@@ -11,7 +11,7 @@ exports.src = {
         },
         3: {
             mark: 'Начало',
-            ttsPlay: { 
+            ttsPlay: {
                 text: 'Произнесите номер абонента',
                 next: {
                     on: {
@@ -23,19 +23,19 @@ exports.src = {
                                     play: {
                                         file: 'media/moh.wav'
                                     },
-                                    startScript : { 
-                                        to: function(self){
+                                    startScript: {
+                                        to: function (self) {
                                             return self.session.dtmfData[0].keys
                                         },
-                                        script : '23 Call_B.js', 
-                                        params: function(self){
+                                        script: '23 Call_B.js',
+                                        params: function (self) {
                                             return [self.sessionID]
-                                        }, 
+                                        },
                                         next: {
-                                            goto: function(self){
+                                            goto: function (self) {
                                                 self.session.rec({ stt_detect: false });
                                                 return self.requestRes.event == 'answered' ? 'вызов' : 'абонент_не_найден'
-                                            } 
+                                            }
                                         }
                                     }
                                 }
@@ -45,16 +45,7 @@ exports.src = {
                     wait: {
                         time: 20,
                         next: {
-                            ttsPlay: { 
-                                text: 'Произнесите номер абонента',
-                                next: { 
-                                    goto: 'Начало'
-                                }
-                            }
-                            // play: {
-                            //     file: 'media/uchet/Мы_не_получили_от_вас_никаких_данных.wav',
-                            //     next: { goto: 'Начало' }
-                            // }
+                            goto: 'Начало'
                         }
                     }
                 }
