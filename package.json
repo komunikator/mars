@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.129",
+  "version": "2.0.130",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -52,6 +52,7 @@
     "nconf": ">= 0.6.9",
     "nedb": "1.8.0",
     "node-base64-image": "^1.0.4",
+    "node-microphone": "^0.1.3",
     "node-schedule": ">= 0.1.13",
     "node-uuid": "^1.4.2",
     "node-webrtc": "git+https://github.com/komunikator/node-webrtc.git",
