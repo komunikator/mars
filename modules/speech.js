@@ -16,16 +16,16 @@ function wavEncode(data, file_name, cb) {
         bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'error', msg: 'Sox Error: ' + e.toString()});
         fs.exists(file_name, function (exist) {
             if (exist)
-                fs.unlink(file_name, cb());
+                fs.unlink(file_name, cb);
             else
                 cb();
         });
     });
 
-    sox.stdout.on('finish', function () {
+    sox.stdout.on('end', function () {
         fs.exists(file_name, function (exist) {
             if (exist)
-                fs.unlink(file_name, cb());
+                fs.unlink(file_name, cb);
             else
                 cb();
         });
