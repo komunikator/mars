@@ -39,10 +39,10 @@ bus.on('tts', function (data) {
         return;
     }
     var tmp = data.text.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-    if (tmp.length > 120)
+    /*if (tmp.length > 120)
     {
         tmp = tmp.substring(0, 121);
-    }
+    }*/
     var type = data.type || "yandex";
     var voice = data.voice || "jane";
     tmp += '-' + type;
