@@ -76,7 +76,6 @@
     "yandex-speech": "0.0.12"
   },
   "devDependencies": {
-    "mocha": "^4.0.1",
-    "sip_client": "git+https://github.com/komunikator/sip_client.git"
+    "mocha": "^4.0.1"
   }
 }
