@@ -298,7 +298,8 @@ Ext.define('IVR.view.Viewport', {
 
                             },
                             failure: function(response, o) {
-                                Ext.showError(response.responseText);
+                                console.warn('Unable to retrieve data /statusSipCli', response.statusText);
+                                //Ext.showError(response.responseText);
                             }
                         });
                     },
@@ -505,7 +506,8 @@ Ext.define('IVR.view.Viewport', {
 
                             },
                             failure: function(response, o) {
-                                Ext.showError(response.responseText);
+                                console.warn('Unable to retrieve data /statusSMPP', response.statusText);
+                                //Ext.showError(response.responseText);
                             }
                         });
                     },
