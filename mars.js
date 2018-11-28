@@ -13,7 +13,7 @@
         sys.bus.emit('refresh', 'tasks');
 
         if (module.parent) {
-            var sip = require('./lib/sip/sip');
+            var sip = require('sip');
 
             module.exports = {
                 events: sys.bus,
