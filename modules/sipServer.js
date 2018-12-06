@@ -10,5 +10,5 @@ function init() {
     bus.setWorker(worker);
 }
 if (!(bus.config.get("sipServer") == "disable")) {
-	init();
+	//init();
 }
