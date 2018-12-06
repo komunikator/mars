@@ -25,7 +25,7 @@ function getSipClients() {
     });
 }
 
-exports.getStoreData = async function (data, clients) {
+exports.getStoreData = async function (data) {
     if (data){
         try {
             data = JSON.parse(data);
@@ -37,41 +37,20 @@ exports.getStoreData = async function (data, clients) {
 
                 null, null, null, null, null, null, null, null, null, null];
 
-
-    var clients = clients || await getSipClients();
-
-    if (clients) {
-         clients.forEach(function (row, i) {
-            rec[i] = 0;
-            rec[10+i] = row.user;
-        });
-    }
-
     if (data) {
         data.forEach(function (row, i) {
-            for (var i = 10; i < rec.length; i++){
-                if (row.substr(0,row.indexOf('@')) == rec[i]){
-                    rec[i - 10] = 1;
-                    rec[i] = row;
-                }
-            }
-            // rec[i] = 1;
-            // rec[10+i] = row;
+            rec[i] = 1;
+            rec[10+i] = row;
         });
     }
-    //bus.emit('message', {category: 'sip_proxy', type: 'trace', msg: rec });
     return [rec];
 };
 
 exports.read = function (req, res) {
-    bus.request('getStatusSipCliList', {}, function (errSipList, sipList) {
+    bus.request('getStatusSipCliList', {}, async function (errSipList, sipList) {
         if (errSipList) return false;
         if (sipList) {
-            // bus.request('sipServer', {}, function (errSipServer, sipServer) {
-            bus.request('sipClients', {}, async function (errSipServer, clients) {
-                if (errSipServer) return false;
-                res.send({success: true, data: await exports.getStoreData(JSON.stringify(sipList), clients)});
-            });
+            res.send({success: true, data: await exports.getStoreData(JSON.stringify(sipList))});
         } else {
             return false;
         }

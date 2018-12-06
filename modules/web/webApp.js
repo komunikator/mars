@@ -193,7 +193,6 @@ function sendTimeToUser(socket) {
 }
 
 var onData = async function(obj) {
-    // bus.emit('message', obj);
     var controllerPath = './application/controller/',
         dialogController = require(controllerPath + 'dialog'),
         statusUAController = require(controllerPath + 'statusUA'),
