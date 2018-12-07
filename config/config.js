@@ -57,7 +57,7 @@
         },
         "1": {
             "host": "172.17.4.15:5060",
-            "expires": 10,
+            "expires": 60,
             "user": "1",
             "password": "1",
             "domain": "",
@@ -67,7 +67,7 @@
         },
         "2": {
             "host": "172.17.4.15:5061",
-            "expires": 10,
+            "expires": 60,
             "user": "2",
             "password": "2",
             "domain": "",
@@ -77,7 +77,7 @@
         },
         "3": {
             "host": "172.17.4.15:5062",
-            "expires": 10,
+            "expires": 60,
             "user": "3",
             "password": "3",
             "domain": "",
@@ -87,7 +87,7 @@
         },
         "4": {
             "host": "172.17.4.15:8506",
-            "expires": 10,
+            "expires": 60,
             "user": "4",
             "password": "4",
             "domain": "",
@@ -97,7 +97,7 @@
         },
         "5": {
             "host": "172.17.4.15:8507",
-            "expires": 10,
+            "expires": 60,
             "user": "5",
             "password": "5",
             "domain": "",
@@ -107,7 +107,7 @@
         },
         "6": {
             "host": "172.17.4.15:5060",
-            "expires": 10,
+            "expires": 60,
             "user": "1",
             "password": "1",
             "domain": "",
@@ -117,7 +117,7 @@
         },
         "7": {
             "host": "172.17.4.15:5061",
-            "expires": 10,
+            "expires": 60,
             "user": "2",
             "password": "2",
             "domain": "",
@@ -127,7 +127,7 @@
         },
         "8": {
             "host": "172.17.4.15:5062",
-            "expires": 10,
+            "expires": 60,
             "user": "3",
             "password": "3",
             "domain": "",
@@ -137,7 +137,7 @@
         },
         "9": {
             "host": "172.17.4.15:8506",
-            "expires": 10,
+            "expires": 60,
             "user": "4",
             "password": "4",
             "domain": "",
@@ -147,7 +147,7 @@
         },
         "10": {
             "host": "172.17.4.15:8507",
-            "expires": 10,
+            "expires": 60,
             "user": "5",
             "password": "5",
             "domain": "",
