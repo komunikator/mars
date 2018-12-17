@@ -47,16 +47,18 @@
         }
     },
     "sipAccounts": {
-        "5894475a0e5216d64426d524": { 
+        "5894475a0e5216d64426d524": {
             "host": "193.201.229.35",
-            "expires": 60, 
-            "user": "xxxxxxxx", 
-            "password": "xxxxxxxx", 
-            "domain": "multifon.ru", 
-            "disable": 1
+            "expires": 60,
+            "user": "xxxxxxxx",
+            "password": "xxxxxxxx",
+            "domain": "multifon.ru",
+            "disable": 1,
+            "type": "sip",
+            "transport": "udp"
         },
         "1": {
-            "host": "172.17.4.15:5060",
+            "host": "127.0.0.1:5060",
             "expires": 60,
             "user": "1",
             "password": "1",
@@ -66,7 +68,7 @@
             "type": "sip"
         },
         "2": {
-            "host": "172.17.4.15:5061",
+            "host": "127.0.0.1:5061",
             "expires": 60,
             "user": "2",
             "password": "2",
@@ -76,7 +78,7 @@
             "type": "sip"
         },
         "3": {
-            "host": "172.17.4.15:5062",
+            "host": "127.0.0.1:5062",
             "expires": 60,
             "user": "3",
             "password": "3",
@@ -86,7 +88,7 @@
             "type": "sip"
         },
         "4": {
-            "host": "172.17.4.15:8506",
+            "host": "127.0.0.1:8506",
             "expires": 60,
             "user": "4",
             "password": "4",
@@ -96,57 +98,7 @@
             "type": "sip"
         },
         "5": {
-            "host": "172.17.4.15:8507",
-            "expires": 60,
-            "user": "5",
-            "password": "5",
-            "domain": "",
-            "transport": "wss",
-            "disable": 1,
-            "type": "sip"
-        },
-        "6": {
-            "host": "172.17.4.15:5060",
-            "expires": 60,
-            "user": "1",
-            "password": "1",
-            "domain": "",
-            "transport": "udp",
-            "disable": 1,
-            "type": "sip"
-        },
-        "7": {
-            "host": "172.17.4.15:5061",
-            "expires": 60,
-            "user": "2",
-            "password": "2",
-            "domain": "",
-            "transport": "tcp",
-            "disable": 1,
-            "type": "sip"
-        },
-        "8": {
-            "host": "172.17.4.15:5062",
-            "expires": 60,
-            "user": "3",
-            "password": "3",
-            "domain": "",
-            "transport": "tls",
-            "disable": 1,
-            "type": "sip"
-        },
-        "9": {
-            "host": "172.17.4.15:8506",
-            "expires": 60,
-            "user": "4",
-            "password": "4",
-            "domain": "",
-            "transport": "ws",
-            "disable": 1,
-            "type": "sip"
-        },
-        "10": {
-            "host": "172.17.4.15:8507",
+            "host": "127.0.0.1:8507",
             "expires": 60,
             "user": "5",
             "password": "5",
@@ -313,18 +265,8 @@
         "tcp": {
             "port": 5061
         },
-        "tls": {
-            "port": 5062,
-            "key": "modules/sipServer/server_localhost.key",
-            "cert": "modules/sipServer/server_localhost.crt"
-        },
         "ws": {
             "port": 8506
-        },
-        "wss": {
-            "port": 8507,
-            "key": "modules/sipServer/server_localhost.key",
-            "cert": "modules/sipServer/server_localhost.crt"
         },
         "accounts": [
             {
