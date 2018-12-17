@@ -59,32 +59,32 @@ function getCertificate(keyPath, crtPath) {
 function startProxy(data) {
     if (server) {
         bus.emit('message', {msg: 'sip_proxy started'});
-        if (data && data.tls && data.tls.key && data.tls.cert) {
-            let sslTls = getCertificate(data.tls.key, data.tls.cert);
-            data['tls']['key'] = sslTls['key'];
-            data['tls']['cert'] = sslTls['cert'];
-        }
+        // if (data && data.tls && data.tls.key && data.tls.cert) {
+        //     let sslTls = getCertificate(data.tls.key, data.tls.cert);
+        //     data['tls']['key'] = sslTls['key'];
+        //     data['tls']['cert'] = sslTls['cert'];
+        // }
 
-        if (data && data.wss && data.wss.key && data.wss.cert) {
-            let sslWss = getCertificate(data.wss.key, data.wss.cert);
-            data['wss']['key'] = sslWss['key'];
-            data['wss']['cert'] = sslWss['cert'];
-        }
+        // if (data && data.wss && data.wss.key && data.wss.cert) {
+        //     let sslWss = getCertificate(data.wss.key, data.wss.cert);
+        //     data['wss']['key'] = sslWss['key'];
+        //     data['wss']['cert'] = sslWss['cert'];
+        // }
         server.ProxyStart(data);
     } else {
         server = new nodeSipServer.SipServer({ accounts: accounts });
 
-        if (sipServer && sipServer.tls && sipServer.tls.key && sipServer.tls.cert) {
-            let sslTls = getCertificate(sipServer.tls.key, sipServer.tls.cert);
-            sipServer['tls']['key'] = sslTls['key'];
-            sipServer['tls']['cert'] = sslTls['cert'];
-        }
+        // if (sipServer && sipServer.tls && sipServer.tls.key && sipServer.tls.cert) {
+        //     let sslTls = getCertificate(sipServer.tls.key, sipServer.tls.cert);
+        //     sipServer['tls']['key'] = sslTls['key'];
+        //     sipServer['tls']['cert'] = sslTls['cert'];
+        // }
 
-        if (sipServer && sipServer.wss && sipServer.wss.key && sipServer.wss.cert) {
-            let sslWss = getCertificate(sipServer.wss.key, sipServer.wss.cert);
-            sipServer['wss']['key'] = sslWss['key'];
-            sipServer['wss']['cert'] = sslWss['cert'];
-        }
+        // if (sipServer && sipServer.wss && sipServer.wss.key && sipServer.wss.cert) {
+        //     let sslWss = getCertificate(sipServer.wss.key, sipServer.wss.cert);
+        //     sipServer['wss']['key'] = sslWss['key'];
+        //     sipServer['wss']['cert'] = sslWss['cert'];
+        // }
 
         server.ProxyStart(sipServer);
         server.on('updateRegistryList', sendContacts);
