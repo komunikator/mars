@@ -56,36 +56,6 @@
             "disable": 1,
             "type": "sip",
             "transport": "udp"
-        },
-        "1": {
-            "host": "127.0.0.1:5060",
-            "expires": 60,
-            "user": "1",
-            "password": "1",
-            "domain": "",
-            "transport": "udp",
-            "disable": 1,
-            "type": "sip"
-        },
-        "2": {
-            "host": "127.0.0.1:5061",
-            "expires": 60,
-            "user": "2",
-            "password": "2",
-            "domain": "",
-            "transport": "tcp",
-            "disable": 1,
-            "type": "sip"
-        },
-        "3": {
-            "host": "127.0.0.1:8506",
-            "expires": 60,
-            "user": "3",
-            "password": "3",
-            "domain": "",
-            "transport": "ws",
-            "disable": 1,
-            "type": "sip"
         }
     },
     "b24accounts": {
