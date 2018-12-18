@@ -78,32 +78,12 @@
             "type": "sip"
         },
         "3": {
-            "host": "127.0.0.1:5062",
+            "host": "127.0.0.1:8506",
             "expires": 60,
             "user": "3",
             "password": "3",
             "domain": "",
-            "transport": "tls",
-            "disable": 1,
-            "type": "sip"
-        },
-        "4": {
-            "host": "127.0.0.1:8506",
-            "expires": 60,
-            "user": "4",
-            "password": "4",
-            "domain": "",
             "transport": "ws",
-            "disable": 1,
-            "type": "sip"
-        },
-        "5": {
-            "host": "127.0.0.1:8507",
-            "expires": 60,
-            "user": "5",
-            "password": "5",
-            "domain": "",
-            "transport": "wss",
             "disable": 1,
             "type": "sip"
         }
