@@ -47,33 +47,6 @@
         }
     },
     "sipAccounts": {
-        "1": {
-            "host": "127.0.0.1:5060",
-            "expires": 60,
-            "user": "1",
-            "password": "1",
-            "disable": 0,
-            "type": "sip",
-            "transport": "udp"
-        },
-        "2": {
-            "host": "127.0.0.1:5060",
-            "expires": 60,
-            "user": "2",
-            "password": "2",
-            "disable": 0,
-            "type": "sip",
-            "transport": "udp"
-        },
-        "3": {
-            "host": "127.0.0.1:5060",
-            "expires": 60,
-            "user": "3",
-            "password": "3",
-            "disable": 0,
-            "type": "sip",
-            "transport": "udp"
-        },
         "5894475a0e5216d64426d524": {
             "host": "193.201.229.35",
             "expires": 60,
