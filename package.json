@@ -74,8 +74,5 @@
     "ws": "5.2.0",
     "xml2js": "~0.4.9",
     "yandex-speech": "0.0.12"
-  },
-  "devDependencies": {
-    "mocha": "^4.0.1"
   }
 }
