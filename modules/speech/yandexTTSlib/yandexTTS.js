@@ -9,7 +9,7 @@ var YandexTTS = function(options, callback){
     var fs = require('fs');
     var path = require('path');
 
-    var yandex_tts_url = 'http://tts.voicetech.yandex.net/tts?';    
+    var yandex_tts_url = 'https://speech.kloud.one/tts?';    
     
     var params = {};
 
@@ -18,6 +18,7 @@ var YandexTTS = function(options, callback){
     var init = function(options){
         //required     
         params['text'] = options['text'];
+        params['key'] = options['key'];
         file_download_path = options['file'];
         //optional
         params['speaker'] = (options['speaker']) ? options['speaker'] : 'jane';
@@ -30,7 +31,8 @@ var YandexTTS = function(options, callback){
     
     var full_url = yandex_tts_url + qs.stringify(params);    
 
-    var download = function(callback){        
+    var download = function(callback){
+
         var file = fs.createWriteStream(file_download_path);
         file.on('finish', function(){
             file.close(callback);
