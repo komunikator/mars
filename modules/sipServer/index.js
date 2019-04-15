@@ -1,8 +1,10 @@
+
 // ************* Подгрузка модулей *************
 let os = require('os');
 let fs = require('fs');
 let sip = require('sip');
-let nodeSipServer = require('sip_server');
+let nodeSipServer = require('sip.server');
+
 let bus = require('../../lib/system/bus');
 let sipServer = bus.config.get('sipServer') || {};
 let conf = sipServer['accounts'] || [];

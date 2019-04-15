@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -64,7 +64,7 @@
     "serve-favicon": "2.3.0",
     "session-memory-store": "^0.2.2",
     "sip": "git+https://github.com/komunikator/sip.js.git",
-    "sip_server": "git+https://github.com/komunikator/sip_server.git",
+    "sip.server": "git+https://github.com/komunikator/sip.server.git",
     "smpp": ">=0.3.1",
     "socket.io": "1.4.8",
     "url": "^0.11.0",
