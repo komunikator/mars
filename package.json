@@ -103,7 +103,7 @@
     "start": "node mars.js",
     "test": "mocha --timeout 10000"
   },
-  "version": "2.1.16",
+  "version": "2.1.17",
   "warnings": [
     {
       "code": "ENOTSUP",
