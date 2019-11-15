@@ -48,10 +48,12 @@ bus.on('tts', function (data) {
     tmp += '-' + type;
     tmp += '-' + voice;
     tmp = md5(tmp);
-    var file_name = 'media/temp/' + tmp + '.wav';
+    var temp_dir = 'media/temp/';
+    var file_name = temp_dir + tmp + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
     if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/media/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
     {
+        if (!fs.existsSync(temp_dir)) fs.mkdirSync(temp_dir);        
         function ttsDone() {
             wavEncode(data, file_name + '.tmp', function () {
                 bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts file "' + file_name + '"'});
