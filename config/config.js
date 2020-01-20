@@ -53,13 +53,6 @@
             "user": "USER",
             "password": "PASSWORD",
             "disable": 1
-        },
-        "6": {
-            "host": "multifon.ru",
-            "password": "yphsOPfbc",
-            "expires": 60,
-            "user": "79297331427",
-            "disable": 0
         }
     },
     "b24accounts": {

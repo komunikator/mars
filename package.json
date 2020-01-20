@@ -1,6 +1,6 @@
 {
   "name": "mars",
-  "version": "2.0.145",
+  "version": "2.0.146",
   "license": "GPL-3.0",
   "engines": {
     "node": ">=6.11.4 <8.6.0"
@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "api.ai": "^1.0.3",
-    "b24_bot_api": "git+https://github.com/komunikator/b24_bot_api",
     "body-parser": "1.0.2",
     "compression": "1.6.2",
     "connect": "3.4.1",
@@ -42,18 +41,14 @@
     "ip": "^1.1.0",
     "ivona-node": "0.2.0",
     "json-stringify-safe": "^5.0.1",
-    "leveldown": "1.5.0",
-    "levelup": "1.3.3",
     "log4js": "^0.6.13",
     "method-override": "1.0.0",
     "mkdirp": ">= 0.5.0",
     "native-dns": "0.7.0",
     "nconf": ">= 0.6.9",
-    "nedb": "1.8.0",
     "node-base64-image": "^1.0.4",
     "node-schedule": ">= 0.1.13",
     "node-uuid": "^1.4.2",
-    "wrtc": "^0.2.1",
     "nstore": ">= 0.5.2",
     "passport": "0.2.0",
     "passport-local": "1.0.0",
