@@ -16,7 +16,6 @@
     "url": "https://github.com/komunikator/mars"
   },
   "dependencies": {
-    "api.ai": "^1.0.3",
     "body-parser": "1.0.2",
     "compression": "1.6.2",
     "connect": "3.4.1",
