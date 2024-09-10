@@ -28,7 +28,7 @@
   "dependencies": {
     "api.ai": "^1.0.3",
     "b24_bot_api": "git+https://github.com/komunikator/b24_bot_api.git",
-    "body-parser": "1.0.2",
+    "body-parser": "1.20.3",
     "compression": "1.6.2",
     "connect": "3.4.1",
     "connect-flash": "0.1.1",
