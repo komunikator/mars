@@ -1,7 +1,7 @@
 (function () {
 
     process.on('uncaughtException', function (e) {
-        console.error('uncaughtException', e);
+        console.error('uncaughtException', e.stack);
     });
 
     var sys = require('require-dir')('lib/system');
