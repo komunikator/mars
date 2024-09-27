@@ -1,7 +1,7 @@
 (function () {
 
     process.on('uncaughtException', function (e) {
-        console.error('uncaughtException', e);
+        console.error('uncaughtException', e.stack);
     });
 
     var sys = require('require-dir')('lib/system');
@@ -13,7 +13,7 @@
         sys.bus.emit('refresh', 'tasks');
 
         if (module.parent) {
-            var sip = require('sip');
+            var sip = require('./lib/sip/sip');
 
             module.exports = {
                 events: sys.bus,

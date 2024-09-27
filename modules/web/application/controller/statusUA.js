@@ -26,6 +26,7 @@ exports.getStoreData = function(data) {
     ];
 
     Object.keys(data).forEach(function(row, i) {
+        if (i > 9) return;
         rec[i] = data[row].status;
         rec[(1 + '' + i)] = data[row].name;
     });

@@ -6,10 +6,10 @@ var bus = require('../lib/system/bus'),
 
 function wavEncode(data, file_name, cb) {
     bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'Start encode file "' + file_name + '"'});
-    var stats = fs.statSync(file_name)
-    if (stats.size < 100) return fs.unlink(file_name, cb);
+
     var spawn = require('child_process').spawn,
-            args = ['-b', 16, '-r', 8000, '-c', 1, '-t', 'raw', '-L','-e', 'signed-integer', file_name, '-e', 'u-law', file_name.slice(0, -4)],
+            args =
+            [file_name, '--bits', 8, '--rate', 8000, '--channels', 1, '--encoding', audioCodec === 'PCMA' ? 'a-law' : 'u-law', '--type', 'wav', file_name.slice(0, -4)],
             sox = spawn('sox', args);
 
     sox.on('error', function (e) {
@@ -48,10 +48,12 @@ bus.on('tts', function (data) {
     tmp += '-' + type;
     tmp += '-' + voice;
     tmp = md5(tmp);
-    var file_name = 'media/temp/' + tmp + '.wav';
+    var temp_dir = 'media/temp/';
+    var file_name = temp_dir + tmp + '.wav';
     // если файл file_name не существует, посылаем текст на синтез речи, если существует и правильного формата просто его проигрываем
     if (data.rewrite || !fs.existsSync(file_name) || !require('../lib/media/wav').checkFormat(file_name, [6, 7]))//6-pcma,7-pcmu
     {
+        if (!fs.existsSync(temp_dir)) fs.mkdirSync(temp_dir);        
         function ttsDone() {
             wavEncode(data, file_name + '.tmp', function () {
                 bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'tts file "' + file_name + '"'});
@@ -59,7 +61,7 @@ bus.on('tts', function (data) {
             });
         }
         bus.emit('message', {category: 'call', sessionID: data.sessionID, type: 'debug', msg: 'Start generate speech from text "' + data.text + '"'});
-        bus.emit('ttsLaunch', {type: data.type, voice: data.voice, key: data.key, text: data.text, file: file_name + '.tmp', cb: ttsDone});
+        bus.emit('ttsLaunch', {type: data.type, voice: data.voice, text: data.text, file: file_name + '.tmp', cb: ttsDone});
     } else
         data.cb(file_name);
 })

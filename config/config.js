@@ -28,7 +28,7 @@
         "client_secret": "TRUSTED_LOGIN_CLIENT_SECRET"
     },
     "maxCalls": 10,
-    "ringingTimeout": "30",
+    "ringingTimeout": "90",
     "serviceName": "MARS",
     "activeAccount": 0,
     "def_tts": "yandex",
@@ -47,42 +47,12 @@
         }
     },
     "sipAccounts": {
-        "5894475a0e5216d64426d524": {
-            "host": "193.201.229.35",
-            "expires": 60,
-            "user": "xxxxxxxx",
-            "password": "xxxxxxxx",
-            "domain": "multifon.ru",
-            "disable": 1,
-            "type": "sip",
-            "transport": "udp"
-        },
         "1": {
-            "host": "127.0.0.1:5060",
+            "host": "multifon.ru",
             "expires": 60,
-            "user": "1",
-            "password": "1",
-            "disable": 1,
-            "type": "sip",
-            "transport": "udp"
-        },
-        "2": {
-            "host": "127.0.0.1:5061",
-            "expires": 60,
-            "user": "2",
-            "password": "2",
-            "disable": 1,
-            "type": "sip",
-            "transport": "tcp"
-        },
-        "3": {
-            "host": "127.0.0.1:8506",
-            "expires": 60,
-            "user": "3",
-            "password": "3",
-            "disable": 1,
-            "type": "sip",
-            "transport": "ws"
+            "user": "USER",
+            "password": "PASSWORD",
+            "disable": 1
         }
     },
     "b24accounts": {
@@ -94,29 +64,9 @@
             "redirectUri": "MY_DOMAIN:PORT"
         }
     },
-    "SMPP": {
-        "SMPP_server_1": {
-            "host": "0.0.0.0",
-            "port": 80,
-            "connection_type": "trx",
-            "System_ID": "xxxx",
-            "password": "yyyy",
-            "sms_send_limit": 5,
-            "disable": 1
-        }
-    },
-    "SMPP_connections": {
-        "connect_1": {
-            "input": "number1",
-            "output": "number2",
-            "smpp_out": "SMPP_server_1",
-            "disable": 1
-        }
-    },
     "levels": {
         "[all]": "trace",
-        "http": "error",
-        "smsc": "trace"
+        "http": "error"
     },
     "replaceConsole": "false",
     "appenders": [
@@ -131,9 +81,7 @@
                 "error",
                 "http",
                 "rotation",
-                "sip_proxy",
-                "smsc",
-                "sms"
+                "sip_proxy"
             ]
         },
         {
@@ -212,76 +160,7 @@
             "maxLogSize": 1048576,
             "backups": 10,
             "category": "sip_proxy"
-        },
-        {
-            "type": "file",
-            "filename": "logs/smsc.log",
-            "maxLogSize": 1048576,
-            "backups": 10,
-            "category": "smsc"
-        },
-        {
-            "type": "file",
-            "filename": "logs/sms.log",
-            "maxLogSize": 1048576,
-            "backups": 10,
-            "category": "sms"
-        },
-        {
-            "type": "file",
-            "filename": "logs/smpp.log",
-            "maxLogSize": 1048576,
-            "backups": 10,
-            "category": "smpp"
         }
     ],
-    "sipServer": {
-        "udp": {
-            "port": 5060
-        },
-        "tcp": {
-            "port": 5061
-        },
-        "ws": {
-            "port": 8506
-        },
-        "accounts": [
-            {
-                "user": "1",
-                "password": "1"
-            },
-            {
-                "user": "2",
-                "password": "2"
-            },
-            {
-                "user": "3",
-                "password": "3"
-            },
-            {
-                "user": "4",
-                "password": "4"
-            },
-            {
-                "user": "5",
-                "password": "5"
-            },
-            {
-                "user": "6",
-                "password": "6"
-            },
-            {
-                "user": "7",
-                "password": "7"
-            },
-            {
-                "user": "8",
-                "password": "8"
-            },
-            {
-                "user": "9",
-                "password": "9"
-            }
-        ]
-    }
+    "sipServer": "disable"
 }

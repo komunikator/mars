@@ -222,13 +222,13 @@ Ext.define('IVR.view.Viewport', {
                             columns.reverse();
                             this.reconfigure(undefined, columns);
                             this.onRefresh(this, function(data) {
+                                
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
-                                } else {
-                                    //Ext.getCmp('menuTree').showPanel('settingsMaster');
+                                } else
+                                //Ext.getCmp('menuTree').showPanel('settingsMaster');
                                     window.location.href = '/wizard';
-                                }
                             });
                         }
                     },
@@ -279,15 +279,9 @@ Ext.define('IVR.view.Viewport', {
                                 break;
                         };
                         metadata.style += ';color:white;';
-                        var connections = record.data['field' + (colIndex + 11)].connections;
-                        var realAddress = '';
-
-                        for (var i = 0; i < connections.length; i++) {
-                            realAddress += '<br>' + connections[i];
-                        }
                         if (status)
-                            metadata.tdAttr = 'data-qtip="' + status + realAddress + '"';
-                        return '';
+                            metadata.tdAttr = 'data-qtip="' + record.data['field' + (colIndex + 11)] + ' ' + status + '"';
+                        return ''; //new_value;
                     },
                     onRefresh: function(grid, cb) {
                         Ext.Ajax.request({
@@ -329,8 +323,7 @@ Ext.define('IVR.view.Viewport', {
                         }
                     },
                     columns: [
-                        { dataIndex: 'field1' },
-                        { dataIndex: 'field2' }
+                        { dataIndex: 'field1' }
                     ],
                     store: [
                         [
@@ -530,9 +523,8 @@ Ext.define('IVR.view.Viewport', {
                                 if (data && data[0] && data[0].join('')) {
                                     Ext.getCmp('IVR.view.Viewport').setVisible(true);
                                     Ext.getCmp('menuTree').showPanel('dialogsList');
-                                } else {
+                                } else
                                     window.location.href = '/wizard';
-                                }
                             });
                         }
                     },
